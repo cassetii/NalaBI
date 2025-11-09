@@ -1,0 +1,1576 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nala Aircon - Project Dashboard</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #2563eb;
+            --primary-dark: #1e40af;
+            --secondary-color: #10b981;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            --dark: #1e293b;
+            --dark-light: #334155;
+            --gray: #64748b;
+            --gray-light: #e2e8f0;
+            --white: #ffffff;
+            --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f8fafc;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        /* Header */
+        .header {
+            background: var(--white);
+            border-bottom: 1px solid var(--gray-light);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: var(--shadow);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .logo i {
+            font-size: 2rem;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-info {
+            text-align: right;
+        }
+
+        .user-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .user-role {
+            font-size: 0.75rem;
+            color: var(--gray);
+        }
+
+        .btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-secondary {
+            background: var(--gray-light);
+            color: var(--dark);
+        }
+
+        .btn-secondary:hover {
+            background: var(--gray);
+            color: var(--white);
+        }
+
+        .btn-success {
+            background: var(--secondary-color);
+            color: var(--white);
+        }
+
+        .btn-logout {
+            background: transparent;
+            color: var(--danger-color);
+            border: 1px solid var(--danger-color);
+        }
+
+        .btn-logout:hover {
+            background: var(--danger-color);
+            color: var(--white);
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Navigation Tabs */
+        .nav-tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            background: var(--white);
+            padding: 1rem;
+            border-radius: 0.75rem;
+            box-shadow: var(--shadow);
+        }
+
+        .nav-tab {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            font-weight: 500;
+            color: var(--gray);
+            border-radius: 0.5rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-tab:hover {
+            background: var(--gray-light);
+            color: var(--dark);
+        }
+
+        .nav-tab.active {
+            background: var(--primary-color);
+            color: var(--white);
+        }
+
+        /* Dashboard Stats */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--white);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .stat-card.success {
+            border-left-color: var(--secondary-color);
+        }
+
+        .stat-card.warning {
+            border-left-color: var(--warning-color);
+        }
+
+        .stat-card.info {
+            border-left-color: var(--primary-color);
+        }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .stat-icon {
+            width: 3rem;
+            height: 3rem;
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: var(--white);
+        }
+
+        .stat-icon.success {
+            background: var(--secondary-color);
+        }
+
+        .stat-icon.warning {
+            background: var(--warning-color);
+        }
+
+        .stat-icon.info {
+            background: var(--primary-color);
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--dark);
+        }
+
+        .stat-label {
+            color: var(--gray);
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        /* Content Sections */
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .card {
+            background: var(--white);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 1.5rem;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--gray-light);
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Form Styles */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            font-weight: 500;
+            color: var(--dark);
+            font-size: 0.9rem;
+        }
+
+        input, select, textarea {
+            padding: 0.75rem;
+            border: 1px solid var(--gray-light);
+            border-radius: 0.5rem;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            font-family: 'Inter', sans-serif;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        /* Table Styles */
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--gray-light);
+        }
+
+        th {
+            background: var(--gray-light);
+            font-weight: 600;
+            color: var(--dark);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        tr:hover {
+            background: #f8fafc;
+        }
+
+        /* Status Badges */
+        .status-badge {
+            padding: 0.35rem 0.75rem;
+            border-radius: 1rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .status-potential {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .status-negosiasi {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-kontrak {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-eksekusi {
+            background: #e0e7ff;
+            color: #3730a3;
+        }
+
+        .status-selesai {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .status-hold {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        /* Map Container */
+        #map {
+            height: 500px;
+            border-radius: 0.75rem;
+            box-shadow: var(--shadow);
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn-sm {
+            padding: 0.35rem 0.75rem;
+            font-size: 0.8rem;
+        }
+
+        .btn-edit {
+            background: var(--warning-color);
+            color: var(--white);
+        }
+
+        .btn-delete {
+            background: var(--danger-color);
+            color: var(--white);
+        }
+
+        .btn-view {
+            background: var(--primary-color);
+            color: var(--white);
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--white);
+            border-radius: 0.75rem;
+            padding: 2rem;
+            max-width: 800px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--gray-light);
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--gray);
+            transition: color 0.3s ease;
+        }
+
+        .close-modal:hover {
+            color: var(--danger-color);
+        }
+
+        /* Filter Section */
+        .filter-section {
+            background: var(--white);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 1.5rem;
+        }
+
+        .filter-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            align-items: end;
+        }
+
+        /* Loading Spinner */
+        .spinner {
+            border: 3px solid var(--gray-light);
+            border-top: 3px solid var(--primary-color);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 2rem auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-tabs {
+                overflow-x: auto;
+                flex-wrap: nowrap;
+            }
+
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .table-container {
+                overflow-x: scroll;
+            }
+
+            table {
+                min-width: 800px;
+            }
+        }
+
+        /* Login Screen */
+        .login-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+            padding: 2rem;
+        }
+
+        .login-card {
+            background: var(--white);
+            padding: 3rem;
+            border-radius: 1rem;
+            box-shadow: var(--shadow-lg);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .login-logo {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .login-logo i {
+            font-size: 4rem;
+            color: var(--primary-color);
+        }
+
+        .login-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .login-subtitle {
+            text-align: center;
+            color: var(--gray);
+            margin-bottom: 2rem;
+        }
+
+        /* Alert */
+        .alert {
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        .alert.show {
+            display: block;
+        }
+
+        .alert-success {
+            background: #d1fae5;
+            color: #065f46;
+            border-left: 4px solid var(--secondary-color);
+        }
+
+        .alert-error {
+            background: #fee2e2;
+            color: #991b1b;
+            border-left: 4px solid var(--danger-color);
+        }
+
+        /* Charts placeholder */
+        .chart-container {
+            height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--gray-light);
+            border-radius: 0.5rem;
+            color: var(--gray);
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Screen -->
+    <div id="loginScreen" class="login-container">
+        <div class="login-card">
+            <div class="login-logo">
+                <i class="fas fa-snowflake"></i>
+            </div>
+            <h1 class="login-title">Nala Aircon</h1>
+            <p class="login-subtitle">Project Management Dashboard</p>
+            
+            <div id="loginAlert" class="alert"></div>
+            
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" placeholder="admin@nalaaircon.com" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">
+                    <i class="fas fa-sign-in-alt"></i> Masuk
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Main Dashboard -->
+    <div id="mainDashboard" style="display: none;">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-snowflake"></i>
+                    <span>Nala Aircon Dashboard</span>
+                </div>
+                <div class="user-menu">
+                    <div class="user-info">
+                        <div class="user-name" id="userName">Admin</div>
+                        <div class="user-role">Project Manager</div>
+                    </div>
+                    <button class="btn btn-logout" id="logoutBtn">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Container -->
+        <div class="container">
+            <!-- Navigation Tabs -->
+            <div class="nav-tabs">
+                <button class="nav-tab active" data-tab="dashboard">
+                    <i class="fas fa-chart-line"></i> Dashboard
+                </button>
+                <button class="nav-tab" data-tab="projects">
+                    <i class="fas fa-tasks"></i> Daftar Project
+                </button>
+                <button class="nav-tab" data-tab="map">
+                    <i class="fas fa-map-marked-alt"></i> Peta Project
+                </button>
+                <button class="nav-tab" data-tab="add">
+                    <i class="fas fa-plus-circle"></i> Tambah Project
+                </button>
+            </div>
+
+            <!-- Dashboard Section -->
+            <section id="dashboard" class="section active">
+                <!-- Stats Grid -->
+                <div class="stats-grid">
+                    <div class="stat-card info">
+                        <div class="stat-header">
+                            <div>
+                                <div class="stat-value" id="totalProjects">0</div>
+                                <div class="stat-label">Total Project</div>
+                            </div>
+                            <div class="stat-icon info">
+                                <i class="fas fa-briefcase"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card warning">
+                        <div class="stat-header">
+                            <div>
+                                <div class="stat-value" id="negotiationProjects">0</div>
+                                <div class="stat-label">Dalam Negosiasi</div>
+                            </div>
+                            <div class="stat-icon warning">
+                                <i class="fas fa-handshake"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card success">
+                        <div class="stat-header">
+                            <div>
+                                <div class="stat-value" id="activeProjects">0</div>
+                                <div class="stat-label">Project Aktif</div>
+                            </div>
+                            <div class="stat-icon success">
+                                <i class="fas fa-tools"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card success">
+                        <div class="stat-header">
+                            <div>
+                                <div class="stat-value" id="totalRevenue">Rp 0</div>
+                                <div class="stat-label">Total Nilai Kontrak</div>
+                            </div>
+                            <div class="stat-icon success">
+                                <i class="fas fa-dollar-sign"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Projects -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <i class="fas fa-clock"></i> Project Terbaru
+                        </h2>
+                    </div>
+                    <div class="table-container">
+                        <table id="recentProjectsTable">
+                            <thead>
+                                <tr>
+                                    <th>Nama Project</th>
+                                    <th>Client</th>
+                                    <th>Lokasi</th>
+                                    <th>Status</th>
+                                    <th>Nilai Kontrak</th>
+                                    <th>Tanggal</th>
+                                </tr>
+                            </thead>
+                            <tbody id="recentProjectsBody">
+                                <tr>
+                                    <td colspan="6" style="text-align: center; padding: 2rem;">
+                                        Belum ada data project
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Projects List Section -->
+            <section id="projects" class="section">
+                <!-- Filter Section -->
+                <div class="filter-section">
+                    <div class="filter-grid">
+                        <div class="form-group">
+                            <label for="filterStatus">Status</label>
+                            <select id="filterStatus">
+                                <option value="">Semua Status</option>
+                                <option value="potential">Potential</option>
+                                <option value="negosiasi">Negosiasi</option>
+                                <option value="kontrak">Kontrak Signed</option>
+                                <option value="eksekusi">Eksekusi</option>
+                                <option value="selesai">Selesai</option>
+                                <option value="hold">Hold</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="filterSearch">Cari Project</label>
+                            <input type="text" id="filterSearch" placeholder="Nama project atau client...">
+                        </div>
+                        <div class="form-group">
+                            <button class="btn btn-secondary" id="resetFilter">
+                                <i class="fas fa-redo"></i> Reset Filter
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Projects Table -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <i class="fas fa-list"></i> Semua Project
+                        </h2>
+                        <button class="btn btn-primary" onclick="switchTab('add')">
+                            <i class="fas fa-plus"></i> Tambah Project
+                        </button>
+                    </div>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Nama Project</th>
+                                    <th>Client</th>
+                                    <th>Lokasi</th>
+                                    <th>Status</th>
+                                    <th>Nilai Kontrak</th>
+                                    <th>PIC</th>
+                                    <th>Tanggal Mulai</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="projectsTableBody">
+                                <tr>
+                                    <td colspan="8" style="text-align: center; padding: 2rem;">
+                                        <div class="spinner"></div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Map Section -->
+            <section id="map-section" class="section">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <i class="fas fa-map-marked-alt"></i> Peta Lokasi Project
+                        </h2>
+                        <div>
+                            <label style="margin-right: 1rem;">
+                                <input type="checkbox" id="showPotential" checked> Potential
+                            </label>
+                            <label style="margin-right: 1rem;">
+                                <input type="checkbox" id="showNegotiation" checked> Negosiasi
+                            </label>
+                            <label>
+                                <input type="checkbox" id="showActive" checked> Aktif
+                            </label>
+                        </div>
+                    </div>
+                    <div id="map"></div>
+                </div>
+            </section>
+
+            <!-- Add/Edit Project Section -->
+            <section id="add" class="section">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <i class="fas fa-plus-circle"></i> <span id="formTitle">Tambah Project Baru</span>
+                        </h2>
+                    </div>
+                    
+                    <div id="formAlert" class="alert"></div>
+                    
+                    <form id="projectForm">
+                        <input type="hidden" id="projectId">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="projectName">Nama Project *</label>
+                                <input type="text" id="projectName" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="clientName">Nama Client *</label>
+                                <input type="text" id="clientName" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="clientContact">Kontak Client</label>
+                                <input type="text" id="clientContact" placeholder="0812-xxxx-xxxx">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="clientEmail">Email Client</label>
+                                <input type="email" id="clientEmail">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="projectAddress">Alamat Lokasi *</label>
+                                <input type="text" id="projectAddress" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="projectCity">Kota *</label>
+                                <input type="text" id="projectCity" value="Makassar" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="latitude">Latitude</label>
+                                <input type="text" id="latitude" placeholder="-5.1477">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="longitude">Longitude</label>
+                                <input type="text" id="longitude" placeholder="119.4327">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="projectType">Tipe Project *</label>
+                                <select id="projectType" required>
+                                    <option value="">Pilih Tipe</option>
+                                    <option value="instalasi">Instalasi Baru</option>
+                                    <option value="maintenance">Maintenance</option>
+                                    <option value="perbaikan">Perbaikan</option>
+                                    <option value="upgrade">Upgrade System</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="projectStatus">Status *</label>
+                                <select id="projectStatus" required>
+                                    <option value="potential">Potential</option>
+                                    <option value="negosiasi">Negosiasi</option>
+                                    <option value="kontrak">Kontrak Signed</option>
+                                    <option value="eksekusi">Eksekusi</option>
+                                    <option value="selesai">Selesai</option>
+                                    <option value="hold">Hold</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="contractValue">Nilai Kontrak (Rp) *</label>
+                                <input type="number" id="contractValue" min="0" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="startDate">Tanggal Mulai</label>
+                                <input type="date" id="startDate">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="endDate">Estimasi Selesai</label>
+                                <input type="date" id="endDate">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="picName">PIC (Person In Charge) *</label>
+                                <input type="text" id="picName" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="acCapacity">Kapasitas AC (PK)</label>
+                                <input type="text" id="acCapacity" placeholder="Contoh: 5 x 2PK">
+                            </div>
+                            
+                            <div class="form-group full-width">
+                                <label for="projectDescription">Deskripsi Project</label>
+                                <textarea id="projectDescription" rows="4"></textarea>
+                            </div>
+                            
+                            <div class="form-group full-width">
+                                <label for="projectNotes">Catatan / Notes</label>
+                                <textarea id="projectNotes" rows="3"></textarea>
+                            </div>
+                        </div>
+                        
+                        <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Simpan Project
+                            </button>
+                            <button type="button" class="btn btn-secondary" id="cancelForm">
+                                <i class="fas fa-times"></i> Batal
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <!-- View Project Modal -->
+    <div id="viewModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Detail Project</h2>
+                <button class="close-modal" onclick="closeViewModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div id="projectDetailContent">
+                <!-- Content will be populated dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+        import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, orderBy, where, onSnapshot, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+
+        // ============================================================
+        // KONFIGURASI FIREBASE
+        // ============================================================
+        const firebaseConfig = {
+            apiKey: "AIzaSyByj6eRFI_KN0Bvnqi_Cqeu7yOEKb2ruhI",
+            authDomain: "nalabi-a1b2e.firebaseapp.com",
+            projectId: "nalabi-a1b2e",
+            storageBucket: "nalabi-a1b2e.firebasestorage.app",
+            messagingSenderId: "487881361509",
+            appId: "1:487881361509:web:5dd35e7e6708c2f9085e8c",
+            measurementId: "G-MDJ78XCLGZ"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // ============================================================
+        // GOOGLE MAPS API KEY
+        // ============================================================
+        const GOOGLE_MAPS_API_KEY = 'AIzaSyAgJ1XyeNAym-SibOsJG57gE5WXWJgzDA4';
+
+        // Global variables
+        let map;
+        let markers = [];
+        let allProjects = [];
+        let currentUser = null;
+
+        // ============================================================
+        // AUTHENTICATION
+        // ============================================================
+        
+        // Check auth state
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                currentUser = user;
+                document.getElementById('loginScreen').style.display = 'none';
+                document.getElementById('mainDashboard').style.display = 'block';
+                document.getElementById('userName').textContent = user.email.split('@')[0];
+                loadProjects();
+                loadMap();
+            } else {
+                currentUser = null;
+                document.getElementById('loginScreen').style.display = 'flex';
+                document.getElementById('mainDashboard').style.display = 'none';
+            }
+        });
+
+        // Login
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            try {
+                await signInWithEmailAndPassword(auth, email, password);
+                showAlert('loginAlert', 'Login berhasil!', 'success');
+            } catch (error) {
+                showAlert('loginAlert', 'Login gagal: ' + error.message, 'error');
+            }
+        });
+
+        // Logout
+        document.getElementById('logoutBtn').addEventListener('click', async () => {
+            if (confirm('Apakah Anda yakin ingin logout?')) {
+                await signOut(auth);
+            }
+        });
+
+        // ============================================================
+        // NAVIGATION
+        // ============================================================
+        
+        document.querySelectorAll('.nav-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                const targetTab = tab.dataset.tab;
+                switchTab(targetTab);
+            });
+        });
+
+        window.switchTab = function(tabName) {
+            // Update tabs
+            document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+            document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+            
+            // Update sections
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.getElementById(tabName === 'map' ? 'map-section' : tabName).classList.add('active');
+            
+            // Reload map if switching to map tab
+            if (tabName === 'map' && map) {
+                google.maps.event.trigger(map, 'resize');
+                updateMapMarkers();
+            }
+        };
+
+        // ============================================================
+        // LOAD GOOGLE MAPS
+        // ============================================================
+        
+        function loadMap() {
+            const script = document.createElement('script');
+            script.src = `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAPS_API_KEY}&callback=initMap`;
+            script.async = true;
+            script.defer = true;
+            document.head.appendChild(script);
+        }
+
+        window.initMap = function() {
+            // Center on Makassar
+            const makassar = { lat: -5.1477, lng: 119.4327 };
+            
+            map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 12,
+                center: makassar,
+                styles: [
+                    {
+                        featureType: 'poi',
+                        elementType: 'labels',
+                        stylers: [{ visibility: 'off' }]
+                    }
+                ]
+            });
+            
+            updateMapMarkers();
+        };
+
+        function updateMapMarkers() {
+            if (!map) return;
+            
+            // Clear existing markers
+            markers.forEach(marker => marker.setMap(null));
+            markers = [];
+            
+            // Get filter settings
+            const showPotential = document.getElementById('showPotential').checked;
+            const showNegotiation = document.getElementById('showNegotiation').checked;
+            const showActive = document.getElementById('showActive').checked;
+            
+            // Add markers for filtered projects
+            allProjects.forEach(project => {
+                if (!project.latitude || !project.longitude) return;
+                
+                // Filter by status
+                if (project.status === 'potential' && !showPotential) return;
+                if (project.status === 'negosiasi' && !showNegotiation) return;
+                if ((project.status === 'kontrak' || project.status === 'eksekusi') && !showActive) return;
+                
+                const marker = new google.maps.Marker({
+                    position: { lat: parseFloat(project.latitude), lng: parseFloat(project.longitude) },
+                    map: map,
+                    title: project.projectName,
+                    icon: {
+                        path: google.maps.SymbolPath.CIRCLE,
+                        scale: 10,
+                        fillColor: getStatusColor(project.status),
+                        fillOpacity: 0.8,
+                        strokeColor: '#fff',
+                        strokeWeight: 2
+                    }
+                });
+                
+                const infoWindow = new google.maps.InfoWindow({
+                    content: `
+                        <div style="padding: 10px;">
+                            <h3 style="margin: 0 0 10px 0; color: #1e293b;">${project.projectName}</h3>
+                            <p style="margin: 5px 0;"><strong>Client:</strong> ${project.clientName}</p>
+                            <p style="margin: 5px 0;"><strong>Status:</strong> <span class="status-badge status-${project.status}">${getStatusLabel(project.status)}</span></p>
+                            <p style="margin: 5px 0;"><strong>Nilai:</strong> ${formatCurrency(project.contractValue)}</p>
+                            <p style="margin: 5px 0;"><strong>Lokasi:</strong> ${project.projectAddress}</p>
+                        </div>
+                    `
+                });
+                
+                marker.addListener('click', () => {
+                    infoWindow.open(map, marker);
+                });
+                
+                markers.push(marker);
+            });
+        }
+
+        function getStatusColor(status) {
+            const colors = {
+                'potential': '#3b82f6',
+                'negosiasi': '#f59e0b',
+                'kontrak': '#10b981',
+                'eksekusi': '#6366f1',
+                'selesai': '#059669',
+                'hold': '#ef4444'
+            };
+            return colors[status] || '#64748b';
+        }
+
+        // Map filter listeners
+        ['showPotential', 'showNegotiation', 'showActive'].forEach(id => {
+            document.getElementById(id).addEventListener('change', updateMapMarkers);
+        });
+
+        // ============================================================
+        // PROJECT CRUD OPERATIONS
+        // ============================================================
+        
+        async function loadProjects() {
+            try {
+                const q = query(collection(db, 'projects'), orderBy('createdAt', 'desc'));
+                
+                onSnapshot(q, (snapshot) => {
+                    allProjects = [];
+                    snapshot.forEach((doc) => {
+                        allProjects.push({ id: doc.id, ...doc.data() });
+                    });
+                    
+                    updateDashboardStats();
+                    displayRecentProjects();
+                    displayAllProjects();
+                    updateMapMarkers();
+                });
+            } catch (error) {
+                console.error('Error loading projects:', error);
+                showAlert('formAlert', 'Error loading projects: ' + error.message, 'error');
+            }
+        }
+
+        // Submit project form
+        document.getElementById('projectForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const projectId = document.getElementById('projectId').value;
+            const projectData = {
+                projectName: document.getElementById('projectName').value,
+                clientName: document.getElementById('clientName').value,
+                clientContact: document.getElementById('clientContact').value,
+                clientEmail: document.getElementById('clientEmail').value,
+                projectAddress: document.getElementById('projectAddress').value,
+                projectCity: document.getElementById('projectCity').value,
+                latitude: document.getElementById('latitude').value,
+                longitude: document.getElementById('longitude').value,
+                projectType: document.getElementById('projectType').value,
+                projectStatus: document.getElementById('projectStatus').value,
+                contractValue: parseInt(document.getElementById('contractValue').value),
+                startDate: document.getElementById('startDate').value,
+                endDate: document.getElementById('endDate').value,
+                picName: document.getElementById('picName').value,
+                acCapacity: document.getElementById('acCapacity').value,
+                projectDescription: document.getElementById('projectDescription').value,
+                projectNotes: document.getElementById('projectNotes').value,
+                status: document.getElementById('projectStatus').value,
+                updatedAt: serverTimestamp()
+            };
+            
+            try {
+                if (projectId) {
+                    // Update existing project
+                    await updateDoc(doc(db, 'projects', projectId), projectData);
+                    showAlert('formAlert', 'Project berhasil diupdate!', 'success');
+                } else {
+                    // Add new project
+                    projectData.createdAt = serverTimestamp();
+                    await addDoc(collection(db, 'projects'), projectData);
+                    showAlert('formAlert', 'Project berhasil ditambahkan!', 'success');
+                }
+                
+                // Reset form
+                document.getElementById('projectForm').reset();
+                document.getElementById('projectId').value = '';
+                document.getElementById('formTitle').textContent = 'Tambah Project Baru';
+                
+                // Switch to projects tab
+                setTimeout(() => {
+                    switchTab('projects');
+                }, 1500);
+                
+            } catch (error) {
+                console.error('Error saving project:', error);
+                showAlert('formAlert', 'Error: ' + error.message, 'error');
+            }
+        });
+
+        // Cancel form
+        document.getElementById('cancelForm').addEventListener('click', () => {
+            document.getElementById('projectForm').reset();
+            document.getElementById('projectId').value = '';
+            document.getElementById('formTitle').textContent = 'Tambah Project Baru';
+            switchTab('projects');
+        });
+
+        // Edit project
+        window.editProject = function(projectId) {
+            const project = allProjects.find(p => p.id === projectId);
+            if (!project) return;
+            
+            document.getElementById('projectId').value = projectId;
+            document.getElementById('projectName').value = project.projectName || '';
+            document.getElementById('clientName').value = project.clientName || '';
+            document.getElementById('clientContact').value = project.clientContact || '';
+            document.getElementById('clientEmail').value = project.clientEmail || '';
+            document.getElementById('projectAddress').value = project.projectAddress || '';
+            document.getElementById('projectCity').value = project.projectCity || '';
+            document.getElementById('latitude').value = project.latitude || '';
+            document.getElementById('longitude').value = project.longitude || '';
+            document.getElementById('projectType').value = project.projectType || '';
+            document.getElementById('projectStatus').value = project.status || '';
+            document.getElementById('contractValue').value = project.contractValue || '';
+            document.getElementById('startDate').value = project.startDate || '';
+            document.getElementById('endDate').value = project.endDate || '';
+            document.getElementById('picName').value = project.picName || '';
+            document.getElementById('acCapacity').value = project.acCapacity || '';
+            document.getElementById('projectDescription').value = project.projectDescription || '';
+            document.getElementById('projectNotes').value = project.projectNotes || '';
+            
+            document.getElementById('formTitle').textContent = 'Edit Project';
+            switchTab('add');
+        };
+
+        // Delete project
+        window.deleteProject = async function(projectId) {
+            if (!confirm('Apakah Anda yakin ingin menghapus project ini?')) return;
+            
+            try {
+                await deleteDoc(doc(db, 'projects', projectId));
+                showAlert('formAlert', 'Project berhasil dihapus!', 'success');
+            } catch (error) {
+                console.error('Error deleting project:', error);
+                alert('Error: ' + error.message);
+            }
+        };
+
+        // View project details
+        window.viewProject = function(projectId) {
+            const project = allProjects.find(p => p.id === projectId);
+            if (!project) return;
+            
+            const content = `
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
+                    <div>
+                        <h3 style="color: var(--gray); font-size: 0.85rem; margin-bottom: 0.5rem;">NAMA PROJECT</h3>
+                        <p style="font-weight: 600; font-size: 1.1rem;">${project.projectName}</p>
+                    </div>
+                    <div>
+                        <h3 style="color: var(--gray); font-size: 0.85rem; margin-bottom: 0.5rem;">CLIENT</h3>
+                        <p style="font-weight: 600; font-size: 1.1rem;">${project.clientName}</p>
+                        ${project.clientContact ? `<p style="font-size: 0.9rem; color: var(--gray);">${project.clientContact}</p>` : ''}
+                        ${project.clientEmail ? `<p style="font-size: 0.9rem; color: var(--gray);">${project.clientEmail}</p>` : ''}
+                    </div>
+                    <div>
+                        <h3 style="color: var(--gray); font-size: 0.85rem; margin-bottom: 0.5rem;">STATUS</h3>
+                        <span class="status-badge status-${project.status}">${getStatusLabel(project.status)}</span>
+                    </div>
+                    <div>
+                        <h3 style="color: var(--gray); font-size: 0.85rem; margin-bottom: 0.5rem;">NILAI KONTRAK</h3>
+                        <p style="font-weight: 600; font-size: 1.1rem; color: var(--secondary-color);">${formatCurrency(project.contractValue)}</p>
+                    </div>
+                    <div>
+                        <h3 style="color: var(--gray); font-size: 0.85rem; margin-bottom: 0.5rem;">TIPE PROJECT</h3>
+                        <p>${project.projectType || '-'}</p>
+                    </div>
+                    <div>
+                        <h3 style="color: var(--gray); font-size: 0.85rem; margin-bottom: 0.5rem;">KAPASITAS AC</h3>
+                        <p>${project.acCapacity || '-'}</p>
+                    </div>
+                    <div>
+                        <h3 style="color: var(--gray); font-size: 0.85rem; margin-bottom: 0.5rem;">PIC</h3>
+                        <p>${project.picName || '-'}</p>
+                    </div>
+                    <div>
+                        <h3 style="color: var(--gray); font-size: 0.85rem; margin-bottom: 0.5rem;">TANGGAL MULAI</h3>
+                        <p>${project.startDate ? formatDate(project.startDate) : '-'}</p>
+                    </div>
+                    <div style="grid-column: 1 / -1;">
+                        <h3 style="color: var(--gray); font-size: 0.85rem; margin-bottom: 0.5rem;">LOKASI</h3>
+                        <p>${project.projectAddress}, ${project.projectCity}</p>
+                    </div>
+                    ${project.projectDescription ? `
+                    <div style="grid-column: 1 / -1;">
+                        <h3 style="color: var(--gray); font-size: 0.85rem; margin-bottom: 0.5rem;">DESKRIPSI</h3>
+                        <p style="line-height: 1.6;">${project.projectDescription}</p>
+                    </div>
+                    ` : ''}
+                    ${project.projectNotes ? `
+                    <div style="grid-column: 1 / -1;">
+                        <h3 style="color: var(--gray); font-size: 0.85rem; margin-bottom: 0.5rem;">CATATAN</h3>
+                        <p style="line-height: 1.6;">${project.projectNotes}</p>
+                    </div>
+                    ` : ''}
+                </div>
+                <div style="margin-top: 2rem; display: flex; gap: 1rem;">
+                    <button class="btn btn-primary" onclick="closeViewModal(); editProject('${projectId}')">
+                        <i class="fas fa-edit"></i> Edit Project
+                    </button>
+                    <button class="btn btn-secondary" onclick="closeViewModal()">
+                        <i class="fas fa-times"></i> Tutup
+                    </button>
+                </div>
+            `;
+            
+            document.getElementById('projectDetailContent').innerHTML = content;
+            document.getElementById('viewModal').classList.add('active');
+        };
+
+        window.closeViewModal = function() {
+            document.getElementById('viewModal').classList.remove('active');
+        };
+
+        // ============================================================
+        // DISPLAY FUNCTIONS
+        // ============================================================
+        
+        function updateDashboardStats() {
+            const total = allProjects.length;
+            const negotiation = allProjects.filter(p => p.status === 'negosiasi').length;
+            const active = allProjects.filter(p => p.status === 'kontrak' || p.status === 'eksekusi').length;
+            const totalRevenue = allProjects.reduce((sum, p) => sum + (p.contractValue || 0), 0);
+            
+            document.getElementById('totalProjects').textContent = total;
+            document.getElementById('negotiationProjects').textContent = negotiation;
+            document.getElementById('activeProjects').textContent = active;
+            document.getElementById('totalRevenue').textContent = formatCurrency(totalRevenue);
+        }
+
+        function displayRecentProjects() {
+            const tbody = document.getElementById('recentProjectsBody');
+            const recent = allProjects.slice(0, 5);
+            
+            if (recent.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 2rem;">Belum ada data project</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = recent.map(project => `
+                <tr>
+                    <td>${project.projectName}</td>
+                    <td>${project.clientName}</td>
+                    <td>${project.projectCity}</td>
+                    <td><span class="status-badge status-${project.status}">${getStatusLabel(project.status)}</span></td>
+                    <td>${formatCurrency(project.contractValue)}</td>
+                    <td>${project.startDate ? formatDate(project.startDate) : '-'}</td>
+                </tr>
+            `).join('');
+        }
+
+        function displayAllProjects() {
+            const tbody = document.getElementById('projectsTableBody');
+            let filteredProjects = [...allProjects];
+            
+            // Apply filters
+            const statusFilter = document.getElementById('filterStatus').value;
+            const searchFilter = document.getElementById('filterSearch').value.toLowerCase();
+            
+            if (statusFilter) {
+                filteredProjects = filteredProjects.filter(p => p.status === statusFilter);
+            }
+            
+            if (searchFilter) {
+                filteredProjects = filteredProjects.filter(p => 
+                    p.projectName.toLowerCase().includes(searchFilter) ||
+                    p.clientName.toLowerCase().includes(searchFilter)
+                );
+            }
+            
+            if (filteredProjects.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; padding: 2rem;">Tidak ada project yang ditemukan</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = filteredProjects.map(project => `
+                <tr>
+                    <td><strong>${project.projectName}</strong></td>
+                    <td>${project.clientName}</td>
+                    <td>${project.projectAddress}, ${project.projectCity}</td>
+                    <td><span class="status-badge status-${project.status}">${getStatusLabel(project.status)}</span></td>
+                    <td><strong>${formatCurrency(project.contractValue)}</strong></td>
+                    <td>${project.picName || '-'}</td>
+                    <td>${project.startDate ? formatDate(project.startDate) : '-'}</td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="btn btn-sm btn-view" onclick="viewProject('${project.id}')">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button class="btn btn-sm btn-edit" onclick="editProject('${project.id}')">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-sm btn-delete" onclick="deleteProject('${project.id}')">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // Filter listeners
+        document.getElementById('filterStatus').addEventListener('change', displayAllProjects);
+        document.getElementById('filterSearch').addEventListener('input', displayAllProjects);
+        document.getElementById('resetFilter').addEventListener('click', () => {
+            document.getElementById('filterStatus').value = '';
+            document.getElementById('filterSearch').value = '';
+            displayAllProjects();
+        });
+
+        // ============================================================
+        // UTILITY FUNCTIONS
+        // ============================================================
+        
+        function formatCurrency(value) {
+            if (!value) return 'Rp 0';
+            return 'Rp ' + parseInt(value).toLocaleString('id-ID');
+        }
+
+        function formatDate(dateString) {
+            if (!dateString) return '-';
+            const date = new Date(dateString);
+            return date.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
+        }
+
+        function getStatusLabel(status) {
+            const labels = {
+                'potential': 'Potential',
+                'negosiasi': 'Negosiasi',
+                'kontrak': 'Kontrak Signed',
+                'eksekusi': 'Eksekusi',
+                'selesai': 'Selesai',
+                'hold': 'Hold'
+            };
+            return labels[status] || status;
+        }
+
+        function showAlert(elementId, message, type) {
+            const alert = document.getElementById(elementId);
+            alert.textContent = message;
+            alert.className = `alert alert-${type} show`;
+            
+            setTimeout(() => {
+                alert.classList.remove('show');
+            }, 5000);
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('viewModal').addEventListener('click', (e) => {
+            if (e.target.id === 'viewModal') {
+                closeViewModal();
+            }
+        });
+    </script>
+</body>
+</html>
