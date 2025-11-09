@@ -573,6 +573,144 @@
             box-shadow: var(--shadow);
         }
 
+        /* Project List Item */
+        .project-list-item {
+            padding: 1rem;
+            margin-bottom: 0.5rem;
+            border: 1px solid var(--gray-light);
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: var(--white);
+        }
+
+        .project-list-item:hover {
+            border-color: var(--primary-color);
+            box-shadow: var(--shadow-md);
+            transform: translateX(5px);
+        }
+
+        .project-list-item.active {
+            border-color: var(--primary-color);
+            background: #eff6ff;
+        }
+
+        .project-list-item-name {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .project-list-item-client {
+            font-size: 0.85rem;
+            color: var(--gray);
+            margin-bottom: 0.5rem;
+        }
+
+        .project-list-item-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.75rem;
+        }
+
+        /* Animated Marker Styles */
+        @keyframes markerBounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        @keyframes markerPulse {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.2);
+                opacity: 0.7;
+            }
+        }
+
+        @keyframes markerGlow {
+            0%, 100% {
+                box-shadow: 0 0 5px currentColor;
+            }
+            50% {
+                box-shadow: 0 0 20px currentColor, 0 0 30px currentColor;
+            }
+        }
+
+        @keyframes markerRotate {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes ripple {
+            0% {
+                transform: scale(0.8);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(2.5);
+                opacity: 0;
+            }
+        }
+
+        .marker-bounce {
+            animation: markerBounce 1s ease-in-out infinite;
+        }
+
+        .marker-pulse {
+            animation: markerPulse 2s ease-in-out infinite;
+        }
+
+        .marker-glow {
+            animation: markerGlow 1s ease-in-out infinite;
+        }
+
+        /* Status Change Button */
+        .status-change-btn {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--gray-light);
+            border-radius: 0.5rem;
+            background: var(--white);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .status-change-btn:hover {
+            border-color: var(--primary-color);
+            background: #eff6ff;
+        }
+
+        /* PDF Viewer */
+        .pdf-viewer-container {
+            width: 100%;
+            height: 600px;
+            border: 1px solid var(--gray-light);
+            border-radius: 0.5rem;
+            overflow: hidden;
+        }
+
+        .pdf-viewer-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
         /* Modal */
         .modal {
             display: none;
@@ -912,6 +1050,22 @@
             table {
                 min-width: 800px;
             }
+
+            /* Map responsive */
+            #map-section .card > div {
+                grid-template-columns: 1fr !important;
+                height: auto !important;
+            }
+
+            #projectListSidebar {
+                max-height: 300px !important;
+                order: 2;
+            }
+
+            #map {
+                height: 400px !important;
+                order: 1;
+            }
         }
 
         /* Info Box */
@@ -1178,7 +1332,26 @@
                             <i class="fas fa-map-marked-alt"></i> Peta Lokasi Project
                         </h2>
                     </div>
-                    <div id="map"></div>
+                    
+                    <div style="display: grid; grid-template-columns: 350px 1fr; gap: 1rem; height: 600px;">
+                        <!-- Project List Sidebar -->
+                        <div style="border: 1px solid var(--gray-light); border-radius: 0.5rem; overflow: hidden; display: flex; flex-direction: column;">
+                            <div style="padding: 1rem; background: var(--gray-light); border-bottom: 1px solid var(--gray-light);">
+                                <input 
+                                    type="text" 
+                                    id="mapSearchInput" 
+                                    placeholder="🔍 Cari project..."
+                                    style="width: 100%; padding: 0.75rem; border: 1px solid var(--gray-light); border-radius: 0.5rem;"
+                                >
+                            </div>
+                            <div id="projectListSidebar" style="flex: 1; overflow-y: auto; padding: 0.5rem;">
+                                <!-- Will be populated -->
+                            </div>
+                        </div>
+                        
+                        <!-- Map -->
+                        <div id="map" style="border-radius: 0.5rem; overflow: hidden;"></div>
+                    </div>
                 </div>
             </section>
 
@@ -1426,8 +1599,19 @@
             document.getElementById(tabName === 'map' ? 'map-section' : tabName).classList.add('active');
             
             if (tabName === 'map' && map) {
-                google.maps.event.trigger(map, 'resize');
-                updateMapMarkers();
+                setTimeout(() => {
+                    google.maps.event.trigger(map, 'resize');
+                    updateMapMarkers();
+                    
+                    // Center map to show all markers
+                    if (markers.length > 0) {
+                        const bounds = new google.maps.LatLngBounds();
+                        markers.forEach(marker => {
+                            bounds.extend(marker.getPosition());
+                        });
+                        map.fitBounds(bounds);
+                    }
+                }, 100);
             }
         };
 
@@ -1454,79 +1638,323 @@
         function updateMapMarkers() {
             if (!map) return;
             
-            markers.forEach(marker => marker.setMap(null));
+            // Clear existing markers
+            markers.forEach(marker => {
+                if (marker.animation) clearInterval(marker.animation);
+                marker.setMap(null);
+            });
             markers = [];
             
-            allProjects.forEach(project => {
+            // Update project list sidebar
+            updateProjectList();
+            
+            // Add markers for all projects with locations
+            allProjects.forEach((project, index) => {
                 if (!project.latitude || !project.longitude) return;
                 
-                const color = getStatusColor(project.status);
+                const position = { 
+                    lat: parseFloat(project.latitude), 
+                    lng: parseFloat(project.longitude) 
+                };
                 
-                // Create custom SVG marker with pulse
+                const color = getStatusColor(project.status);
+                const animation = getMarkerAnimation(project.status);
+                
+                // Create custom animated marker
                 const marker = new google.maps.Marker({
-                    position: { lat: parseFloat(project.latitude), lng: parseFloat(project.longitude) },
+                    position: position,
                     map: map,
                     title: project.projectName,
-                    icon: {
-                        path: google.maps.SymbolPath.CIRCLE,
-                        scale: 12,
-                        fillColor: color,
-                        fillOpacity: 1,
-                        strokeColor: '#ffffff',
-                        strokeWeight: 3
-                    },
-                    animation: google.maps.Animation.DROP
+                    icon: createCustomMarkerIcon(color, project.status),
+                    animation: google.maps.Animation.DROP,
+                    zIndex: getMarkerZIndex(project.status)
                 });
                 
-                // Add pulse circle
-                const pulseCircle = new google.maps.Circle({
-                    strokeColor: color,
-                    strokeOpacity: 0,
-                    strokeWeight: 0,
-                    fillColor: color,
-                    fillOpacity: 0.3,
-                    map: map,
-                    center: { lat: parseFloat(project.latitude), lng: parseFloat(project.longitude) },
-                    radius: 50
-                });
+                // Add pulsing circle animation
+                createPulsingCircle(marker, position, color, project.status);
                 
-                // Animate pulse
-                let radius = 50;
-                let growing = true;
-                const pulseSpeed = getPulseSpeed(project.status);
-                
-                setInterval(() => {
-                    if (growing) {
-                        radius += 5;
-                        if (radius >= 150) growing = false;
-                    } else {
-                        radius -= 5;
-                        if (radius <= 50) growing = true;
-                    }
-                    pulseCircle.setRadius(radius);
-                    pulseCircle.setOptions({
-                        fillOpacity: 0.3 - (radius - 50) / 400
-                    });
-                }, pulseSpeed);
-                
+                // Info window
                 const infoWindow = new google.maps.InfoWindow({
-                    content: `
-                        <div style="padding: 10px;">
-                            <h3 style="margin: 0 0 10px 0;">${project.projectName}</h3>
-                            <p><strong>Client:</strong> ${project.clientName}</p>
-                            <p><strong>Status:</strong> ${getStatusLabel(project.status)}</p>
-                            <p><strong>Progress:</strong> ${project.progress || 0}%</p>
-                        </div>
-                    `
+                    content: createInfoWindowContent(project)
                 });
                 
                 marker.addListener('click', () => {
+                    // Close all other info windows
+                    markers.forEach(m => {
+                        if (m.infoWindow) m.infoWindow.close();
+                    });
                     infoWindow.open(map, marker);
+                    
+                    // Highlight in list
+                    document.querySelectorAll('.project-list-item').forEach(item => {
+                        item.classList.remove('active');
+                    });
+                    document.getElementById(`project-item-${project.id}`)?.classList.add('active');
                 });
                 
+                marker.infoWindow = infoWindow;
+                marker.projectId = project.id;
                 markers.push(marker);
             });
         }
+
+        function createCustomMarkerIcon(color, status) {
+            // Create SVG marker with custom icon based on status
+            const icons = {
+                'potential': '💡',
+                'negosiasi': '🤝',
+                'kontrak': '✅',
+                'eksekusi': '🔧',
+                'selesai': '🎉',
+                'hold': '⏸️'
+            };
+            
+            const icon = icons[status] || '📍';
+            
+            return {
+                path: google.maps.SymbolPath.CIRCLE,
+                scale: 15,
+                fillColor: color,
+                fillOpacity: 1,
+                strokeColor: '#ffffff',
+                strokeWeight: 3,
+                anchor: new google.maps.Point(0, 0)
+            };
+        }
+
+        function createPulsingCircle(marker, position, color, status) {
+            const circle = new google.maps.Circle({
+                strokeColor: color,
+                strokeOpacity: 0,
+                strokeWeight: 0,
+                fillColor: color,
+                fillOpacity: 0.3,
+                map: map,
+                center: position,
+                radius: 50,
+                clickable: false
+            });
+            
+            const animationConfig = getAnimationConfig(status);
+            let radius = animationConfig.minRadius;
+            let growing = true;
+            
+            const animationInterval = setInterval(() => {
+                if (growing) {
+                    radius += animationConfig.speed;
+                    if (radius >= animationConfig.maxRadius) growing = false;
+                } else {
+                    radius -= animationConfig.speed;
+                    if (radius <= animationConfig.minRadius) growing = true;
+                }
+                
+                circle.setRadius(radius);
+                circle.setOptions({
+                    fillOpacity: animationConfig.baseOpacity - (radius - animationConfig.minRadius) / (animationConfig.maxRadius * 2)
+                });
+            }, animationConfig.interval);
+            
+            marker.pulseCircle = circle;
+            marker.pulseInterval = animationInterval;
+        }
+
+        function getAnimationConfig(status) {
+            const configs = {
+                'potential': {
+                    minRadius: 50,
+                    maxRadius: 150,
+                    speed: 3,
+                    interval: 80,
+                    baseOpacity: 0.3
+                },
+                'negosiasi': {
+                    minRadius: 40,
+                    maxRadius: 120,
+                    speed: 4,
+                    interval: 60,
+                    baseOpacity: 0.35
+                },
+                'kontrak': {
+                    minRadius: 50,
+                    maxRadius: 180,
+                    speed: 6,
+                    interval: 40,
+                    baseOpacity: 0.4
+                },
+                'eksekusi': {
+                    minRadius: 50,
+                    maxRadius: 180,
+                    speed: 6,
+                    interval: 40,
+                    baseOpacity: 0.4
+                },
+                'selesai': {
+                    minRadius: 40,
+                    maxRadius: 100,
+                    speed: 2,
+                    interval: 120,
+                    baseOpacity: 0.25
+                },
+                'hold': {
+                    minRadius: 50,
+                    maxRadius: 140,
+                    speed: 3,
+                    interval: 90,
+                    baseOpacity: 0.35
+                }
+            };
+            
+            return configs[status] || configs['potential'];
+        }
+
+        function getMarkerZIndex(status) {
+            const priorities = {
+                'kontrak': 1000,
+                'eksekusi': 999,
+                'negosiasi': 500,
+                'potential': 300,
+                'hold': 200,
+                'selesai': 100
+            };
+            return priorities[status] || 300;
+        }
+
+        function getMarkerAnimation(status) {
+            // Return animation type based on status
+            const animations = {
+                'potential': 'pulse-slow',
+                'negosiasi': 'bounce-medium',
+                'kontrak': 'glow-fast',
+                'eksekusi': 'bounce-glow',
+                'selesai': 'gentle-pulse',
+                'hold': 'blink-slow'
+            };
+            return animations[status] || 'pulse-slow';
+        }
+
+        function createInfoWindowContent(project) {
+            const financial = project.financial || {};
+            const paymentStatus = financial.paymentStatus || 'pending';
+            const progress = project.progress || 0;
+            
+            return `
+                <div style="padding: 10px; min-width: 250px;">
+                    <h3 style="margin: 0 0 10px 0; color: #1e293b;">${project.projectName}</h3>
+                    <p style="margin: 5px 0;"><strong>Client:</strong> ${project.clientName}</p>
+                    <p style="margin: 5px 0;">
+                        <strong>Status:</strong> 
+                        <span class="status-badge status-${project.status}">${getStatusLabel(project.status)}</span>
+                    </p>
+                    <p style="margin: 5px 0;"><strong>Nilai:</strong> ${formatCurrency(project.contractValue)}</p>
+                    <p style="margin: 5px 0;"><strong>Progress:</strong> ${progress}%</p>
+                    <div style="margin: 10px 0;">
+                        <div style="background: #e2e8f0; height: 8px; border-radius: 4px; overflow: hidden;">
+                            <div style="background: linear-gradient(90deg, #2563eb, #10b981); height: 100%; width: ${progress}%;"></div>
+                        </div>
+                    </div>
+                    <p style="margin: 5px 0;">
+                        <strong>Payment:</strong> 
+                        <span class="status-badge payment-${paymentStatus}">${getPaymentLabel(paymentStatus)}</span>
+                    </p>
+                    <button onclick="viewProject('${project.id}')" class="btn btn-primary btn-sm" style="margin-top: 10px; width: 100%;">
+                        <i class="fas fa-eye"></i> Lihat Detail
+                    </button>
+                </div>
+            `;
+        }
+
+        // Update Project List Sidebar
+        function updateProjectList() {
+            const container = document.getElementById('projectListSidebar');
+            const searchInput = document.getElementById('mapSearchInput');
+            
+            const searchTerm = searchInput?.value.toLowerCase() || '';
+            const filteredProjects = allProjects.filter(p => 
+                (p.projectName?.toLowerCase().includes(searchTerm) ||
+                 p.clientName?.toLowerCase().includes(searchTerm)) &&
+                p.latitude && p.longitude
+            );
+            
+            if (filteredProjects.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: var(--gray); padding: 2rem;">Tidak ada project dengan lokasi</p>';
+                return;
+            }
+            
+            container.innerHTML = filteredProjects.map(project => `
+                <div class="project-list-item" id="project-item-${project.id}" onclick="zoomToProject('${project.id}')">
+                    <div class="project-list-item-name">
+                        <span style="font-size: 1.2rem;">${getStatusEmoji(project.status)}</span>
+                        <span>${project.projectName}</span>
+                    </div>
+                    <div class="project-list-item-client">${project.clientName}</div>
+                    <div class="project-list-item-footer">
+                        <span class="status-badge status-${project.status}">${getStatusLabel(project.status)}</span>
+                        <span style="font-weight: 600;">${project.progress || 0}%</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function getStatusEmoji(status) {
+            const emojis = {
+                'potential': '💡',
+                'negosiasi': '🤝',
+                'kontrak': '✅',
+                'eksekusi': '🔧',
+                'selesai': '🎉',
+                'hold': '⏸️'
+            };
+            return emojis[status] || '📍';
+        }
+
+        // Zoom to Project on List Click
+        window.zoomToProject = function(projectId) {
+            const project = allProjects.find(p => p.id === projectId);
+            if (!project || !project.latitude || !project.longitude) return;
+            
+            const position = {
+                lat: parseFloat(project.latitude),
+                lng: parseFloat(project.longitude)
+            };
+            
+            // Zoom and center map
+            map.setZoom(16);
+            map.panTo(position);
+            
+            // Highlight marker
+            const marker = markers.find(m => m.projectId === projectId);
+            if (marker) {
+                // Bounce animation
+                marker.setAnimation(google.maps.Animation.BOUNCE);
+                setTimeout(() => {
+                    marker.setAnimation(null);
+                }, 2000);
+                
+                // Open info window
+                if (marker.infoWindow) {
+                    markers.forEach(m => {
+                        if (m.infoWindow) m.infoWindow.close();
+                    });
+                    marker.infoWindow.open(map, marker);
+                }
+            }
+            
+            // Highlight in list
+            document.querySelectorAll('.project-list-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            document.getElementById(`project-item-${projectId}`)?.classList.add('active');
+        };
+
+        // Search functionality
+        document.addEventListener('DOMContentLoaded', () => {
+            const searchInput = document.getElementById('mapSearchInput');
+            if (searchInput) {
+                searchInput.addEventListener('input', () => {
+                    updateProjectList();
+                });
+            }
+        });
 
         function getStatusColor(status) {
             const colors = {
@@ -1852,6 +2280,13 @@
         function renderInfoTab(project) {
             return `
                 <div class="tab-content active">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                        <h3>Informasi Project</h3>
+                        <button class="btn btn-secondary btn-sm" onclick="editBasicInfo('${project.id}')">
+                            <i class="fas fa-edit"></i> Edit Info
+                        </button>
+                    </div>
+                    
                     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
                         <div>
                             <h4 style="color: var(--gray); font-size: 0.85rem; margin-bottom: 0.5rem;">NAMA PROJECT</h4>
@@ -1863,8 +2298,13 @@
                             ${project.clientContact ? `<p style="font-size: 0.9rem; color: var(--gray);">${project.clientContact}</p>` : ''}
                         </div>
                         <div>
-                            <h4 style="color: var(--gray); font-size: 0.85rem; margin-bottom: 0.5rem;">STATUS</h4>
-                            <span class="status-badge status-${project.status}">${getStatusLabel(project.status)}</span>
+                            <h4 style="color: var(--gray); font-size: 0.85rem; margin-bottom: 0.5rem;">STATUS PROJECT</h4>
+                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                <span class="status-badge status-${project.status}">${getStatusLabel(project.status)}</span>
+                                <button class="btn btn-sm btn-secondary" onclick="changeStatus('${project.id}', '${project.status}')" title="Ubah Status">
+                                    <i class="fas fa-exchange-alt"></i>
+                                </button>
+                            </div>
                         </div>
                         <div>
                             <h4 style="color: var(--gray); font-size: 0.85rem; margin-bottom: 0.5rem;">NILAI KONTRAK</h4>
@@ -1892,6 +2332,72 @@
                 </div>
             `;
         }
+
+        // Change Status Function
+        window.changeStatus = async function(projectId, currentStatus) {
+            const statuses = {
+                'potential': 'Potential',
+                'negosiasi': 'Negosiasi',
+                'kontrak': 'Kontrak Signed',
+                'eksekusi': 'Eksekusi',
+                'selesai': 'Selesai',
+                'hold': 'Hold'
+            };
+            
+            let html = '<div style="padding: 1rem;"><h3 style="margin-bottom: 1rem;">Pilih Status Baru:</h3>';
+            html += '<div style="display: grid; gap: 0.5rem;">';
+            
+            for (const [key, label] of Object.entries(statuses)) {
+                const isActive = key === currentStatus ? 'style="border: 2px solid var(--primary-color);"' : '';
+                html += `
+                    <button class="status-change-btn" ${isActive} onclick="updateProjectStatus('${projectId}', '${key}')">
+                        <span class="status-badge status-${key}">${label}</span>
+                        ${key === currentStatus ? '<i class="fas fa-check" style="color: var(--primary-color);"></i>' : ''}
+                    </button>
+                `;
+            }
+            
+            html += '</div></div>';
+            
+            const modal = document.getElementById('projectModal');
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = html;
+            tempDiv.style.position = 'fixed';
+            tempDiv.style.top = '50%';
+            tempDiv.style.left = '50%';
+            tempDiv.style.transform = 'translate(-50%, -50%)';
+            tempDiv.style.background = 'white';
+            tempDiv.style.padding = '2rem';
+            tempDiv.style.borderRadius = '0.75rem';
+            tempDiv.style.boxShadow = 'var(--shadow-lg)';
+            tempDiv.style.zIndex = '3000';
+            tempDiv.id = 'statusChangeModal';
+            
+            document.body.appendChild(tempDiv);
+            
+            // Close on outside click
+            document.body.addEventListener('click', function closeStatusModal(e) {
+                if (e.target.id === 'statusChangeModal' || !tempDiv.contains(e.target)) {
+                    tempDiv.remove();
+                    document.body.removeEventListener('click', closeStatusModal);
+                }
+            });
+        };
+
+        window.updateProjectStatus = async function(projectId, newStatus) {
+            try {
+                await updateDoc(doc(db, PROJECTS_COLLECTION, projectId), {
+                    status: newStatus,
+                    updatedAt: serverTimestamp()
+                });
+                
+                document.getElementById('statusChangeModal')?.remove();
+                alert('Status berhasil diupdate!');
+                closeProjectModal();
+            } catch (error) {
+                alert('Error: ' + error.message);
+            }
+        };
 
         function renderTimelineTab(project) {
             const milestones = project.milestones || {};
@@ -2322,23 +2828,88 @@
                 return '<p style="text-align: center; color: var(--gray); padding: 2rem;">Belum ada dokumen</p>';
             }
             
-            return documents.map(doc => `
+            return documents.map((doc, index) => `
                 <div class="doc-item">
                     <div class="doc-info">
                         <div class="doc-icon">
-                            <i class="fas fa-file-pdf"></i>
+                            <i class="fas ${getDocIcon(doc.name)}"></i>
                         </div>
                         <div>
                             <strong>${doc.name}</strong>
                             <p style="font-size: 0.85rem; color: var(--gray);">${doc.type} • ${formatDate(doc.uploadDate)}</p>
                         </div>
                     </div>
-                    <a href="${doc.url}" target="_blank" class="btn btn-sm btn-primary">
-                        <i class="fas fa-download"></i> Download
-                    </a>
+                    <div style="display: flex; gap: 0.5rem;">
+                        ${doc.name.toLowerCase().endsWith('.pdf') ? `
+                            <button class="btn btn-sm btn-primary" onclick="viewPDF('${doc.url}', '${doc.name}')">
+                                <i class="fas fa-eye"></i> View
+                            </button>
+                        ` : ''}
+                        <a href="${doc.url}" target="_blank" class="btn btn-sm btn-secondary">
+                            <i class="fas fa-download"></i> Download
+                        </a>
+                    </div>
                 </div>
             `).join('');
         }
+
+        function getDocIcon(filename) {
+            const ext = filename.split('.').pop().toLowerCase();
+            const icons = {
+                'pdf': 'fa-file-pdf',
+                'doc': 'fa-file-word',
+                'docx': 'fa-file-word',
+                'xls': 'fa-file-excel',
+                'xlsx': 'fa-file-excel',
+                'jpg': 'fa-file-image',
+                'jpeg': 'fa-file-image',
+                'png': 'fa-file-image'
+            };
+            return icons[ext] || 'fa-file';
+        }
+
+        // PDF Viewer Function
+        window.viewPDF = function(url, filename) {
+            const modal = document.createElement('div');
+            modal.className = 'modal active';
+            modal.id = 'pdfViewerModal';
+            modal.innerHTML = `
+                <div class="modal-content" style="max-width: 90%; width: 1200px;">
+                    <div class="modal-header">
+                        <h2 class="modal-title">${filename}</h2>
+                        <button class="close-modal" onclick="closePDFViewer()">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="pdf-viewer-container">
+                        <iframe src="${url}" type="application/pdf"></iframe>
+                    </div>
+                    <div style="margin-top: 1rem; display: flex; gap: 1rem;">
+                        <a href="${url}" target="_blank" class="btn btn-primary">
+                            <i class="fas fa-external-link-alt"></i> Buka di Tab Baru
+                        </a>
+                        <a href="${url}" download="${filename}" class="btn btn-secondary">
+                            <i class="fas fa-download"></i> Download
+                        </a>
+                        <button class="btn btn-secondary" onclick="closePDFViewer()">
+                            <i class="fas fa-times"></i> Tutup
+                        </button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+            
+            // Close on outside click
+            modal.addEventListener('click', (e) => {
+                if (e.target.id === 'pdfViewerModal') {
+                    closePDFViewer();
+                }
+            });
+        };
+
+        window.closePDFViewer = function() {
+            document.getElementById('pdfViewerModal')?.remove();
+        };
 
         function setupDocumentsHandlers(project) {
             document.getElementById('docUploadInput').addEventListener('change', async (e) => {
