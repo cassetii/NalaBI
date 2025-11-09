@@ -638,6 +638,60 @@
             border-radius: 0.5rem;
             color: var(--gray);
         }
+
+        /* Pulse Animation for Markers */
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+            }
+            50% {
+                box-shadow: 0 0 0 20px rgba(239, 68, 68, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+            }
+        }
+
+        .pulse-marker {
+            animation: pulse 2s infinite;
+        }
+
+        /* Search Box Styling */
+        .map-search-container {
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            width: 90%;
+            max-width: 400px;
+        }
+
+        .map-search-box {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid var(--white);
+            border-radius: 0.5rem;
+            font-size: 0.95rem;
+            box-shadow: var(--shadow-lg);
+            background: var(--white);
+            transition: all 0.3s ease;
+        }
+
+        .map-search-box:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1), var(--shadow-lg);
+        }
+
+        .search-icon {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray);
+            pointer-events: none;
+        }
     </style>
 </head>
 <body>
@@ -936,9 +990,24 @@
                             <div class="form-group full-width">
                                 <label>📍 Pilih Lokasi Project (Klik di Peta)</label>
                                 <div style="margin-bottom: 0.5rem; color: var(--gray); font-size: 0.85rem;">
-                                    <i class="fas fa-info-circle"></i> Klik di peta untuk menentukan lokasi project. Koordinat akan terisi otomatis.
+                                    <i class="fas fa-info-circle"></i> Cari lokasi atau klik di peta untuk menentukan lokasi project. Koordinat akan terisi otomatis.
                                 </div>
-                                <div id="mapPicker" style="height: 400px; border-radius: 0.5rem; border: 2px solid var(--gray-light);"></div>
+                                <div style="position: relative;">
+                                    <div id="mapPicker" style="height: 450px; border-radius: 0.5rem; border: 2px solid var(--gray-light); position: relative;">
+                                        <div class="map-search-container">
+                                            <div style="position: relative;">
+                                                <input 
+                                                    type="text" 
+                                                    id="mapSearchBox" 
+                                                    class="map-search-box" 
+                                                    placeholder="🔍 Cari lokasi (contoh: Hotel Clarion, Pantai Losari, dll)..."
+                                                    autocomplete="off"
+                                                >
+                                                <i class="fas fa-search search-icon"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div style="margin-top: 0.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
                                     <button type="button" class="btn btn-secondary btn-sm" id="resetMapBtn">
                                         <i class="fas fa-redo"></i> Reset Peta
@@ -1154,7 +1223,7 @@
         
         function loadMap() {
             const script = document.createElement('script');
-            script.src = `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAPS_API_KEY}&callback=initMap`;
+            script.src = `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAPS_API_KEY}&libraries=places&callback=initMap`;
             script.async = true;
             script.defer = true;
             document.head.appendChild(script);
@@ -1209,15 +1278,73 @@
                     placePickerMarker(event.latLng);
                 });
                 
+                // Initialize Places Autocomplete for search box
+                const searchBox = document.getElementById('mapSearchBox');
+                if (searchBox && google.maps.places) {
+                    const autocomplete = new google.maps.places.Autocomplete(searchBox, {
+                        componentRestrictions: { country: 'id' }, // Restrict to Indonesia
+                        fields: ['geometry', 'formatted_address', 'name', 'address_components']
+                    });
+                    
+                    // Bias to map viewport
+                    autocomplete.bindTo('bounds', mapPicker);
+                    
+                    // When place is selected from search
+                    autocomplete.addListener('place_changed', function() {
+                        const place = autocomplete.getPlace();
+                        
+                        if (!place.geometry || !place.geometry.location) {
+                            document.getElementById('locationStatus').innerHTML = '<i class="fas fa-exclamation-circle" style="color: var(--danger-color);"></i> Lokasi tidak ditemukan';
+                            return;
+                        }
+                        
+                        // Center map on selected place
+                        if (place.geometry.viewport) {
+                            mapPicker.fitBounds(place.geometry.viewport);
+                        } else {
+                            mapPicker.setCenter(place.geometry.location);
+                            mapPicker.setZoom(17);
+                        }
+                        
+                        // Place marker at location
+                        placePickerMarker(place.geometry.location);
+                        
+                        // Auto-fill address if available
+                        if (place.formatted_address) {
+                            document.getElementById('projectAddress').value = place.formatted_address;
+                        } else if (place.name) {
+                            document.getElementById('projectAddress').value = place.name;
+                        }
+                        
+                        document.getElementById('locationStatus').innerHTML = '<i class="fas fa-check-circle" style="color: var(--secondary-color);"></i> Lokasi ditemukan!';
+                    });
+                    
+                    // Clear status when typing
+                    searchBox.addEventListener('input', function() {
+                        if (searchBox.value.length > 0) {
+                            document.getElementById('locationStatus').innerHTML = '<i class="fas fa-search"></i> Mencari...';
+                        } else {
+                            document.getElementById('locationStatus').textContent = '';
+                        }
+                    });
+                }
+                
                 // Reset button
                 document.getElementById('resetMapBtn').addEventListener('click', function() {
                     if (pickerMarker) {
+                        if (pickerMarker.pulseCircle) {
+                            pickerMarker.pulseCircle.setMap(null);
+                        }
+                        if (pickerMarker.pulseInterval) {
+                            clearInterval(pickerMarker.pulseInterval);
+                        }
                         pickerMarker.setMap(null);
                         pickerMarker = null;
                     }
                     document.getElementById('latitude').value = '';
                     document.getElementById('longitude').value = '';
                     document.getElementById('locationStatus').textContent = '';
+                    document.getElementById('mapSearchBox').value = '';
                     
                     // Recenter to Makassar
                     const makassar = { lat: -5.1477, lng: 119.4327 };
@@ -1258,26 +1385,72 @@
         }
         
         function placePickerMarker(location) {
-            // Remove existing marker
+            // Remove existing marker and cleanup pulse animation
             if (pickerMarker) {
+                if (pickerMarker.pulseCircle) {
+                    pickerMarker.pulseCircle.setMap(null);
+                }
+                if (pickerMarker.pulseInterval) {
+                    clearInterval(pickerMarker.pulseInterval);
+                }
                 pickerMarker.setMap(null);
             }
             
-            // Create new marker
+            // Create pulsing marker with custom HTML
+            const pulseIcon = {
+                path: 'M 0,0 C -2,-20 -10,-22 -10,-30 A 10,10 0 1,1 10,-30 C 10,-22 2,-20 0,0 z',
+                fillColor: '#ef4444',
+                fillOpacity: 1,
+                strokeColor: '#ffffff',
+                strokeWeight: 2,
+                scale: 1.5,
+                anchor: new google.maps.Point(0, 0)
+            };
+            
+            // Create new marker with pulse animation
             pickerMarker = new google.maps.Marker({
                 position: location,
                 map: mapPicker,
                 draggable: true,
                 animation: google.maps.Animation.DROP,
-                icon: {
-                    path: google.maps.SymbolPath.CIRCLE,
-                    scale: 12,
-                    fillColor: '#ef4444',
-                    fillOpacity: 1,
-                    strokeColor: '#ffffff',
-                    strokeWeight: 3
-                }
+                icon: pulseIcon,
+                title: 'Lokasi Project (Drag untuk adjust)'
             });
+            
+            // Add pulse effect with circle overlay
+            const pulseCircle = new google.maps.Circle({
+                strokeColor: '#ef4444',
+                strokeOpacity: 0.8,
+                strokeWeight: 2,
+                fillColor: '#ef4444',
+                fillOpacity: 0.35,
+                map: mapPicker,
+                center: location,
+                radius: 30,
+                clickable: false
+            });
+            
+            // Animate pulse effect
+            let pulseRadius = 30;
+            let expanding = true;
+            const pulseInterval = setInterval(() => {
+                if (expanding) {
+                    pulseRadius += 2;
+                    if (pulseRadius >= 60) expanding = false;
+                } else {
+                    pulseRadius -= 2;
+                    if (pulseRadius <= 30) expanding = true;
+                }
+                pulseCircle.setRadius(pulseRadius);
+                pulseCircle.setOptions({
+                    fillOpacity: 0.35 - (pulseRadius - 30) / 100,
+                    strokeOpacity: 0.8 - (pulseRadius - 30) / 60
+                });
+            }, 50);
+            
+            // Store pulse circle and interval for cleanup
+            pickerMarker.pulseCircle = pulseCircle;
+            pickerMarker.pulseInterval = pulseInterval;
             
             // Update input fields
             updateCoordinateFields(location.lat(), location.lng());
@@ -1285,6 +1458,7 @@
             // Add drag listener
             pickerMarker.addListener('drag', function(event) {
                 updateCoordinateFields(event.latLng.lat(), event.latLng.lng());
+                pulseCircle.setCenter(event.latLng);
             });
             
             // Try to get address via reverse geocoding
@@ -1477,12 +1651,19 @@
                 document.getElementById('projectId').value = '';
                 document.getElementById('formTitle').textContent = 'Tambah Project Baru';
                 
-                // Reset map picker marker
+                // Reset map picker marker and pulse animation
                 if (pickerMarker) {
+                    if (pickerMarker.pulseCircle) {
+                        pickerMarker.pulseCircle.setMap(null);
+                    }
+                    if (pickerMarker.pulseInterval) {
+                        clearInterval(pickerMarker.pulseInterval);
+                    }
                     pickerMarker.setMap(null);
                     pickerMarker = null;
                 }
                 document.getElementById('locationStatus').textContent = '';
+                document.getElementById('mapSearchBox').value = '';
                 
                 // Switch to projects tab
                 setTimeout(() => {
@@ -1501,12 +1682,19 @@
             document.getElementById('projectId').value = '';
             document.getElementById('formTitle').textContent = 'Tambah Project Baru';
             
-            // Reset map picker marker
+            // Reset map picker marker and pulse animation
             if (pickerMarker) {
+                if (pickerMarker.pulseCircle) {
+                    pickerMarker.pulseCircle.setMap(null);
+                }
+                if (pickerMarker.pulseInterval) {
+                    clearInterval(pickerMarker.pulseInterval);
+                }
                 pickerMarker.setMap(null);
                 pickerMarker = null;
             }
             document.getElementById('locationStatus').textContent = '';
+            document.getElementById('mapSearchBox').value = '';
             
             switchTab('projects');
         });
