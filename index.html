@@ -692,6 +692,158 @@
             color: var(--gray);
             pointer-events: none;
         }
+
+        /* Photo Upload Styling */
+        .photo-upload-container {
+            border: 2px dashed var(--gray-light);
+            border-radius: 0.5rem;
+            padding: 2rem;
+            text-align: center;
+            background: #f8fafc;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .photo-upload-container:hover {
+            border-color: var(--primary-color);
+            background: #f1f5f9;
+        }
+
+        .photo-upload-container.dragover {
+            border-color: var(--primary-color);
+            background: #e0e7ff;
+        }
+
+        .photo-preview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .photo-preview-item {
+            position: relative;
+            border-radius: 0.5rem;
+            overflow: hidden;
+            aspect-ratio: 1;
+            border: 2px solid var(--gray-light);
+            background: var(--gray-light);
+        }
+
+        .photo-preview-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .photo-preview-item .remove-photo {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: var(--danger-color);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 28px;
+            height: 28px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0.9;
+            transition: opacity 0.3s ease;
+        }
+
+        .photo-preview-item .remove-photo:hover {
+            opacity: 1;
+        }
+
+        .upload-progress {
+            margin-top: 1rem;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--gray-light);
+            border-radius: 1rem;
+            overflow: hidden;
+            margin-top: 0.5rem;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: var(--primary-color);
+            transition: width 0.3s ease;
+        }
+
+        /* Photo Gallery in Modal */
+        .photo-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .photo-gallery-item {
+            position: relative;
+            border-radius: 0.5rem;
+            overflow: hidden;
+            cursor: pointer;
+            aspect-ratio: 1;
+            transition: transform 0.3s ease;
+        }
+
+        .photo-gallery-item:hover {
+            transform: scale(1.05);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .photo-gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Lightbox */
+        .lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 3000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .lightbox.active {
+            display: flex;
+        }
+
+        .lightbox img {
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: 2rem;
+            right: 2rem;
+            background: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
     </style>
 </head>
 <body>
@@ -1076,6 +1228,32 @@
                                 <label for="projectNotes">Catatan / Notes</label>
                                 <textarea id="projectNotes" rows="3"></textarea>
                             </div>
+                            
+                            <div class="form-group full-width">
+                                <label>📸 Foto Project (Optional)</label>
+                                <div style="margin-bottom: 0.5rem; color: var(--gray); font-size: 0.85rem;">
+                                    <i class="fas fa-info-circle"></i> Upload foto lokasi, progres, atau dokumentasi project. Max 5MB per foto.
+                                </div>
+                                
+                                <div class="photo-upload-container" id="photoUploadZone">
+                                    <i class="fas fa-cloud-upload-alt" style="font-size: 3rem; color: var(--primary-color); margin-bottom: 1rem;"></i>
+                                    <p style="margin-bottom: 0.5rem; font-weight: 600;">Klik untuk upload atau drag & drop foto</p>
+                                    <p style="font-size: 0.85rem; color: var(--gray);">PNG, JPG, JPEG (Max 5MB per file)</p>
+                                    <input type="file" id="photoInput" multiple accept="image/png,image/jpeg,image/jpg" style="display: none;">
+                                </div>
+                                
+                                <div id="uploadProgress" class="upload-progress" style="display: none;">
+                                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                        <span id="uploadStatus">Uploading...</span>
+                                        <span id="uploadPercent">0%</span>
+                                    </div>
+                                    <div class="progress-bar">
+                                        <div class="progress-bar-fill" id="progressBarFill" style="width: 0%"></div>
+                                    </div>
+                                </div>
+                                
+                                <div id="photoPreviewContainer" class="photo-preview-grid"></div>
+                            </div>
                         </div>
                         
                         <div style="display: flex; gap: 1rem; margin-top: 2rem;">
@@ -1107,11 +1285,20 @@
         </div>
     </div>
 
+    <!-- Lightbox for Photos -->
+    <div id="lightbox" class="lightbox">
+        <button class="lightbox-close" onclick="closeLightbox()">
+            <i class="fas fa-times"></i>
+        </button>
+        <img id="lightboxImg" src="" alt="Photo">
+    </div>
+
     <!-- Firebase SDK -->
     <script type="module">
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
         import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
         import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, orderBy, where, onSnapshot, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+        import { getStorage, ref, uploadBytesResumable, getDownloadURL, deleteObject } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js';
 
         // ============================================================
         // KONFIGURASI FIREBASE
@@ -1130,6 +1317,7 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
+        const storage = getStorage(app);
 
         // ============================================================
         // GOOGLE MAPS API KEY
@@ -1143,6 +1331,8 @@
         let pickerMarker = null;
         let allProjects = [];
         let currentUser = null;
+        let selectedPhotos = [];
+        let uploadedPhotoURLs = [];
 
         // ============================================================
         // AUTHENTICATION
@@ -1228,6 +1418,203 @@
             script.defer = true;
             document.head.appendChild(script);
         }
+
+        // ============================================================
+        // PHOTO UPLOAD FUNCTIONALITY
+        // ============================================================
+        
+        function initPhotoUpload() {
+            const photoUploadZone = document.getElementById('photoUploadZone');
+            const photoInput = document.getElementById('photoInput');
+            
+            // Click to upload
+            photoUploadZone.addEventListener('click', () => {
+                photoInput.click();
+            });
+            
+            // File selection
+            photoInput.addEventListener('change', handlePhotoSelection);
+            
+            // Drag and drop
+            photoUploadZone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                photoUploadZone.classList.add('dragover');
+            });
+            
+            photoUploadZone.addEventListener('dragleave', () => {
+                photoUploadZone.classList.remove('dragover');
+            });
+            
+            photoUploadZone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                photoUploadZone.classList.remove('dragover');
+                
+                const files = Array.from(e.dataTransfer.files).filter(file => 
+                    file.type.startsWith('image/')
+                );
+                
+                handlePhotoFiles(files);
+            });
+        }
+        
+        function handlePhotoSelection(e) {
+            const files = Array.from(e.target.files);
+            handlePhotoFiles(files);
+        }
+        
+        function handlePhotoFiles(files) {
+            // Validate file size (5MB max)
+            const maxSize = 5 * 1024 * 1024; // 5MB
+            const validFiles = files.filter(file => {
+                if (file.size > maxSize) {
+                    alert(`File ${file.name} terlalu besar. Max 5MB per file.`);
+                    return false;
+                }
+                return true;
+            });
+            
+            // Add to selected photos
+            selectedPhotos.push(...validFiles);
+            
+            // Show preview
+            displayPhotoPreview();
+        }
+        
+        function displayPhotoPreview() {
+            const container = document.getElementById('photoPreviewContainer');
+            container.innerHTML = '';
+            
+            selectedPhotos.forEach((file, index) => {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const div = document.createElement('div');
+                    div.className = 'photo-preview-item';
+                    div.innerHTML = `
+                        <img src="${e.target.result}" alt="Preview ${index + 1}">
+                        <button class="remove-photo" onclick="removePhoto(${index})" type="button">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    `;
+                    container.appendChild(div);
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+        
+        window.removePhoto = function(index) {
+            selectedPhotos.splice(index, 1);
+            displayPhotoPreview();
+        };
+        
+        async function uploadPhotosToStorage(projectId) {
+            if (selectedPhotos.length === 0) {
+                return [];
+            }
+            
+            const uploadProgress = document.getElementById('uploadProgress');
+            const uploadStatus = document.getElementById('uploadStatus');
+            const uploadPercent = document.getElementById('uploadPercent');
+            const progressBarFill = document.getElementById('progressBarFill');
+            
+            uploadProgress.style.display = 'block';
+            
+            const photoURLs = [];
+            
+            for (let i = 0; i < selectedPhotos.length; i++) {
+                const file = selectedPhotos[i];
+                const fileName = `${Date.now()}_${file.name}`;
+                const storageRef = ref(storage, `projects/${projectId}/${fileName}`);
+                
+                uploadStatus.textContent = `Uploading ${i + 1} of ${selectedPhotos.length}...`;
+                
+                try {
+                    const uploadTask = uploadBytesResumable(storageRef, file);
+                    
+                    await new Promise((resolve, reject) => {
+                        uploadTask.on('state_changed',
+                            (snapshot) => {
+                                const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                                progressBarFill.style.width = progress + '%';
+                                uploadPercent.textContent = Math.round(progress) + '%';
+                            },
+                            (error) => {
+                                console.error('Upload error:', error);
+                                reject(error);
+                            },
+                            async () => {
+                                const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+                                photoURLs.push({
+                                    url: downloadURL,
+                                    name: file.name,
+                                    uploadedAt: new Date().toISOString()
+                                });
+                                resolve();
+                            }
+                        );
+                    });
+                } catch (error) {
+                    console.error('Error uploading photo:', error);
+                    alert(`Error uploading ${file.name}: ${error.message}`);
+                }
+            }
+            
+            uploadProgress.style.display = 'none';
+            progressBarFill.style.width = '0%';
+            
+            // Clear selected photos after upload
+            selectedPhotos = [];
+            document.getElementById('photoPreviewContainer').innerHTML = '';
+            document.getElementById('photoInput').value = '';
+            
+            return photoURLs;
+        }
+        
+        function displayPhotoGallery(photos) {
+            if (!photos || photos.length === 0) {
+                return '<p style="color: var(--gray);">Belum ada foto</p>';
+            }
+            
+            let html = '<div class="photo-gallery">';
+            photos.forEach((photo, index) => {
+                html += `
+                    <div class="photo-gallery-item" onclick="openLightbox('${photo.url}')">
+                        <img src="${photo.url}" alt="${photo.name || 'Photo ' + (index + 1)}" loading="lazy">
+                    </div>
+                `;
+            });
+            html += '</div>';
+            
+            return html;
+        }
+        
+        window.openLightbox = function(url) {
+            const lightbox = document.getElementById('lightbox');
+            const lightboxImg = document.getElementById('lightboxImg');
+            lightboxImg.src = url;
+            lightbox.classList.add('active');
+        };
+        
+        window.closeLightbox = function() {
+            const lightbox = document.getElementById('lightbox');
+            lightbox.classList.remove('active');
+        };
+        
+        // Close lightbox on click outside
+        document.addEventListener('DOMContentLoaded', () => {
+            const lightbox = document.getElementById('lightbox');
+            if (lightbox) {
+                lightbox.addEventListener('click', (e) => {
+                    if (e.target === lightbox) {
+                        closeLightbox();
+                    }
+                });
+            }
+        });
+        
+        // Initialize photo upload on page load
+        window.addEventListener('load', () => {
+            initPhotoUpload();
+        });
 
         window.initMap = function() {
             // Center on Makassar
@@ -1612,36 +1999,51 @@
             e.preventDefault();
             
             const projectId = document.getElementById('projectId').value;
-            const projectData = {
-                projectName: document.getElementById('projectName').value,
-                clientName: document.getElementById('clientName').value,
-                clientContact: document.getElementById('clientContact').value,
-                clientEmail: document.getElementById('clientEmail').value,
-                projectAddress: document.getElementById('projectAddress').value,
-                projectCity: document.getElementById('projectCity').value,
-                latitude: document.getElementById('latitude').value,
-                longitude: document.getElementById('longitude').value,
-                projectType: document.getElementById('projectType').value,
-                projectStatus: document.getElementById('projectStatus').value,
-                contractValue: parseInt(document.getElementById('contractValue').value),
-                startDate: document.getElementById('startDate').value,
-                endDate: document.getElementById('endDate').value,
-                picName: document.getElementById('picName').value,
-                acCapacity: document.getElementById('acCapacity').value,
-                projectDescription: document.getElementById('projectDescription').value,
-                projectNotes: document.getElementById('projectNotes').value,
-                status: document.getElementById('projectStatus').value,
-                updatedAt: serverTimestamp()
-            };
             
             try {
+                let photoURLs = [];
+                
+                // Upload photos first if there are any selected
+                if (selectedPhotos.length > 0) {
+                    const tempId = projectId || `temp_${Date.now()}`;
+                    photoURLs = await uploadPhotosToStorage(tempId);
+                }
+                
+                const projectData = {
+                    projectName: document.getElementById('projectName').value,
+                    clientName: document.getElementById('clientName').value,
+                    clientContact: document.getElementById('clientContact').value,
+                    clientEmail: document.getElementById('clientEmail').value,
+                    projectAddress: document.getElementById('projectAddress').value,
+                    projectCity: document.getElementById('projectCity').value,
+                    latitude: document.getElementById('latitude').value,
+                    longitude: document.getElementById('longitude').value,
+                    projectType: document.getElementById('projectType').value,
+                    projectStatus: document.getElementById('projectStatus').value,
+                    contractValue: parseInt(document.getElementById('contractValue').value),
+                    startDate: document.getElementById('startDate').value,
+                    endDate: document.getElementById('endDate').value,
+                    picName: document.getElementById('picName').value,
+                    acCapacity: document.getElementById('acCapacity').value,
+                    projectDescription: document.getElementById('projectDescription').value,
+                    projectNotes: document.getElementById('projectNotes').value,
+                    status: document.getElementById('projectStatus').value,
+                    updatedAt: serverTimestamp()
+                };
+                
                 if (projectId) {
                     // Update existing project
+                    // Merge new photos with existing photos
+                    const existingProject = allProjects.find(p => p.id === projectId);
+                    const existingPhotos = existingProject?.photos || [];
+                    projectData.photos = [...existingPhotos, ...photoURLs];
+                    
                     await updateDoc(doc(db, 'projects', projectId), projectData);
                     showAlert('formAlert', 'Project berhasil diupdate!', 'success');
                 } else {
                     // Add new project
                     projectData.createdAt = serverTimestamp();
+                    projectData.photos = photoURLs;
                     await addDoc(collection(db, 'projects'), projectData);
                     showAlert('formAlert', 'Project berhasil ditambahkan!', 'success');
                 }
@@ -1664,6 +2066,11 @@
                 }
                 document.getElementById('locationStatus').textContent = '';
                 document.getElementById('mapSearchBox').value = '';
+                
+                // Reset photo uploads
+                selectedPhotos = [];
+                document.getElementById('photoPreviewContainer').innerHTML = '';
+                document.getElementById('photoInput').value = '';
                 
                 // Switch to projects tab
                 setTimeout(() => {
@@ -1808,6 +2215,12 @@
                     <div style="grid-column: 1 / -1;">
                         <h3 style="color: var(--gray); font-size: 0.85rem; margin-bottom: 0.5rem;">CATATAN</h3>
                         <p style="line-height: 1.6;">${project.projectNotes}</p>
+                    </div>
+                    ` : ''}
+                    ${project.photos && project.photos.length > 0 ? `
+                    <div style="grid-column: 1 / -1;">
+                        <h3 style="color: var(--gray); font-size: 0.85rem; margin-bottom: 0.5rem;">FOTO PROJECT (${project.photos.length})</h3>
+                        ${displayPhotoGallery(project.photos)}
                     </div>
                     ` : ''}
                 </div>
