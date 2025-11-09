@@ -639,24 +639,7 @@
             color: var(--gray);
         }
 
-        /* Pulse Animation for Markers */
-        @keyframes pulse {
-            0% {
-                box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
-            }
-            50% {
-                box-shadow: 0 0 0 20px rgba(239, 68, 68, 0);
-            }
-            100% {
-                box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
-            }
-        }
-
-        .pulse-marker {
-            animation: pulse 2s infinite;
-        }
-
-        /* Search Box Styling */
+        /* Map Search Container */
         .map-search-container {
             position: absolute;
             top: 10px;
@@ -1301,16 +1284,16 @@
         import { getStorage, ref, uploadBytesResumable, getDownloadURL, deleteObject } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js';
 
         // ============================================================
-        // KONFIGURASI FIREBASE
+        // KONFIGURASI FIREBASE - DATABASE BESAR
         // ============================================================
         const firebaseConfig = {
-            apiKey: "AIzaSyByj6eRFI_KN0Bvnqi_Cqeu7yOEKb2ruhI",
-            authDomain: "nalabi-a1b2e.firebaseapp.com",
-            projectId: "nalabi-a1b2e",
-            storageBucket: "nalabi-a1b2e.firebasestorage.app",
-            messagingSenderId: "487881361509",
-            appId: "1:487881361509:web:5dd35e7e6708c2f9085e8c",
-            measurementId: "G-MDJ78XCLGZ"
+            apiKey: "AIzaSyBI5T3ZVyHXSRFikTjSlnW9P04cO1UDAwg",
+            authDomain: "databasebesar.firebaseapp.com",
+            projectId: "databasebesar",
+            storageBucket: "databasebesar.firebasestorage.app",
+            messagingSenderId: "253231829334",
+            appId: "1:253231829334:web:e46fd18ef04b83d6c546f7",
+            measurementId: "G-7387ZN5BJG"
         };
 
         // Initialize Firebase
@@ -1318,6 +1301,12 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
         const storage = getStorage(app);
+
+        // ============================================================
+        // COLLECTION NAME - TERPISAH DARI COLLECTION CUSTOMERS YANG ADA
+        // Collection ini khusus untuk Project Dashboard Nala Aircon
+        // ============================================================
+        const PROJECTS_COLLECTION = 'nala_projects';
 
         // ============================================================
         // GOOGLE MAPS API KEY
@@ -1523,7 +1512,8 @@
             for (let i = 0; i < selectedPhotos.length; i++) {
                 const file = selectedPhotos[i];
                 const fileName = `${Date.now()}_${file.name}`;
-                const storageRef = ref(storage, `projects/${projectId}/${fileName}`);
+                // Storage path untuk nala_projects
+                const storageRef = ref(storage, `nala_projects/${projectId}/${fileName}`);
                 
                 uploadStatus.textContent = `Uploading ${i + 1} of ${selectedPhotos.length}...`;
                 
@@ -1970,12 +1960,13 @@
         });
 
         // ============================================================
-        // PROJECT CRUD OPERATIONS
+        // PROJECT CRUD OPERATIONS - MENGGUNAKAN COLLECTION NALA_PROJECTS
         // ============================================================
         
         async function loadProjects() {
             try {
-                const q = query(collection(db, 'projects'), orderBy('createdAt', 'desc'));
+                // Query dari collection nala_projects (bukan collection projects)
+                const q = query(collection(db, PROJECTS_COLLECTION), orderBy('createdAt', 'desc'));
                 
                 onSnapshot(q, (snapshot) => {
                     allProjects = [];
@@ -2038,13 +2029,13 @@
                     const existingPhotos = existingProject?.photos || [];
                     projectData.photos = [...existingPhotos, ...photoURLs];
                     
-                    await updateDoc(doc(db, 'projects', projectId), projectData);
+                    await updateDoc(doc(db, PROJECTS_COLLECTION, projectId), projectData);
                     showAlert('formAlert', 'Project berhasil diupdate!', 'success');
                 } else {
-                    // Add new project
+                    // Add new project ke collection nala_projects
                     projectData.createdAt = serverTimestamp();
                     projectData.photos = photoURLs;
-                    await addDoc(collection(db, 'projects'), projectData);
+                    await addDoc(collection(db, PROJECTS_COLLECTION), projectData);
                     showAlert('formAlert', 'Project berhasil ditambahkan!', 'success');
                 }
                 
@@ -2152,7 +2143,7 @@
             if (!confirm('Apakah Anda yakin ingin menghapus project ini?')) return;
             
             try {
-                await deleteDoc(doc(db, 'projects', projectId));
+                await deleteDoc(doc(db, PROJECTS_COLLECTION, projectId));
                 showAlert('formAlert', 'Project berhasil dihapus!', 'success');
             } catch (error) {
                 console.error('Error deleting project:', error);
