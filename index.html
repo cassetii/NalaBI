@@ -3,16 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nala Aircon - Business Intelligence V2.1</title>
+    <title>Nala Aircon - Project Dashboard</title>
     
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- Chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     
     <style>
         * {
@@ -27,8 +24,6 @@
             --secondary-color: #10b981;
             --warning-color: #f59e0b;
             --danger-color: #ef4444;
-            --info-color: #3b82f6;
-            --purple-color: #8b5cf6;
             --dark: #1e293b;
             --dark-light: #334155;
             --gray: #64748b;
@@ -58,7 +53,7 @@
         }
 
         .header-content {
-            max-width: 1600px;
+            max-width: 1400px;
             margin: 0 auto;
             display: flex;
             justify-content: space-between;
@@ -137,11 +132,6 @@
             color: var(--white);
         }
 
-        .btn-danger {
-            background: var(--danger-color);
-            color: var(--white);
-        }
-
         .btn-logout {
             background: transparent;
             color: var(--danger-color);
@@ -153,14 +143,9 @@
             color: var(--white);
         }
 
-        .btn-sm {
-            padding: 0.35rem 0.75rem;
-            font-size: 0.8rem;
-        }
-
         /* Main Container */
         .container {
-            max-width: 1600px;
+            max-width: 1400px;
             margin: 0 auto;
             padding: 2rem;
         }
@@ -174,7 +159,6 @@
             padding: 1rem;
             border-radius: 0.75rem;
             box-shadow: var(--shadow);
-            overflow-x: auto;
         }
 
         .nav-tab {
@@ -189,7 +173,6 @@
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            white-space: nowrap;
         }
 
         .nav-tab:hover {
@@ -236,10 +219,6 @@
             border-left-color: var(--primary-color);
         }
 
-        .stat-card.danger {
-            border-left-color: var(--danger-color);
-        }
-
         .stat-header {
             display: flex;
             justify-content: space-between;
@@ -270,10 +249,6 @@
             background: var(--primary-color);
         }
 
-        .stat-icon.danger {
-            background: var(--danger-color);
-        }
-
         .stat-value {
             font-size: 2rem;
             font-weight: 700;
@@ -284,34 +259,6 @@
             color: var(--gray);
             font-size: 0.9rem;
             font-weight: 500;
-        }
-
-        .stat-sublabel {
-            color: var(--gray);
-            font-size: 0.75rem;
-            margin-top: 0.25rem;
-        }
-
-        /* Charts */
-        .charts-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-
-        .chart-card {
-            background: var(--white);
-            padding: 1.5rem;
-            border-radius: 0.75rem;
-            box-shadow: var(--shadow);
-        }
-
-        .chart-title {
-            font-size: 1.1rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
-            color: var(--dark);
         }
 
         /* Content Sections */
@@ -460,112 +407,6 @@
             color: #991b1b;
         }
 
-        /* Payment Status Badges */
-        .payment-pending {
-            background: #fee2e2;
-            color: #991b1b;
-        }
-
-        .payment-partial {
-            background: #fef3c7;
-            color: #92400e;
-        }
-
-        .payment-paid {
-            background: #d1fae5;
-            color: #065f46;
-        }
-
-        /* Progress Bar */
-        .progress-container {
-            width: 100%;
-            background: var(--gray-light);
-            border-radius: 1rem;
-            height: 8px;
-            overflow: hidden;
-        }
-
-        .progress-bar {
-            height: 100%;
-            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
-            border-radius: 1rem;
-            transition: width 0.3s ease;
-        }
-
-        /* Timeline */
-        .timeline {
-            position: relative;
-            padding-left: 2rem;
-        }
-
-        .timeline-item {
-            position: relative;
-            padding-bottom: 2rem;
-        }
-
-        .timeline-item:last-child {
-            padding-bottom: 0;
-        }
-
-        .timeline-item::before {
-            content: '';
-            position: absolute;
-            left: -2rem;
-            top: 0;
-            width: 2px;
-            height: 100%;
-            background: var(--gray-light);
-        }
-
-        .timeline-item.completed::before {
-            background: var(--secondary-color);
-        }
-
-        .timeline-dot {
-            position: absolute;
-            left: calc(-2rem - 6px);
-            top: 0;
-            width: 14px;
-            height: 14px;
-            border-radius: 50%;
-            background: var(--gray-light);
-            border: 3px solid var(--white);
-        }
-
-        .timeline-item.completed .timeline-dot {
-            background: var(--secondary-color);
-        }
-
-        .timeline-item.active .timeline-dot {
-            background: var(--primary-color);
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% {
-                box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.7);
-            }
-            50% {
-                box-shadow: 0 0 0 10px rgba(37, 99, 235, 0);
-            }
-        }
-
-        .timeline-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .timeline-title {
-            font-weight: 600;
-            color: var(--dark);
-        }
-
-        .timeline-date {
-            font-size: 0.85rem;
-            color: var(--gray);
-        }
-
         /* Map Container */
         #map {
             height: 500px;
@@ -573,185 +414,30 @@
             box-shadow: var(--shadow);
         }
 
-        /* Project List Item */
-        .project-list-item {
-            padding: 1rem;
-            margin-bottom: 0.5rem;
-            border: 1px solid var(--gray-light);
-            border-radius: 0.5rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            background: var(--white);
-        }
-
-        .project-list-item:hover {
-            border-color: var(--primary-color);
-            box-shadow: var(--shadow-md);
-            transform: translateX(5px);
-        }
-
-        .project-list-item.active {
-            border-color: var(--primary-color);
-            background: #eff6ff;
-        }
-
-        .project-list-item-name {
-            font-weight: 600;
-            margin-bottom: 0.25rem;
+        /* Action Buttons */
+        .action-buttons {
             display: flex;
-            align-items: center;
             gap: 0.5rem;
         }
 
-        .project-list-item-client {
-            font-size: 0.85rem;
-            color: var(--gray);
-            margin-bottom: 0.5rem;
+        .btn-sm {
+            padding: 0.35rem 0.75rem;
+            font-size: 0.8rem;
         }
 
-        .project-list-item-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 0.75rem;
+        .btn-edit {
+            background: var(--warning-color);
+            color: var(--white);
         }
 
-        /* Animated Marker Styles */
-        @keyframes markerBounce {
-            0%, 100% {
-                transform: translateY(0);
-            }
-            50% {
-                transform: translateY(-10px);
-            }
+        .btn-delete {
+            background: var(--danger-color);
+            color: var(--white);
         }
 
-        @keyframes markerPulse {
-            0%, 100% {
-                transform: scale(1);
-                opacity: 1;
-            }
-            50% {
-                transform: scale(1.2);
-                opacity: 0.7;
-            }
-        }
-
-        @keyframes markerGlow {
-            0%, 100% {
-                box-shadow: 0 0 5px currentColor;
-            }
-            50% {
-                box-shadow: 0 0 20px currentColor, 0 0 30px currentColor;
-            }
-        }
-
-        @keyframes markerRotate {
-            from {
-                transform: rotate(0deg);
-            }
-            to {
-                transform: rotate(360deg);
-            }
-        }
-
-        @keyframes ripple {
-            0% {
-                transform: scale(0.8);
-                opacity: 1;
-            }
-            100% {
-                transform: scale(2.5);
-                opacity: 0;
-            }
-        }
-
-        .marker-bounce {
-            animation: markerBounce 1s ease-in-out infinite;
-        }
-
-        .marker-pulse {
-            animation: markerPulse 2s ease-in-out infinite;
-        }
-
-        .marker-glow {
-            animation: markerGlow 1s ease-in-out infinite;
-        }
-
-        /* Status Change Button */
-        .status-change-btn {
-            padding: 0.75rem 1rem;
-            border: 1px solid var(--gray-light);
-            border-radius: 0.5rem;
-            background: var(--white);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 0.5rem;
-            transition: all 0.3s ease;
-            width: 100%;
-        }
-
-        .status-change-btn:hover {
-            border-color: var(--primary-color);
-            background: #eff6ff;
-            transform: translateX(5px);
-        }
-
-        /* Modal Backdrop */
-        .modal-backdrop {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 2999;
-            animation: fadeIn 0.2s ease;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        .mini-modal {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: white;
-            border-radius: 0.75rem;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
-            z-index: 3000;
-            animation: slideUp 0.3s ease;
-        }
-
-        @keyframes slideUp {
-            from {
-                transform: translate(-50%, -40%);
-                opacity: 0;
-            }
-            to {
-                transform: translate(-50%, -50%);
-                opacity: 1;
-            }
-        }
-
-        /* PDF Viewer */
-        .pdf-viewer-container {
-            width: 100%;
-            height: 600px;
-            border: 1px solid var(--gray-light);
-            border-radius: 0.5rem;
-            overflow: hidden;
-        }
-
-        .pdf-viewer-container iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
+        .btn-view {
+            background: var(--primary-color);
+            color: var(--white);
         }
 
         /* Modal */
@@ -766,7 +452,6 @@
             z-index: 2000;
             align-items: center;
             justify-content: center;
-            overflow-y: auto;
         }
 
         .modal.active {
@@ -777,12 +462,11 @@
             background: var(--white);
             border-radius: 0.75rem;
             padding: 2rem;
-            max-width: 1200px;
-            width: 95%;
+            max-width: 800px;
+            width: 90%;
             max-height: 90vh;
             overflow-y: auto;
             box-shadow: var(--shadow-lg);
-            margin: 2rem;
         }
 
         .modal-header {
@@ -813,169 +497,23 @@
             color: var(--danger-color);
         }
 
-        /* Tabs in Modal */
-        .modal-tabs {
-            display: flex;
-            gap: 0.5rem;
+        /* Filter Section */
+        .filter-section {
+            background: var(--white);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            box-shadow: var(--shadow);
             margin-bottom: 1.5rem;
-            border-bottom: 2px solid var(--gray-light);
-            overflow-x: auto;
         }
 
-        .modal-tab {
-            padding: 0.75rem 1.5rem;
-            border: none;
-            background: transparent;
-            cursor: pointer;
-            font-weight: 500;
-            color: var(--gray);
-            border-bottom: 2px solid transparent;
-            margin-bottom: -2px;
-            transition: all 0.3s ease;
-            white-space: nowrap;
-        }
-
-        .modal-tab:hover {
-            color: var(--dark);
-        }
-
-        .modal-tab.active {
-            color: var(--primary-color);
-            border-bottom-color: var(--primary-color);
-        }
-
-        .tab-content {
-            display: none;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        /* Dynamic Items Table */
-        .items-table {
-            width: 100%;
-            margin-top: 1rem;
-        }
-
-        .items-table th,
-        .items-table td {
-            padding: 0.75rem;
-            text-align: left;
-        }
-
-        .items-table input {
-            width: 100%;
-            padding: 0.5rem;
-        }
-
-        .items-table input[type="number"] {
-            text-align: right;
-        }
-
-        /* Document Upload Area */
-        .doc-upload-area {
-            border: 2px dashed var(--gray-light);
-            border-radius: 0.5rem;
-            padding: 2rem;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .doc-upload-area:hover {
-            border-color: var(--primary-color);
-            background: #f8fafc;
-        }
-
-        .doc-list {
+        .filter-grid {
             display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 1rem;
-            margin-top: 1rem;
+            align-items: end;
         }
 
-        .doc-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 1rem;
-            background: #f8fafc;
-            border-radius: 0.5rem;
-            border: 1px solid var(--gray-light);
-        }
-
-        .doc-info {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .doc-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 0.5rem;
-            background: var(--primary-color);
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.2rem;
-        }
-
-        /* Photo Upload */
-        .photo-upload-container {
-            border: 2px dashed var(--gray-light);
-            border-radius: 0.5rem;
-            padding: 2rem;
-            text-align: center;
-            background: #f8fafc;
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-
-        .photo-upload-container:hover {
-            border-color: var(--primary-color);
-            background: #f1f5f9;
-        }
-
-        .photo-preview-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            gap: 1rem;
-            margin-top: 1rem;
-        }
-
-        .photo-preview-item {
-            position: relative;
-            border-radius: 0.5rem;
-            overflow: hidden;
-            aspect-ratio: 1;
-            border: 2px solid var(--gray-light);
-        }
-
-        .photo-preview-item img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .remove-photo {
-            position: absolute;
-            top: 0.5rem;
-            right: 0.5rem;
-            background: var(--danger-color);
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 28px;
-            height: 28px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        /* Loading */
+        /* Loading Spinner */
         .spinner {
             border: 3px solid var(--gray-light);
             border-top: 3px solid var(--primary-color);
@@ -991,28 +529,37 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* Alert */
-        .alert {
-            padding: 1rem;
-            border-radius: 0.5rem;
-            margin-bottom: 1rem;
-            display: none;
-        }
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
 
-        .alert.show {
-            display: block;
-        }
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
 
-        .alert-success {
-            background: #d1fae5;
-            color: #065f46;
-            border-left: 4px solid var(--secondary-color);
-        }
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
 
-        .alert-error {
-            background: #fee2e2;
-            color: #991b1b;
-            border-left: 4px solid var(--danger-color);
+            .nav-tabs {
+                overflow-x: auto;
+                flex-wrap: nowrap;
+            }
+
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .table-container {
+                overflow-x: scroll;
+            }
+
+            table {
+                min-width: 800px;
+            }
         }
 
         /* Login Screen */
@@ -1057,110 +604,245 @@
             margin-bottom: 2rem;
         }
 
-        /* Action Buttons */
-        .action-buttons {
-            display: flex;
-            gap: 0.5rem;
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .container {
-                padding: 1rem;
-            }
-
-            .stats-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .charts-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .form-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .modal-content {
-                width: 100%;
-                margin: 1rem;
-            }
-
-            .table-container {
-                overflow-x: scroll;
-            }
-
-            table {
-                min-width: 800px;
-            }
-
-            /* Map responsive */
-            #map-section .card > div {
-                grid-template-columns: 1fr !important;
-                height: auto !important;
-            }
-
-            #projectListSidebar {
-                max-height: 300px !important;
-                order: 2;
-            }
-
-            #map {
-                height: 400px !important;
-                order: 1;
-            }
-        }
-
-        /* Info Box */
-        .info-box {
-            background: #eff6ff;
-            border-left: 4px solid var(--info-color);
+        /* Alert */
+        .alert {
             padding: 1rem;
             border-radius: 0.5rem;
             margin-bottom: 1rem;
+            display: none;
         }
 
-        .info-box i {
-            color: var(--info-color);
-            margin-right: 0.5rem;
+        .alert.show {
+            display: block;
         }
 
-        /* Summary Box */
-        .summary-box {
-            background: #f8fafc;
-            padding: 1rem;
-            border-radius: 0.5rem;
-            border: 1px solid var(--gray-light);
+        .alert-success {
+            background: #d1fae5;
+            color: #065f46;
+            border-left: 4px solid var(--secondary-color);
         }
 
-        .summary-row {
+        .alert-error {
+            background: #fee2e2;
+            color: #991b1b;
+            border-left: 4px solid var(--danger-color);
+        }
+
+        /* Charts placeholder */
+        .chart-container {
+            height: 300px;
             display: flex;
-            justify-content: space-between;
-            padding: 0.5rem 0;
-            border-bottom: 1px solid var(--gray-light);
+            align-items: center;
+            justify-content: center;
+            background: var(--gray-light);
+            border-radius: 0.5rem;
+            color: var(--gray);
         }
 
-        .summary-row:last-child {
-            border-bottom: none;
-            font-weight: 600;
-            font-size: 1.1rem;
-            padding-top: 1rem;
-        }
-
-        /* Map Pulse Animation Styles */
-        @keyframes mapPulse {
+        /* Pulse Animation for Markers */
+        @keyframes pulse {
             0% {
-                transform: scale(1);
-                opacity: 1;
+                box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
             }
             50% {
-                transform: scale(1.5);
-                opacity: 0.5;
+                box-shadow: 0 0 0 20px rgba(239, 68, 68, 0);
             }
             100% {
-                transform: scale(1);
-                opacity: 1;
+                box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
             }
+        }
+
+        .pulse-marker {
+            animation: pulse 2s infinite;
+        }
+
+        /* Search Box Styling */
+        .map-search-container {
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            width: 90%;
+            max-width: 400px;
+        }
+
+        .map-search-box {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid var(--white);
+            border-radius: 0.5rem;
+            font-size: 0.95rem;
+            box-shadow: var(--shadow-lg);
+            background: var(--white);
+            transition: all 0.3s ease;
+        }
+
+        .map-search-box:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1), var(--shadow-lg);
+        }
+
+        .search-icon {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray);
+            pointer-events: none;
+        }
+
+        /* Photo Upload Styling */
+        .photo-upload-container {
+            border: 2px dashed var(--gray-light);
+            border-radius: 0.5rem;
+            padding: 2rem;
+            text-align: center;
+            background: #f8fafc;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .photo-upload-container:hover {
+            border-color: var(--primary-color);
+            background: #f1f5f9;
+        }
+
+        .photo-upload-container.dragover {
+            border-color: var(--primary-color);
+            background: #e0e7ff;
+        }
+
+        .photo-preview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .photo-preview-item {
+            position: relative;
+            border-radius: 0.5rem;
+            overflow: hidden;
+            aspect-ratio: 1;
+            border: 2px solid var(--gray-light);
+            background: var(--gray-light);
+        }
+
+        .photo-preview-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .photo-preview-item .remove-photo {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: var(--danger-color);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 28px;
+            height: 28px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0.9;
+            transition: opacity 0.3s ease;
+        }
+
+        .photo-preview-item .remove-photo:hover {
+            opacity: 1;
+        }
+
+        .upload-progress {
+            margin-top: 1rem;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--gray-light);
+            border-radius: 1rem;
+            overflow: hidden;
+            margin-top: 0.5rem;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: var(--primary-color);
+            transition: width 0.3s ease;
+        }
+
+        /* Photo Gallery in Modal */
+        .photo-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .photo-gallery-item {
+            position: relative;
+            border-radius: 0.5rem;
+            overflow: hidden;
+            cursor: pointer;
+            aspect-ratio: 1;
+            transition: transform 0.3s ease;
+        }
+
+        .photo-gallery-item:hover {
+            transform: scale(1.05);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .photo-gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Lightbox */
+        .lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 3000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .lightbox.active {
+            display: flex;
+        }
+
+        .lightbox img {
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: 2rem;
+            right: 2rem;
+            background: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
     </style>
 </head>
@@ -1172,7 +854,7 @@
                 <i class="fas fa-snowflake"></i>
             </div>
             <h1 class="login-title">Nala Aircon</h1>
-            <p class="login-subtitle">Project Management Dashboard V2</p>
+            <p class="login-subtitle">Project Management Dashboard</p>
             
             <div id="loginAlert" class="alert"></div>
             
@@ -1199,7 +881,7 @@
             <div class="header-content">
                 <div class="logo">
                     <i class="fas fa-snowflake"></i>
-                    <span>Nala Aircon Business Intelligence V2.1</span>
+                    <span>Nala Aircon Dashboard</span>
                 </div>
                 <div class="user-menu">
                     <div class="user-info">
@@ -1247,28 +929,14 @@
                         </div>
                     </div>
                     
-                    <div class="stat-card success">
-                        <div class="stat-header">
-                            <div>
-                                <div class="stat-value" id="totalRevenue">Rp 0</div>
-                                <div class="stat-label">Total Nilai Kontrak</div>
-                                <div class="stat-sublabel">Semua project</div>
-                            </div>
-                            <div class="stat-icon success">
-                                <i class="fas fa-dollar-sign"></i>
-                            </div>
-                        </div>
-                    </div>
-                    
                     <div class="stat-card warning">
                         <div class="stat-header">
                             <div>
-                                <div class="stat-value" id="totalOutstanding">Rp 0</div>
-                                <div class="stat-label">Outstanding Payment</div>
-                                <div class="stat-sublabel">Belum terbayar</div>
+                                <div class="stat-value" id="negotiationProjects">0</div>
+                                <div class="stat-label">Dalam Negosiasi</div>
                             </div>
                             <div class="stat-icon warning">
-                                <i class="fas fa-exclamation-triangle"></i>
+                                <i class="fas fa-handshake"></i>
                             </div>
                         </div>
                     </div>
@@ -1278,25 +946,23 @@
                             <div>
                                 <div class="stat-value" id="activeProjects">0</div>
                                 <div class="stat-label">Project Aktif</div>
-                                <div class="stat-sublabel">Sedang berjalan</div>
                             </div>
                             <div class="stat-icon success">
                                 <i class="fas fa-tools"></i>
                             </div>
                         </div>
                     </div>
-                </div>
-
-                <!-- Charts -->
-                <div class="charts-grid">
-                    <div class="chart-card">
-                        <h3 class="chart-title">Revenue per Bulan</h3>
-                        <canvas id="revenueChart"></canvas>
-                    </div>
                     
-                    <div class="chart-card">
-                        <h3 class="chart-title">Status Project</h3>
-                        <canvas id="statusChart"></canvas>
+                    <div class="stat-card success">
+                        <div class="stat-header">
+                            <div>
+                                <div class="stat-value" id="totalRevenue">Rp 0</div>
+                                <div class="stat-label">Total Nilai Kontrak</div>
+                            </div>
+                            <div class="stat-icon success">
+                                <i class="fas fa-dollar-sign"></i>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -1308,15 +974,15 @@
                         </h2>
                     </div>
                     <div class="table-container">
-                        <table>
+                        <table id="recentProjectsTable">
                             <thead>
                                 <tr>
                                     <th>Nama Project</th>
                                     <th>Client</th>
+                                    <th>Lokasi</th>
                                     <th>Status</th>
-                                    <th>Progress</th>
                                     <th>Nilai Kontrak</th>
-                                    <th>Payment Status</th>
+                                    <th>Tanggal</th>
                                 </tr>
                             </thead>
                             <tbody id="recentProjectsBody">
@@ -1333,6 +999,34 @@
 
             <!-- Projects List Section -->
             <section id="projects" class="section">
+                <!-- Filter Section -->
+                <div class="filter-section">
+                    <div class="filter-grid">
+                        <div class="form-group">
+                            <label for="filterStatus">Status</label>
+                            <select id="filterStatus">
+                                <option value="">Semua Status</option>
+                                <option value="potential">Potential</option>
+                                <option value="negosiasi">Negosiasi</option>
+                                <option value="kontrak">Kontrak Signed</option>
+                                <option value="eksekusi">Eksekusi</option>
+                                <option value="selesai">Selesai</option>
+                                <option value="hold">Hold</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="filterSearch">Cari Project</label>
+                            <input type="text" id="filterSearch" placeholder="Nama project atau client...">
+                        </div>
+                        <div class="form-group">
+                            <button class="btn btn-secondary" id="resetFilter">
+                                <i class="fas fa-redo"></i> Reset Filter
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Projects Table -->
                 <div class="card">
                     <div class="card-header">
                         <h2 class="card-title">
@@ -1348,16 +1042,17 @@
                                 <tr>
                                     <th>Nama Project</th>
                                     <th>Client</th>
+                                    <th>Lokasi</th>
                                     <th>Status</th>
-                                    <th>Progress</th>
                                     <th>Nilai Kontrak</th>
-                                    <th>Payment</th>
+                                    <th>PIC</th>
+                                    <th>Tanggal Mulai</th>
                                     <th>Aksi</th>
                                 </tr>
                             </thead>
                             <tbody id="projectsTableBody">
                                 <tr>
-                                    <td colspan="7" style="text-align: center; padding: 2rem;">
+                                    <td colspan="8" style="text-align: center; padding: 2rem;">
                                         <div class="spinner"></div>
                                     </td>
                                 </tr>
@@ -1374,36 +1069,28 @@
                         <h2 class="card-title">
                             <i class="fas fa-map-marked-alt"></i> Peta Lokasi Project
                         </h2>
-                    </div>
-                    
-                    <div style="display: grid; grid-template-columns: 350px 1fr; gap: 1rem; height: 600px;">
-                        <!-- Project List Sidebar -->
-                        <div style="border: 1px solid var(--gray-light); border-radius: 0.5rem; overflow: hidden; display: flex; flex-direction: column;">
-                            <div style="padding: 1rem; background: var(--gray-light); border-bottom: 1px solid var(--gray-light);">
-                                <input 
-                                    type="text" 
-                                    id="mapSearchInput" 
-                                    placeholder="🔍 Cari project..."
-                                    style="width: 100%; padding: 0.75rem; border: 1px solid var(--gray-light); border-radius: 0.5rem;"
-                                >
-                            </div>
-                            <div id="projectListSidebar" style="flex: 1; overflow-y: auto; padding: 0.5rem;">
-                                <!-- Will be populated -->
-                            </div>
+                        <div>
+                            <label style="margin-right: 1rem;">
+                                <input type="checkbox" id="showPotential" checked> Potential
+                            </label>
+                            <label style="margin-right: 1rem;">
+                                <input type="checkbox" id="showNegotiation" checked> Negosiasi
+                            </label>
+                            <label>
+                                <input type="checkbox" id="showActive" checked> Aktif
+                            </label>
                         </div>
-                        
-                        <!-- Map -->
-                        <div id="map" style="border-radius: 0.5rem; overflow: hidden;"></div>
                     </div>
+                    <div id="map"></div>
                 </div>
             </section>
 
-            <!-- Add Project Section -->
+            <!-- Add/Edit Project Section -->
             <section id="add" class="section">
                 <div class="card">
                     <div class="card-header">
                         <h2 class="card-title">
-                            <i class="fas fa-plus-circle"></i> Tambah Project Baru
+                            <i class="fas fa-plus-circle"></i> <span id="formTitle">Tambah Project Baru</span>
                         </h2>
                     </div>
                     
@@ -1411,12 +1098,6 @@
                     
                     <form id="projectForm">
                         <input type="hidden" id="projectId">
-                        
-                        <div class="info-box">
-                            <i class="fas fa-info-circle"></i>
-                            <strong>Info:</strong> Isi data project dengan lengkap. Setelah project dibuat, Anda bisa menambahkan timeline, financial, quotation, dan dokumen di detail project.
-                        </div>
-                        
                         <div class="form-grid">
                             <div class="form-group">
                                 <label for="projectName">Nama Project *</label>
@@ -1450,12 +1131,44 @@
                             
                             <div class="form-group">
                                 <label for="latitude">Latitude</label>
-                                <input type="text" id="latitude" placeholder="-5.1477">
+                                <input type="text" id="latitude" placeholder="-5.1477" readonly>
                             </div>
                             
                             <div class="form-group">
                                 <label for="longitude">Longitude</label>
-                                <input type="text" id="longitude" placeholder="119.4327">
+                                <input type="text" id="longitude" placeholder="119.4327" readonly>
+                            </div>
+                            
+                            <div class="form-group full-width">
+                                <label>📍 Pilih Lokasi Project (Klik di Peta)</label>
+                                <div style="margin-bottom: 0.5rem; color: var(--gray); font-size: 0.85rem;">
+                                    <i class="fas fa-info-circle"></i> Cari lokasi atau klik di peta untuk menentukan lokasi project. Koordinat akan terisi otomatis.
+                                </div>
+                                <div style="position: relative;">
+                                    <div id="mapPicker" style="height: 450px; border-radius: 0.5rem; border: 2px solid var(--gray-light); position: relative;">
+                                        <div class="map-search-container">
+                                            <div style="position: relative;">
+                                                <input 
+                                                    type="text" 
+                                                    id="mapSearchBox" 
+                                                    class="map-search-box" 
+                                                    placeholder="🔍 Cari lokasi (contoh: Hotel Clarion, Pantai Losari, dll)..."
+                                                    autocomplete="off"
+                                                >
+                                                <i class="fas fa-search search-icon"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style="margin-top: 0.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                                    <button type="button" class="btn btn-secondary btn-sm" id="resetMapBtn">
+                                        <i class="fas fa-redo"></i> Reset Peta
+                                    </button>
+                                    <button type="button" class="btn btn-secondary btn-sm" id="getCurrentLocationBtn">
+                                        <i class="fas fa-crosshairs"></i> Lokasi Saya
+                                    </button>
+                                    <span id="locationStatus" style="align-self: center; font-size: 0.85rem; color: var(--gray);"></span>
+                                </div>
                             </div>
                             
                             <div class="form-group">
@@ -1492,13 +1205,54 @@
                             </div>
                             
                             <div class="form-group">
+                                <label for="endDate">Estimasi Selesai</label>
+                                <input type="date" id="endDate">
+                            </div>
+                            
+                            <div class="form-group">
                                 <label for="picName">PIC (Person In Charge) *</label>
                                 <input type="text" id="picName" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="acCapacity">Kapasitas AC (PK)</label>
+                                <input type="text" id="acCapacity" placeholder="Contoh: 5 x 2PK">
                             </div>
                             
                             <div class="form-group full-width">
                                 <label for="projectDescription">Deskripsi Project</label>
                                 <textarea id="projectDescription" rows="4"></textarea>
+                            </div>
+                            
+                            <div class="form-group full-width">
+                                <label for="projectNotes">Catatan / Notes</label>
+                                <textarea id="projectNotes" rows="3"></textarea>
+                            </div>
+                            
+                            <div class="form-group full-width">
+                                <label>📸 Foto Project (Optional)</label>
+                                <div style="margin-bottom: 0.5rem; color: var(--gray); font-size: 0.85rem;">
+                                    <i class="fas fa-info-circle"></i> Upload foto lokasi, progres, atau dokumentasi project. Max 5MB per foto.
+                                </div>
+                                
+                                <div class="photo-upload-container" id="photoUploadZone">
+                                    <i class="fas fa-cloud-upload-alt" style="font-size: 3rem; color: var(--primary-color); margin-bottom: 1rem;"></i>
+                                    <p style="margin-bottom: 0.5rem; font-weight: 600;">Klik untuk upload atau drag & drop foto</p>
+                                    <p style="font-size: 0.85rem; color: var(--gray);">PNG, JPG, JPEG (Max 5MB per file)</p>
+                                    <input type="file" id="photoInput" multiple accept="image/png,image/jpeg,image/jpg" style="display: none;">
+                                </div>
+                                
+                                <div id="uploadProgress" class="upload-progress" style="display: none;">
+                                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                        <span id="uploadStatus">Uploading...</span>
+                                        <span id="uploadPercent">0%</span>
+                                    </div>
+                                    <div class="progress-bar">
+                                        <div class="progress-bar-fill" id="progressBarFill" style="width: 0%"></div>
+                                    </div>
+                                </div>
+                                
+                                <div id="photoPreviewContainer" class="photo-preview-grid"></div>
                             </div>
                         </div>
                         
@@ -1516,56 +1270,39 @@
         </div>
     </div>
 
-    <!-- Project Detail Modal -->
-    <div id="projectModal" class="modal">
+    <!-- View Project Modal -->
+    <div id="viewModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 class="modal-title" id="modalProjectName">Detail Project</h2>
-                <button class="close-modal" onclick="closeProjectModal()">
+                <h2 class="modal-title">Detail Project</h2>
+                <button class="close-modal" onclick="closeViewModal()">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
-            
-            <!-- Modal Tabs -->
-            <div class="modal-tabs">
-                <button class="modal-tab active" data-modal-tab="info">
-                    <i class="fas fa-info-circle"></i> Info Umum
-                </button>
-                <button class="modal-tab" data-modal-tab="timeline">
-                    <i class="fas fa-tasks"></i> Timeline & Progress
-                </button>
-                <button class="modal-tab" data-modal-tab="financial">
-                    <i class="fas fa-dollar-sign"></i> Financial
-                </button>
-                <button class="modal-tab" data-modal-tab="quotation">
-                    <i class="fas fa-file-invoice"></i> Quotation
-                </button>
-                <button class="modal-tab" data-modal-tab="documents">
-                    <i class="fas fa-folder"></i> Dokumen
-                </button>
-                <button class="modal-tab" data-modal-tab="inventory">
-                    <i class="fas fa-boxes"></i> Inventory
-                </button>
-                <button class="modal-tab" data-modal-tab="photos">
-                    <i class="fas fa-images"></i> Foto
-                </button>
-            </div>
-            
-            <!-- Tab Contents -->
-            <div id="modalTabContents">
-                <!-- Will be populated dynamically -->
+            <div id="projectDetailContent">
+                <!-- Content will be populated dynamically -->
             </div>
         </div>
     </div>
 
-    <!-- Firebase & Google Maps Scripts -->
+    <!-- Lightbox for Photos -->
+    <div id="lightbox" class="lightbox">
+        <button class="lightbox-close" onclick="closeLightbox()">
+            <i class="fas fa-times"></i>
+        </button>
+        <img id="lightboxImg" src="" alt="Photo">
+    </div>
+
+    <!-- Firebase SDK -->
     <script type="module">
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
         import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
-        import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, orderBy, onSnapshot, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
-        import { getStorage, ref, uploadBytesResumable, getDownloadURL } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js';
+        import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, orderBy, where, onSnapshot, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+        import { getStorage, ref, uploadBytesResumable, getDownloadURL, deleteObject } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js';
 
-        // Firebase Config
+        // ============================================================
+        // KONFIGURASI FIREBASE - databasebesar
+        // ============================================================
         const firebaseConfig = {
             apiKey: "AIzaSyBI5T3ZVyHXSRFikTjSlnW9P04cO1UDAwg",
             authDomain: "databasebesar.firebaseapp.com",
@@ -1576,22 +1313,32 @@
             measurementId: "G-7387ZN5BJG"
         };
 
+        // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
         const storage = getStorage(app);
-        const PROJECTS_COLLECTION = 'nala_projects';
+
+        // ============================================================
+        // GOOGLE MAPS API KEY
+        // ============================================================
         const GOOGLE_MAPS_API_KEY = 'AIzaSyAgJ1XyeNAym-SibOsJG57gE5WXWJgzDA4';
 
         // Global variables
         let map;
+        let mapPicker;
         let markers = [];
+        let pickerMarker = null;
         let allProjects = [];
         let currentUser = null;
-        let revenueChart, statusChart;
-        let currentProjectId = null;
+        let selectedPhotos = [];
+        let uploadedPhotoURLs = [];
 
-        // Authentication
+        // ============================================================
+        // AUTHENTICATION
+        // ============================================================
+        
+        // Check auth state
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 currentUser = user;
@@ -1607,6 +1354,7 @@
             }
         });
 
+        // Login
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const email = document.getElementById('email').value;
@@ -1620,13 +1368,17 @@
             }
         });
 
+        // Logout
         document.getElementById('logoutBtn').addEventListener('click', async () => {
             if (confirm('Apakah Anda yakin ingin logout?')) {
                 await signOut(auth);
             }
         });
 
-        // Navigation
+        // ============================================================
+        // NAVIGATION
+        // ============================================================
+        
         document.querySelectorAll('.nav-tab').forEach(tab => {
             tab.addEventListener('click', () => {
                 const targetTab = tab.dataset.tab;
@@ -1635,398 +1387,595 @@
         });
 
         window.switchTab = function(tabName) {
+            // Update tabs
             document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
             document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
             
+            // Update sections
             document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
             document.getElementById(tabName === 'map' ? 'map-section' : tabName).classList.add('active');
             
+            // Reload map if switching to map tab
             if (tabName === 'map' && map) {
-                setTimeout(() => {
-                    google.maps.event.trigger(map, 'resize');
-                    updateMapMarkers();
-                    
-                    // Center map to show all markers
-                    if (markers.length > 0) {
-                        const bounds = new google.maps.LatLngBounds();
-                        markers.forEach(marker => {
-                            bounds.extend(marker.getPosition());
-                        });
-                        map.fitBounds(bounds);
-                    }
-                }, 100);
+                google.maps.event.trigger(map, 'resize');
+                updateMapMarkers();
+            }
+            
+            // Initialize map picker if switching to add tab
+            if (tabName === 'add') {
+                setTimeout(initMapPicker, 100);
             }
         };
 
-        // Load Map
+        // ============================================================
+        // LOAD GOOGLE MAPS
+        // ============================================================
+        
         function loadMap() {
             const script = document.createElement('script');
-            script.src = `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAPS_API_KEY}&callback=initMap`;
+            script.src = `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAPS_API_KEY}&libraries=places&callback=initMap`;
             script.async = true;
             script.defer = true;
             document.head.appendChild(script);
         }
 
+        // ============================================================
+        // PHOTO UPLOAD FUNCTIONALITY
+        // ============================================================
+        
+        function initPhotoUpload() {
+            const photoUploadZone = document.getElementById('photoUploadZone');
+            const photoInput = document.getElementById('photoInput');
+            
+            // Click to upload
+            photoUploadZone.addEventListener('click', () => {
+                photoInput.click();
+            });
+            
+            // File selection
+            photoInput.addEventListener('change', handlePhotoSelection);
+            
+            // Drag and drop
+            photoUploadZone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                photoUploadZone.classList.add('dragover');
+            });
+            
+            photoUploadZone.addEventListener('dragleave', () => {
+                photoUploadZone.classList.remove('dragover');
+            });
+            
+            photoUploadZone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                photoUploadZone.classList.remove('dragover');
+                
+                const files = Array.from(e.dataTransfer.files).filter(file => 
+                    file.type.startsWith('image/')
+                );
+                
+                handlePhotoFiles(files);
+            });
+        }
+        
+        function handlePhotoSelection(e) {
+            const files = Array.from(e.target.files);
+            handlePhotoFiles(files);
+        }
+        
+        function handlePhotoFiles(files) {
+            // Validate file size (5MB max)
+            const maxSize = 5 * 1024 * 1024; // 5MB
+            const validFiles = files.filter(file => {
+                if (file.size > maxSize) {
+                    alert(`File ${file.name} terlalu besar. Max 5MB per file.`);
+                    return false;
+                }
+                return true;
+            });
+            
+            // Add to selected photos
+            selectedPhotos.push(...validFiles);
+            
+            // Show preview
+            displayPhotoPreview();
+        }
+        
+        function displayPhotoPreview() {
+            const container = document.getElementById('photoPreviewContainer');
+            container.innerHTML = '';
+            
+            selectedPhotos.forEach((file, index) => {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const div = document.createElement('div');
+                    div.className = 'photo-preview-item';
+                    div.innerHTML = `
+                        <img src="${e.target.result}" alt="Preview ${index + 1}">
+                        <button class="remove-photo" onclick="removePhoto(${index})" type="button">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    `;
+                    container.appendChild(div);
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+        
+        window.removePhoto = function(index) {
+            selectedPhotos.splice(index, 1);
+            displayPhotoPreview();
+        };
+        
+        async function uploadPhotosToStorage(projectId) {
+            if (selectedPhotos.length === 0) {
+                return [];
+            }
+            
+            const uploadProgress = document.getElementById('uploadProgress');
+            const uploadStatus = document.getElementById('uploadStatus');
+            const uploadPercent = document.getElementById('uploadPercent');
+            const progressBarFill = document.getElementById('progressBarFill');
+            
+            uploadProgress.style.display = 'block';
+            
+            const photoURLs = [];
+            
+            for (let i = 0; i < selectedPhotos.length; i++) {
+                const file = selectedPhotos[i];
+                const fileName = `${Date.now()}_${file.name}`;
+                const storageRef = ref(storage, `nala_dashboard/${projectId}/${fileName}`);
+                
+                uploadStatus.textContent = `Uploading ${i + 1} of ${selectedPhotos.length}...`;
+                
+                try {
+                    const uploadTask = uploadBytesResumable(storageRef, file);
+                    
+                    await new Promise((resolve, reject) => {
+                        uploadTask.on('state_changed',
+                            (snapshot) => {
+                                const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                                progressBarFill.style.width = progress + '%';
+                                uploadPercent.textContent = Math.round(progress) + '%';
+                            },
+                            (error) => {
+                                console.error('Upload error:', error);
+                                reject(error);
+                            },
+                            async () => {
+                                const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+                                photoURLs.push({
+                                    url: downloadURL,
+                                    name: file.name,
+                                    uploadedAt: new Date().toISOString()
+                                });
+                                resolve();
+                            }
+                        );
+                    });
+                } catch (error) {
+                    console.error('Error uploading photo:', error);
+                    alert(`Error uploading ${file.name}: ${error.message}`);
+                }
+            }
+            
+            uploadProgress.style.display = 'none';
+            progressBarFill.style.width = '0%';
+            
+            // Clear selected photos after upload
+            selectedPhotos = [];
+            document.getElementById('photoPreviewContainer').innerHTML = '';
+            document.getElementById('photoInput').value = '';
+            
+            return photoURLs;
+        }
+        
+        function displayPhotoGallery(photos) {
+            if (!photos || photos.length === 0) {
+                return '<p style="color: var(--gray);">Belum ada foto</p>';
+            }
+            
+            let html = '<div class="photo-gallery">';
+            photos.forEach((photo, index) => {
+                html += `
+                    <div class="photo-gallery-item" onclick="openLightbox('${photo.url}')">
+                        <img src="${photo.url}" alt="${photo.name || 'Photo ' + (index + 1)}" loading="lazy">
+                    </div>
+                `;
+            });
+            html += '</div>';
+            
+            return html;
+        }
+        
+        window.openLightbox = function(url) {
+            const lightbox = document.getElementById('lightbox');
+            const lightboxImg = document.getElementById('lightboxImg');
+            lightboxImg.src = url;
+            lightbox.classList.add('active');
+        };
+        
+        window.closeLightbox = function() {
+            const lightbox = document.getElementById('lightbox');
+            lightbox.classList.remove('active');
+        };
+        
+        // Close lightbox on click outside
+        document.addEventListener('DOMContentLoaded', () => {
+            const lightbox = document.getElementById('lightbox');
+            if (lightbox) {
+                lightbox.addEventListener('click', (e) => {
+                    if (e.target === lightbox) {
+                        closeLightbox();
+                    }
+                });
+            }
+        });
+        
+        // Initialize photo upload on page load
+        window.addEventListener('load', () => {
+            initPhotoUpload();
+        });
+
         window.initMap = function() {
+            // Center on Makassar
             const makassar = { lat: -5.1477, lng: 119.4327 };
             
             map = new google.maps.Map(document.getElementById('map'), {
                 zoom: 12,
-                center: makassar
+                center: makassar,
+                styles: [
+                    {
+                        featureType: 'poi',
+                        elementType: 'labels',
+                        stylers: [{ visibility: 'off' }]
+                    }
+                ]
             });
             
             updateMapMarkers();
+            
+            // Initialize map picker
+            initMapPicker();
         };
+
+        // ============================================================
+        // MAP PICKER FUNCTIONALITY
+        // ============================================================
+        
+        function initMapPicker() {
+            if (!google || !google.maps) return;
+            
+            const mapPickerDiv = document.getElementById('mapPicker');
+            if (!mapPickerDiv) return;
+            
+            // Initialize map picker if not already initialized
+            if (!mapPicker) {
+                const makassar = { lat: -5.1477, lng: 119.4327 };
+                
+                mapPicker = new google.maps.Map(mapPickerDiv, {
+                    zoom: 13,
+                    center: makassar,
+                    mapTypeControl: true,
+                    streetViewControl: true,
+                    fullscreenControl: true
+                });
+                
+                // Add click listener to place marker
+                mapPicker.addListener('click', function(event) {
+                    placePickerMarker(event.latLng);
+                });
+                
+                // Initialize Places Autocomplete for search box
+                const searchBox = document.getElementById('mapSearchBox');
+                if (searchBox && google.maps.places) {
+                    const autocomplete = new google.maps.places.Autocomplete(searchBox, {
+                        componentRestrictions: { country: 'id' }, // Restrict to Indonesia
+                        fields: ['geometry', 'formatted_address', 'name', 'address_components']
+                    });
+                    
+                    // Bias to map viewport
+                    autocomplete.bindTo('bounds', mapPicker);
+                    
+                    // When place is selected from search
+                    autocomplete.addListener('place_changed', function() {
+                        const place = autocomplete.getPlace();
+                        
+                        if (!place.geometry || !place.geometry.location) {
+                            document.getElementById('locationStatus').innerHTML = '<i class="fas fa-exclamation-circle" style="color: var(--danger-color);"></i> Lokasi tidak ditemukan';
+                            return;
+                        }
+                        
+                        // Center map on selected place
+                        if (place.geometry.viewport) {
+                            mapPicker.fitBounds(place.geometry.viewport);
+                        } else {
+                            mapPicker.setCenter(place.geometry.location);
+                            mapPicker.setZoom(17);
+                        }
+                        
+                        // Place marker at location
+                        placePickerMarker(place.geometry.location);
+                        
+                        // Auto-fill address if available
+                        if (place.formatted_address) {
+                            document.getElementById('projectAddress').value = place.formatted_address;
+                        } else if (place.name) {
+                            document.getElementById('projectAddress').value = place.name;
+                        }
+                        
+                        document.getElementById('locationStatus').innerHTML = '<i class="fas fa-check-circle" style="color: var(--secondary-color);"></i> Lokasi ditemukan!';
+                    });
+                    
+                    // Clear status when typing
+                    searchBox.addEventListener('input', function() {
+                        if (searchBox.value.length > 0) {
+                            document.getElementById('locationStatus').innerHTML = '<i class="fas fa-search"></i> Mencari...';
+                        } else {
+                            document.getElementById('locationStatus').textContent = '';
+                        }
+                    });
+                }
+                
+                // Reset button
+                document.getElementById('resetMapBtn').addEventListener('click', function() {
+                    if (pickerMarker) {
+                        if (pickerMarker.pulseCircle) {
+                            pickerMarker.pulseCircle.setMap(null);
+                        }
+                        if (pickerMarker.pulseInterval) {
+                            clearInterval(pickerMarker.pulseInterval);
+                        }
+                        pickerMarker.setMap(null);
+                        pickerMarker = null;
+                    }
+                    document.getElementById('latitude').value = '';
+                    document.getElementById('longitude').value = '';
+                    document.getElementById('locationStatus').textContent = '';
+                    document.getElementById('mapSearchBox').value = '';
+                    
+                    // Recenter to Makassar
+                    const makassar = { lat: -5.1477, lng: 119.4327 };
+                    mapPicker.setCenter(makassar);
+                    mapPicker.setZoom(13);
+                });
+                
+                // Get current location button
+                document.getElementById('getCurrentLocationBtn').addEventListener('click', function() {
+                    if (navigator.geolocation) {
+                        document.getElementById('locationStatus').innerHTML = '<i class="fas fa-spinner fa-spin"></i> Mencari lokasi...';
+                        
+                        navigator.geolocation.getCurrentPosition(
+                            function(position) {
+                                const pos = {
+                                    lat: position.coords.latitude,
+                                    lng: position.coords.longitude
+                                };
+                                
+                                mapPicker.setCenter(pos);
+                                mapPicker.setZoom(16);
+                                placePickerMarker(new google.maps.LatLng(pos.lat, pos.lng));
+                                
+                                document.getElementById('locationStatus').innerHTML = '<i class="fas fa-check-circle" style="color: var(--secondary-color);"></i> Lokasi ditemukan!';
+                            },
+                            function() {
+                                document.getElementById('locationStatus').innerHTML = '<i class="fas fa-exclamation-circle" style="color: var(--danger-color);"></i> Tidak bisa mendapatkan lokasi';
+                            }
+                        );
+                    } else {
+                        document.getElementById('locationStatus').innerHTML = '<i class="fas fa-exclamation-circle" style="color: var(--danger-color);"></i> Browser tidak support geolocation';
+                    }
+                });
+            } else {
+                // If already initialized, just trigger resize
+                google.maps.event.trigger(mapPicker, 'resize');
+            }
+        }
+        
+        function placePickerMarker(location) {
+            // Remove existing marker and cleanup pulse animation
+            if (pickerMarker) {
+                if (pickerMarker.pulseCircle) {
+                    pickerMarker.pulseCircle.setMap(null);
+                }
+                if (pickerMarker.pulseInterval) {
+                    clearInterval(pickerMarker.pulseInterval);
+                }
+                pickerMarker.setMap(null);
+            }
+            
+            // Create pulsing marker with custom HTML
+            const pulseIcon = {
+                path: 'M 0,0 C -2,-20 -10,-22 -10,-30 A 10,10 0 1,1 10,-30 C 10,-22 2,-20 0,0 z',
+                fillColor: '#ef4444',
+                fillOpacity: 1,
+                strokeColor: '#ffffff',
+                strokeWeight: 2,
+                scale: 1.5,
+                anchor: new google.maps.Point(0, 0)
+            };
+            
+            // Create new marker with pulse animation
+            pickerMarker = new google.maps.Marker({
+                position: location,
+                map: mapPicker,
+                draggable: true,
+                animation: google.maps.Animation.DROP,
+                icon: pulseIcon,
+                title: 'Lokasi Project (Drag untuk adjust)'
+            });
+            
+            // Add pulse effect with circle overlay
+            const pulseCircle = new google.maps.Circle({
+                strokeColor: '#ef4444',
+                strokeOpacity: 0.8,
+                strokeWeight: 2,
+                fillColor: '#ef4444',
+                fillOpacity: 0.35,
+                map: mapPicker,
+                center: location,
+                radius: 30,
+                clickable: false
+            });
+            
+            // Animate pulse effect
+            let pulseRadius = 30;
+            let expanding = true;
+            const pulseInterval = setInterval(() => {
+                if (expanding) {
+                    pulseRadius += 2;
+                    if (pulseRadius >= 60) expanding = false;
+                } else {
+                    pulseRadius -= 2;
+                    if (pulseRadius <= 30) expanding = true;
+                }
+                pulseCircle.setRadius(pulseRadius);
+                pulseCircle.setOptions({
+                    fillOpacity: 0.35 - (pulseRadius - 30) / 100,
+                    strokeOpacity: 0.8 - (pulseRadius - 30) / 60
+                });
+            }, 50);
+            
+            // Store pulse circle and interval for cleanup
+            pickerMarker.pulseCircle = pulseCircle;
+            pickerMarker.pulseInterval = pulseInterval;
+            
+            // Update input fields
+            updateCoordinateFields(location.lat(), location.lng());
+            
+            // Add drag listener
+            pickerMarker.addListener('drag', function(event) {
+                updateCoordinateFields(event.latLng.lat(), event.latLng.lng());
+                pulseCircle.setCenter(event.latLng);
+            });
+            
+            // Try to get address via reverse geocoding
+            reverseGeocode(location.lat(), location.lng());
+        }
+        
+        function updateCoordinateFields(lat, lng) {
+            document.getElementById('latitude').value = lat.toFixed(6);
+            document.getElementById('longitude').value = lng.toFixed(6);
+        }
+        
+        function reverseGeocode(lat, lng) {
+            const geocoder = new google.maps.Geocoder();
+            const latlng = { lat: lat, lng: lng };
+            
+            geocoder.geocode({ location: latlng }, function(results, status) {
+                if (status === 'OK' && results[0]) {
+                    // Try to extract address components
+                    const addressComponents = results[0].address_components;
+                    let city = '';
+                    let street = '';
+                    
+                    // Look for city
+                    for (let component of addressComponents) {
+                        if (component.types.includes('administrative_area_level_2') || 
+                            component.types.includes('locality')) {
+                            city = component.long_name;
+                            break;
+                        }
+                    }
+                    
+                    // Get formatted address (shorter version)
+                    street = results[0].formatted_address;
+                    
+                    // Auto-fill address field if empty
+                    const addressField = document.getElementById('projectAddress');
+                    if (!addressField.value) {
+                        addressField.value = street;
+                    }
+                    
+                    // Auto-fill city if empty or default
+                    const cityField = document.getElementById('projectCity');
+                    if (city && (!cityField.value || cityField.value === 'Makassar')) {
+                        cityField.value = city;
+                    }
+                    
+                    document.getElementById('locationStatus').innerHTML = '<i class="fas fa-check-circle" style="color: var(--secondary-color);"></i> Lokasi dipilih!';
+                }
+            });
+        }
 
         function updateMapMarkers() {
             if (!map) return;
             
             // Clear existing markers
-            markers.forEach(marker => {
-                if (marker.animation) clearInterval(marker.animation);
-                marker.setMap(null);
-            });
+            markers.forEach(marker => marker.setMap(null));
             markers = [];
             
-            // Update project list sidebar
-            updateProjectList();
+            // Get filter settings
+            const showPotential = document.getElementById('showPotential').checked;
+            const showNegotiation = document.getElementById('showNegotiation').checked;
+            const showActive = document.getElementById('showActive').checked;
             
-            // Add markers for all projects with locations
-            allProjects.forEach((project, index) => {
+            // Add markers for filtered projects
+            allProjects.forEach(project => {
                 if (!project.latitude || !project.longitude) return;
                 
-                const position = { 
-                    lat: parseFloat(project.latitude), 
-                    lng: parseFloat(project.longitude) 
-                };
+                // Filter by status
+                if (project.status === 'potential' && !showPotential) return;
+                if (project.status === 'negosiasi' && !showNegotiation) return;
+                if ((project.status === 'kontrak' || project.status === 'eksekusi') && !showActive) return;
                 
-                const color = getStatusColor(project.status);
-                const animation = getMarkerAnimation(project.status);
-                
-                // Create custom animated marker
                 const marker = new google.maps.Marker({
-                    position: position,
+                    position: { lat: parseFloat(project.latitude), lng: parseFloat(project.longitude) },
                     map: map,
                     title: project.projectName,
-                    icon: createCustomMarkerIcon(color, project.status),
-                    animation: google.maps.Animation.DROP,
-                    zIndex: getMarkerZIndex(project.status)
+                    icon: {
+                        path: google.maps.SymbolPath.CIRCLE,
+                        scale: 10,
+                        fillColor: getStatusColor(project.status),
+                        fillOpacity: 0.8,
+                        strokeColor: '#fff',
+                        strokeWeight: 2
+                    }
                 });
                 
-                // Add pulsing circle animation
-                createPulsingCircle(marker, position, color, project.status);
-                
-                // Info window
                 const infoWindow = new google.maps.InfoWindow({
-                    content: createInfoWindowContent(project)
+                    content: `
+                        <div style="padding: 10px;">
+                            <h3 style="margin: 0 0 10px 0; color: #1e293b;">${project.projectName}</h3>
+                            <p style="margin: 5px 0;"><strong>Client:</strong> ${project.clientName}</p>
+                            <p style="margin: 5px 0;"><strong>Status:</strong> <span class="status-badge status-${project.status}">${getStatusLabel(project.status)}</span></p>
+                            <p style="margin: 5px 0;"><strong>Nilai:</strong> ${formatCurrency(project.contractValue)}</p>
+                            <p style="margin: 5px 0;"><strong>Lokasi:</strong> ${project.projectAddress}</p>
+                        </div>
+                    `
                 });
                 
                 marker.addListener('click', () => {
-                    // Close all other info windows
-                    markers.forEach(m => {
-                        if (m.infoWindow) m.infoWindow.close();
-                    });
                     infoWindow.open(map, marker);
-                    
-                    // Highlight in list
-                    document.querySelectorAll('.project-list-item').forEach(item => {
-                        item.classList.remove('active');
-                    });
-                    document.getElementById(`project-item-${project.id}`)?.classList.add('active');
                 });
                 
-                marker.infoWindow = infoWindow;
-                marker.projectId = project.id;
                 markers.push(marker);
             });
         }
 
-        function createCustomMarkerIcon(color, status) {
-            // Create SVG marker with custom icon based on status
-            const icons = {
-                'potential': '💡',
-                'negosiasi': '🤝',
-                'kontrak': '✅',
-                'eksekusi': '🔧',
-                'selesai': '🎉',
-                'hold': '⏸️'
-            };
-            
-            const icon = icons[status] || '📍';
-            
-            return {
-                path: google.maps.SymbolPath.CIRCLE,
-                scale: 15,
-                fillColor: color,
-                fillOpacity: 1,
-                strokeColor: '#ffffff',
-                strokeWeight: 3,
-                anchor: new google.maps.Point(0, 0)
-            };
-        }
-
-        function createPulsingCircle(marker, position, color, status) {
-            const circle = new google.maps.Circle({
-                strokeColor: color,
-                strokeOpacity: 0,
-                strokeWeight: 0,
-                fillColor: color,
-                fillOpacity: 0.3,
-                map: map,
-                center: position,
-                radius: 50,
-                clickable: false
-            });
-            
-            const animationConfig = getAnimationConfig(status);
-            let radius = animationConfig.minRadius;
-            let growing = true;
-            
-            const animationInterval = setInterval(() => {
-                if (growing) {
-                    radius += animationConfig.speed;
-                    if (radius >= animationConfig.maxRadius) growing = false;
-                } else {
-                    radius -= animationConfig.speed;
-                    if (radius <= animationConfig.minRadius) growing = true;
-                }
-                
-                circle.setRadius(radius);
-                circle.setOptions({
-                    fillOpacity: animationConfig.baseOpacity - (radius - animationConfig.minRadius) / (animationConfig.maxRadius * 2)
-                });
-            }, animationConfig.interval);
-            
-            marker.pulseCircle = circle;
-            marker.pulseInterval = animationInterval;
-        }
-
-        function getAnimationConfig(status) {
-            const configs = {
-                'potential': {
-                    minRadius: 50,
-                    maxRadius: 150,
-                    speed: 3,
-                    interval: 80,
-                    baseOpacity: 0.3
-                },
-                'negosiasi': {
-                    minRadius: 40,
-                    maxRadius: 120,
-                    speed: 4,
-                    interval: 60,
-                    baseOpacity: 0.35
-                },
-                'kontrak': {
-                    minRadius: 50,
-                    maxRadius: 180,
-                    speed: 6,
-                    interval: 40,
-                    baseOpacity: 0.4
-                },
-                'eksekusi': {
-                    minRadius: 50,
-                    maxRadius: 180,
-                    speed: 6,
-                    interval: 40,
-                    baseOpacity: 0.4
-                },
-                'selesai': {
-                    minRadius: 40,
-                    maxRadius: 100,
-                    speed: 2,
-                    interval: 120,
-                    baseOpacity: 0.25
-                },
-                'hold': {
-                    minRadius: 50,
-                    maxRadius: 140,
-                    speed: 3,
-                    interval: 90,
-                    baseOpacity: 0.35
-                }
-            };
-            
-            return configs[status] || configs['potential'];
-        }
-
-        function getMarkerZIndex(status) {
-            const priorities = {
-                'kontrak': 1000,
-                'eksekusi': 999,
-                'negosiasi': 500,
-                'potential': 300,
-                'hold': 200,
-                'selesai': 100
-            };
-            return priorities[status] || 300;
-        }
-
-        function getMarkerAnimation(status) {
-            // Return animation type based on status
-            const animations = {
-                'potential': 'pulse-slow',
-                'negosiasi': 'bounce-medium',
-                'kontrak': 'glow-fast',
-                'eksekusi': 'bounce-glow',
-                'selesai': 'gentle-pulse',
-                'hold': 'blink-slow'
-            };
-            return animations[status] || 'pulse-slow';
-        }
-
-        function createInfoWindowContent(project) {
-            const financial = project.financial || {};
-            const paymentStatus = financial.paymentStatus || 'pending';
-            const progress = project.progress || 0;
-            
-            return `
-                <div style="padding: 10px; min-width: 250px;">
-                    <h3 style="margin: 0 0 10px 0; color: #1e293b;">${project.projectName}</h3>
-                    <p style="margin: 5px 0;"><strong>Client:</strong> ${project.clientName}</p>
-                    <p style="margin: 5px 0;">
-                        <strong>Status:</strong> 
-                        <span class="status-badge status-${project.status}">${getStatusLabel(project.status)}</span>
-                    </p>
-                    <p style="margin: 5px 0;"><strong>Nilai:</strong> ${formatCurrency(project.contractValue)}</p>
-                    <p style="margin: 5px 0;"><strong>Progress:</strong> ${progress}%</p>
-                    <div style="margin: 10px 0;">
-                        <div style="background: #e2e8f0; height: 8px; border-radius: 4px; overflow: hidden;">
-                            <div style="background: linear-gradient(90deg, #2563eb, #10b981); height: 100%; width: ${progress}%;"></div>
-                        </div>
-                    </div>
-                    <p style="margin: 5px 0;">
-                        <strong>Payment:</strong> 
-                        <span class="status-badge payment-${paymentStatus}">${getPaymentLabel(paymentStatus)}</span>
-                    </p>
-                    <button onclick="viewProject('${project.id}')" class="btn btn-primary btn-sm" style="margin-top: 10px; width: 100%;">
-                        <i class="fas fa-eye"></i> Lihat Detail
-                    </button>
-                </div>
-            `;
-        }
-
-        // Update Project List Sidebar
-        function updateProjectList() {
-            const container = document.getElementById('projectListSidebar');
-            const searchInput = document.getElementById('mapSearchInput');
-            
-            const searchTerm = searchInput?.value.toLowerCase() || '';
-            const filteredProjects = allProjects.filter(p => 
-                (p.projectName?.toLowerCase().includes(searchTerm) ||
-                 p.clientName?.toLowerCase().includes(searchTerm)) &&
-                p.latitude && p.longitude
-            );
-            
-            if (filteredProjects.length === 0) {
-                container.innerHTML = '<p style="text-align: center; color: var(--gray); padding: 2rem;">Tidak ada project dengan lokasi</p>';
-                return;
-            }
-            
-            container.innerHTML = filteredProjects.map(project => `
-                <div class="project-list-item" id="project-item-${project.id}" onclick="zoomToProject('${project.id}')">
-                    <div class="project-list-item-name">
-                        <span style="font-size: 1.2rem;">${getStatusEmoji(project.status)}</span>
-                        <span>${project.projectName}</span>
-                    </div>
-                    <div class="project-list-item-client">${project.clientName}</div>
-                    <div class="project-list-item-footer">
-                        <span class="status-badge status-${project.status}">${getStatusLabel(project.status)}</span>
-                        <span style="font-weight: 600;">${project.progress || 0}%</span>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function getStatusEmoji(status) {
-            const emojis = {
-                'potential': '💡',
-                'negosiasi': '🤝',
-                'kontrak': '✅',
-                'eksekusi': '🔧',
-                'selesai': '🎉',
-                'hold': '⏸️'
-            };
-            return emojis[status] || '📍';
-        }
-
-        // Zoom to Project on List Click
-        window.zoomToProject = function(projectId) {
-            const project = allProjects.find(p => p.id === projectId);
-            if (!project || !project.latitude || !project.longitude) return;
-            
-            const position = {
-                lat: parseFloat(project.latitude),
-                lng: parseFloat(project.longitude)
-            };
-            
-            // Zoom and center map
-            map.setZoom(16);
-            map.panTo(position);
-            
-            // Highlight marker
-            const marker = markers.find(m => m.projectId === projectId);
-            if (marker) {
-                // Bounce animation
-                marker.setAnimation(google.maps.Animation.BOUNCE);
-                setTimeout(() => {
-                    marker.setAnimation(null);
-                }, 2000);
-                
-                // Open info window
-                if (marker.infoWindow) {
-                    markers.forEach(m => {
-                        if (m.infoWindow) m.infoWindow.close();
-                    });
-                    marker.infoWindow.open(map, marker);
-                }
-            }
-            
-            // Highlight in list
-            document.querySelectorAll('.project-list-item').forEach(item => {
-                item.classList.remove('active');
-            });
-            document.getElementById(`project-item-${projectId}`)?.classList.add('active');
-        };
-
-        // Search functionality
-        document.addEventListener('DOMContentLoaded', () => {
-            const searchInput = document.getElementById('mapSearchInput');
-            if (searchInput) {
-                searchInput.addEventListener('input', () => {
-                    updateProjectList();
-                });
-            }
-        });
-
         function getStatusColor(status) {
             const colors = {
-                'potential': '#3b82f6',      // Blue
-                'negosiasi': '#f59e0b',      // Yellow/Orange
-                'kontrak': '#10b981',        // Green
-                'eksekusi': '#8b5cf6',       // Purple
-                'selesai': '#059669',        // Dark Green
-                'hold': '#ef4444'            // Red
+                'potential': '#3b82f6',
+                'negosiasi': '#f59e0b',
+                'kontrak': '#10b981',
+                'eksekusi': '#6366f1',
+                'selesai': '#059669',
+                'hold': '#ef4444'
             };
             return colors[status] || '#64748b';
         }
 
-        function getPulseSpeed(status) {
-            const speeds = {
-                'potential': 100,     // Slow
-                'negosiasi': 80,      // Medium
-                'kontrak': 50,        // Fast
-                'eksekusi': 50,       // Fast
-                'selesai': 200,       // Very slow
-                'hold': 150           // Slow
-            };
-            return speeds[status] || 100;
-        }
+        // Map filter listeners
+        ['showPotential', 'showNegotiation', 'showActive'].forEach(id => {
+            document.getElementById(id).addEventListener('change', updateMapMarkers);
+        });
 
-        // Load Projects
+        // ============================================================
+        // PROJECT CRUD OPERATIONS
+        // ============================================================
+        
         async function loadProjects() {
             try {
-                const q = query(collection(db, PROJECTS_COLLECTION), orderBy('createdAt', 'desc'));
+                const q = query(collection(db, 'nala_dashboard_projects'), orderBy('createdAt', 'desc'));
                 
                 onSnapshot(q, (snapshot) => {
                     allProjects = [];
@@ -2034,111 +1983,279 @@
                         allProjects.push({ id: doc.id, ...doc.data() });
                     });
                     
-                    updateDashboard();
-                    displayProjects();
+                    updateDashboardStats();
+                    displayRecentProjects();
+                    displayAllProjects();
                     updateMapMarkers();
                 });
             } catch (error) {
                 console.error('Error loading projects:', error);
+                showAlert('formAlert', 'Error loading projects: ' + error.message, 'error');
             }
         }
 
-        // Update Dashboard
-        function updateDashboard() {
+        // Submit project form
+        document.getElementById('projectForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const projectId = document.getElementById('projectId').value;
+            
+            try {
+                let photoURLs = [];
+                
+                // Upload photos first if there are any selected
+                if (selectedPhotos.length > 0) {
+                    const tempId = projectId || `temp_${Date.now()}`;
+                    photoURLs = await uploadPhotosToStorage(tempId);
+                }
+                
+                const projectData = {
+                    projectName: document.getElementById('projectName').value,
+                    clientName: document.getElementById('clientName').value,
+                    clientContact: document.getElementById('clientContact').value,
+                    clientEmail: document.getElementById('clientEmail').value,
+                    projectAddress: document.getElementById('projectAddress').value,
+                    projectCity: document.getElementById('projectCity').value,
+                    latitude: document.getElementById('latitude').value,
+                    longitude: document.getElementById('longitude').value,
+                    projectType: document.getElementById('projectType').value,
+                    projectStatus: document.getElementById('projectStatus').value,
+                    contractValue: parseInt(document.getElementById('contractValue').value),
+                    startDate: document.getElementById('startDate').value,
+                    endDate: document.getElementById('endDate').value,
+                    picName: document.getElementById('picName').value,
+                    acCapacity: document.getElementById('acCapacity').value,
+                    projectDescription: document.getElementById('projectDescription').value,
+                    projectNotes: document.getElementById('projectNotes').value,
+                    status: document.getElementById('projectStatus').value,
+                    updatedAt: serverTimestamp()
+                };
+                
+                if (projectId) {
+                    // Update existing project
+                    // Merge new photos with existing photos
+                    const existingProject = allProjects.find(p => p.id === projectId);
+                    const existingPhotos = existingProject?.photos || [];
+                    projectData.photos = [...existingPhotos, ...photoURLs];
+                    
+                    await updateDoc(doc(db, 'nala_dashboard_projects', projectId), projectData);
+                    showAlert('formAlert', 'Project berhasil diupdate!', 'success');
+                } else {
+                    // Add new project
+                    projectData.createdAt = serverTimestamp();
+                    projectData.photos = photoURLs;
+                    await addDoc(collection(db, 'nala_dashboard_projects'), projectData);
+                    showAlert('formAlert', 'Project berhasil ditambahkan!', 'success');
+                }
+                
+                // Reset form
+                document.getElementById('projectForm').reset();
+                document.getElementById('projectId').value = '';
+                document.getElementById('formTitle').textContent = 'Tambah Project Baru';
+                
+                // Reset map picker marker and pulse animation
+                if (pickerMarker) {
+                    if (pickerMarker.pulseCircle) {
+                        pickerMarker.pulseCircle.setMap(null);
+                    }
+                    if (pickerMarker.pulseInterval) {
+                        clearInterval(pickerMarker.pulseInterval);
+                    }
+                    pickerMarker.setMap(null);
+                    pickerMarker = null;
+                }
+                document.getElementById('locationStatus').textContent = '';
+                document.getElementById('mapSearchBox').value = '';
+                
+                // Reset photo uploads
+                selectedPhotos = [];
+                document.getElementById('photoPreviewContainer').innerHTML = '';
+                document.getElementById('photoInput').value = '';
+                
+                // Switch to projects tab
+                setTimeout(() => {
+                    switchTab('projects');
+                }, 1500);
+                
+            } catch (error) {
+                console.error('Error saving project:', error);
+                showAlert('formAlert', 'Error: ' + error.message, 'error');
+            }
+        });
+
+        // Cancel form
+        document.getElementById('cancelForm').addEventListener('click', () => {
+            document.getElementById('projectForm').reset();
+            document.getElementById('projectId').value = '';
+            document.getElementById('formTitle').textContent = 'Tambah Project Baru';
+            
+            // Reset map picker marker and pulse animation
+            if (pickerMarker) {
+                if (pickerMarker.pulseCircle) {
+                    pickerMarker.pulseCircle.setMap(null);
+                }
+                if (pickerMarker.pulseInterval) {
+                    clearInterval(pickerMarker.pulseInterval);
+                }
+                pickerMarker.setMap(null);
+                pickerMarker = null;
+            }
+            document.getElementById('locationStatus').textContent = '';
+            document.getElementById('mapSearchBox').value = '';
+            
+            switchTab('projects');
+        });
+
+        // Edit project
+        window.editProject = function(projectId) {
+            const project = allProjects.find(p => p.id === projectId);
+            if (!project) return;
+            
+            document.getElementById('projectId').value = projectId;
+            document.getElementById('projectName').value = project.projectName || '';
+            document.getElementById('clientName').value = project.clientName || '';
+            document.getElementById('clientContact').value = project.clientContact || '';
+            document.getElementById('clientEmail').value = project.clientEmail || '';
+            document.getElementById('projectAddress').value = project.projectAddress || '';
+            document.getElementById('projectCity').value = project.projectCity || '';
+            document.getElementById('latitude').value = project.latitude || '';
+            document.getElementById('longitude').value = project.longitude || '';
+            document.getElementById('projectType').value = project.projectType || '';
+            document.getElementById('projectStatus').value = project.status || '';
+            document.getElementById('contractValue').value = project.contractValue || '';
+            document.getElementById('startDate').value = project.startDate || '';
+            document.getElementById('endDate').value = project.endDate || '';
+            document.getElementById('picName').value = project.picName || '';
+            document.getElementById('acCapacity').value = project.acCapacity || '';
+            document.getElementById('projectDescription').value = project.projectDescription || '';
+            document.getElementById('projectNotes').value = project.projectNotes || '';
+            
+            document.getElementById('formTitle').textContent = 'Edit Project';
+            switchTab('add');
+            
+            // Show marker on map picker if coordinates exist
+            setTimeout(() => {
+                if (project.latitude && project.longitude && mapPicker) {
+                    const location = {
+                        lat: parseFloat(project.latitude),
+                        lng: parseFloat(project.longitude)
+                    };
+                    mapPicker.setCenter(location);
+                    mapPicker.setZoom(16);
+                    placePickerMarker(new google.maps.LatLng(location.lat, location.lng));
+                }
+            }, 200);
+        };
+
+        // Delete project
+        window.deleteProject = async function(projectId) {
+            if (!confirm('Apakah Anda yakin ingin menghapus project ini?')) return;
+            
+            try {
+                await deleteDoc(doc(db, 'nala_dashboard_projects', projectId));
+                showAlert('formAlert', 'Project berhasil dihapus!', 'success');
+            } catch (error) {
+                console.error('Error deleting project:', error);
+                alert('Error: ' + error.message);
+            }
+        };
+
+        // View project details
+        window.viewProject = function(projectId) {
+            const project = allProjects.find(p => p.id === projectId);
+            if (!project) return;
+            
+            const content = `
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
+                    <div>
+                        <h3 style="color: var(--gray); font-size: 0.85rem; margin-bottom: 0.5rem;">NAMA PROJECT</h3>
+                        <p style="font-weight: 600; font-size: 1.1rem;">${project.projectName}</p>
+                    </div>
+                    <div>
+                        <h3 style="color: var(--gray); font-size: 0.85rem; margin-bottom: 0.5rem;">CLIENT</h3>
+                        <p style="font-weight: 600; font-size: 1.1rem;">${project.clientName}</p>
+                        ${project.clientContact ? `<p style="font-size: 0.9rem; color: var(--gray);">${project.clientContact}</p>` : ''}
+                        ${project.clientEmail ? `<p style="font-size: 0.9rem; color: var(--gray);">${project.clientEmail}</p>` : ''}
+                    </div>
+                    <div>
+                        <h3 style="color: var(--gray); font-size: 0.85rem; margin-bottom: 0.5rem;">STATUS</h3>
+                        <span class="status-badge status-${project.status}">${getStatusLabel(project.status)}</span>
+                    </div>
+                    <div>
+                        <h3 style="color: var(--gray); font-size: 0.85rem; margin-bottom: 0.5rem;">NILAI KONTRAK</h3>
+                        <p style="font-weight: 600; font-size: 1.1rem; color: var(--secondary-color);">${formatCurrency(project.contractValue)}</p>
+                    </div>
+                    <div>
+                        <h3 style="color: var(--gray); font-size: 0.85rem; margin-bottom: 0.5rem;">TIPE PROJECT</h3>
+                        <p>${project.projectType || '-'}</p>
+                    </div>
+                    <div>
+                        <h3 style="color: var(--gray); font-size: 0.85rem; margin-bottom: 0.5rem;">KAPASITAS AC</h3>
+                        <p>${project.acCapacity || '-'}</p>
+                    </div>
+                    <div>
+                        <h3 style="color: var(--gray); font-size: 0.85rem; margin-bottom: 0.5rem;">PIC</h3>
+                        <p>${project.picName || '-'}</p>
+                    </div>
+                    <div>
+                        <h3 style="color: var(--gray); font-size: 0.85rem; margin-bottom: 0.5rem;">TANGGAL MULAI</h3>
+                        <p>${project.startDate ? formatDate(project.startDate) : '-'}</p>
+                    </div>
+                    <div style="grid-column: 1 / -1;">
+                        <h3 style="color: var(--gray); font-size: 0.85rem; margin-bottom: 0.5rem;">LOKASI</h3>
+                        <p>${project.projectAddress}, ${project.projectCity}</p>
+                    </div>
+                    ${project.projectDescription ? `
+                    <div style="grid-column: 1 / -1;">
+                        <h3 style="color: var(--gray); font-size: 0.85rem; margin-bottom: 0.5rem;">DESKRIPSI</h3>
+                        <p style="line-height: 1.6;">${project.projectDescription}</p>
+                    </div>
+                    ` : ''}
+                    ${project.projectNotes ? `
+                    <div style="grid-column: 1 / -1;">
+                        <h3 style="color: var(--gray); font-size: 0.85rem; margin-bottom: 0.5rem;">CATATAN</h3>
+                        <p style="line-height: 1.6;">${project.projectNotes}</p>
+                    </div>
+                    ` : ''}
+                    ${project.photos && project.photos.length > 0 ? `
+                    <div style="grid-column: 1 / -1;">
+                        <h3 style="color: var(--gray); font-size: 0.85rem; margin-bottom: 0.5rem;">FOTO PROJECT (${project.photos.length})</h3>
+                        ${displayPhotoGallery(project.photos)}
+                    </div>
+                    ` : ''}
+                </div>
+                <div style="margin-top: 2rem; display: flex; gap: 1rem;">
+                    <button class="btn btn-primary" onclick="closeViewModal(); editProject('${projectId}')">
+                        <i class="fas fa-edit"></i> Edit Project
+                    </button>
+                    <button class="btn btn-secondary" onclick="closeViewModal()">
+                        <i class="fas fa-times"></i> Tutup
+                    </button>
+                </div>
+            `;
+            
+            document.getElementById('projectDetailContent').innerHTML = content;
+            document.getElementById('viewModal').classList.add('active');
+        };
+
+        window.closeViewModal = function() {
+            document.getElementById('viewModal').classList.remove('active');
+        };
+
+        // ============================================================
+        // DISPLAY FUNCTIONS
+        // ============================================================
+        
+        function updateDashboardStats() {
             const total = allProjects.length;
-            const totalRevenue = allProjects.reduce((sum, p) => sum + (p.contractValue || 0), 0);
-            const totalOutstanding = allProjects.reduce((sum, p) => {
-                const financial = p.financial || {};
-                return sum + (financial.outstanding || 0);
-            }, 0);
+            const negotiation = allProjects.filter(p => p.status === 'negosiasi').length;
             const active = allProjects.filter(p => p.status === 'kontrak' || p.status === 'eksekusi').length;
+            const totalRevenue = allProjects.reduce((sum, p) => sum + (p.contractValue || 0), 0);
             
             document.getElementById('totalProjects').textContent = total;
-            document.getElementById('totalRevenue').textContent = formatCurrency(totalRevenue);
-            document.getElementById('totalOutstanding').textContent = formatCurrency(totalOutstanding);
+            document.getElementById('negotiationProjects').textContent = negotiation;
             document.getElementById('activeProjects').textContent = active;
-            
-            updateCharts();
-            displayRecentProjects();
-        }
-
-        function updateCharts() {
-            // Revenue Chart
-            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-            const revenueData = new Array(12).fill(0);
-            
-            allProjects.forEach(project => {
-                if (project.startDate) {
-                    const month = new Date(project.startDate).getMonth();
-                    revenueData[month] += project.contractValue || 0;
-                }
-            });
-            
-            if (revenueChart) revenueChart.destroy();
-            
-            const ctxRevenue = document.getElementById('revenueChart').getContext('2d');
-            revenueChart = new Chart(ctxRevenue, {
-                type: 'line',
-                data: {
-                    labels: months,
-                    datasets: [{
-                        label: 'Revenue (Rp)',
-                        data: revenueData,
-                        borderColor: '#2563eb',
-                        backgroundColor: 'rgba(37, 99, 235, 0.1)',
-                        tension: 0.4,
-                        fill: true
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: true,
-                    plugins: {
-                        legend: {
-                            display: false
-                        }
-                    }
-                }
-            });
-            
-            // Status Chart
-            const statusCounts = {
-                'potential': 0,
-                'negosiasi': 0,
-                'kontrak': 0,
-                'eksekusi': 0,
-                'selesai': 0,
-                'hold': 0
-            };
-            
-            allProjects.forEach(project => {
-                statusCounts[project.status] = (statusCounts[project.status] || 0) + 1;
-            });
-            
-            if (statusChart) statusChart.destroy();
-            
-            const ctxStatus = document.getElementById('statusChart').getContext('2d');
-            statusChart = new Chart(ctxStatus, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Potential', 'Negosiasi', 'Kontrak', 'Eksekusi', 'Selesai', 'Hold'],
-                    datasets: [{
-                        data: Object.values(statusCounts),
-                        backgroundColor: [
-                            '#3b82f6',
-                            '#f59e0b',
-                            '#10b981',
-                            '#8b5cf6',
-                            '#059669',
-                            '#ef4444'
-                        ]
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: true
-                }
-            });
+            document.getElementById('totalRevenue').textContent = formatCurrency(totalRevenue);
         }
 
         function displayRecentProjects() {
@@ -2150,1230 +2267,81 @@
                 return;
             }
             
-            tbody.innerHTML = recent.map(project => {
-                const financial = project.financial || {};
-                const paymentStatus = financial.paymentStatus || 'pending';
-                const progress = project.progress || 0;
-                
-                return `
-                    <tr style="cursor: pointer;" onclick="viewProject('${project.id}')">
-                        <td><strong>${project.projectName}</strong></td>
-                        <td>${project.clientName}</td>
-                        <td><span class="status-badge status-${project.status}">${getStatusLabel(project.status)}</span></td>
-                        <td>
-                            <div style="display: flex; align-items: center; gap: 0.5rem;">
-                                <div class="progress-container" style="flex: 1;">
-                                    <div class="progress-bar" style="width: ${progress}%"></div>
-                                </div>
-                                <span style="font-size: 0.85rem; color: var(--gray);">${progress}%</span>
-                            </div>
-                        </td>
-                        <td><strong>${formatCurrency(project.contractValue)}</strong></td>
-                        <td><span class="status-badge payment-${paymentStatus}">${getPaymentLabel(paymentStatus)}</span></td>
-                    </tr>
-                `;
-            }).join('');
+            tbody.innerHTML = recent.map(project => `
+                <tr>
+                    <td>${project.projectName}</td>
+                    <td>${project.clientName}</td>
+                    <td>${project.projectCity}</td>
+                    <td><span class="status-badge status-${project.status}">${getStatusLabel(project.status)}</span></td>
+                    <td>${formatCurrency(project.contractValue)}</td>
+                    <td>${project.startDate ? formatDate(project.startDate) : '-'}</td>
+                </tr>
+            `).join('');
         }
 
-        function displayProjects() {
+        function displayAllProjects() {
             const tbody = document.getElementById('projectsTableBody');
+            let filteredProjects = [...allProjects];
             
-            if (allProjects.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 2rem;">Belum ada data project</td></tr>';
+            // Apply filters
+            const statusFilter = document.getElementById('filterStatus').value;
+            const searchFilter = document.getElementById('filterSearch').value.toLowerCase();
+            
+            if (statusFilter) {
+                filteredProjects = filteredProjects.filter(p => p.status === statusFilter);
+            }
+            
+            if (searchFilter) {
+                filteredProjects = filteredProjects.filter(p => 
+                    p.projectName.toLowerCase().includes(searchFilter) ||
+                    p.clientName.toLowerCase().includes(searchFilter)
+                );
+            }
+            
+            if (filteredProjects.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; padding: 2rem;">Tidak ada project yang ditemukan</td></tr>';
                 return;
             }
             
-            tbody.innerHTML = allProjects.map(project => {
-                const financial = project.financial || {};
-                const paymentStatus = financial.paymentStatus || 'pending';
-                const progress = project.progress || 0;
-                
-                return `
-                    <tr>
-                        <td><strong>${project.projectName}</strong></td>
-                        <td>${project.clientName}</td>
-                        <td><span class="status-badge status-${project.status}">${getStatusLabel(project.status)}</span></td>
-                        <td>
-                            <div style="display: flex; align-items: center; gap: 0.5rem;">
-                                <div class="progress-container" style="flex: 1;">
-                                    <div class="progress-bar" style="width: ${progress}%"></div>
-                                </div>
-                                <span style="font-size: 0.85rem;">${progress}%</span>
-                            </div>
-                        </td>
-                        <td><strong>${formatCurrency(project.contractValue)}</strong></td>
-                        <td><span class="status-badge payment-${paymentStatus}">${getPaymentLabel(paymentStatus)}</span></td>
-                        <td>
-                            <div class="action-buttons">
-                                <button class="btn btn-sm btn-primary" onclick="viewProject('${project.id}')">
-                                    <i class="fas fa-eye"></i>
-                                </button>
-                                <button class="btn btn-sm btn-danger" onclick="deleteProject('${project.id}')">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-                `;
-            }).join('');
-        }
-
-        // Form Submit
-        document.getElementById('projectForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            try {
-                const projectData = {
-                    projectName: document.getElementById('projectName').value,
-                    clientName: document.getElementById('clientName').value,
-                    clientContact: document.getElementById('clientContact').value,
-                    clientEmail: document.getElementById('clientEmail').value,
-                    projectAddress: document.getElementById('projectAddress').value,
-                    projectCity: document.getElementById('projectCity').value,
-                    latitude: document.getElementById('latitude').value,
-                    longitude: document.getElementById('longitude').value,
-                    projectType: document.getElementById('projectType').value,
-                    status: document.getElementById('projectStatus').value,
-                    contractValue: parseInt(document.getElementById('contractValue').value),
-                    startDate: document.getElementById('startDate').value,
-                    picName: document.getElementById('picName').value,
-                    projectDescription: document.getElementById('projectDescription').value,
-                    progress: 0,
-                    createdAt: serverTimestamp(),
-                    updatedAt: serverTimestamp()
-                };
-                
-                await addDoc(collection(db, PROJECTS_COLLECTION), projectData);
-                showAlert('formAlert', 'Project berhasil ditambahkan!', 'success');
-                
-                document.getElementById('projectForm').reset();
-                setTimeout(() => switchTab('projects'), 1500);
-                
-            } catch (error) {
-                console.error('Error:', error);
-                showAlert('formAlert', 'Error: ' + error.message, 'error');
-            }
-        });
-
-        document.getElementById('cancelForm').addEventListener('click', () => {
-            document.getElementById('projectForm').reset();
-            switchTab('projects');
-        });
-
-        // View Project
-        window.viewProject = function(projectId) {
-            const project = allProjects.find(p => p.id === projectId);
-            if (!project) return;
-            
-            currentProjectId = projectId;
-            document.getElementById('modalProjectName').textContent = project.projectName;
-            
-            // Activate first tab
-            document.querySelectorAll('.modal-tab').forEach(t => t.classList.remove('active'));
-            document.querySelector('[data-modal-tab="info"]').classList.add('active');
-            
-            renderModalContent(project, 'info');
-            
-            document.getElementById('projectModal').classList.add('active');
-            
-            // Setup tab switching
-            document.querySelectorAll('.modal-tab').forEach(tab => {
-                tab.onclick = function() {
-                    document.querySelectorAll('.modal-tab').forEach(t => t.classList.remove('active'));
-                    this.classList.add('active');
-                    renderModalContent(project, this.dataset.modalTab);
-                };
-            });
-        };
-
-        function renderModalContent(project, tabName) {
-            const container = document.getElementById('modalTabContents');
-            
-            switch(tabName) {
-                case 'info':
-                    container.innerHTML = renderInfoTab(project);
-                    break;
-                case 'timeline':
-                    container.innerHTML = renderTimelineTab(project);
-                    setupTimelineHandlers(project);
-                    break;
-                case 'financial':
-                    container.innerHTML = renderFinancialTab(project);
-                    setupFinancialHandlers(project);
-                    break;
-                case 'quotation':
-                    container.innerHTML = renderQuotationTab(project);
-                    setupQuotationHandlers(project);
-                    break;
-                case 'documents':
-                    container.innerHTML = renderDocumentsTab(project);
-                    setupDocumentsHandlers(project);
-                    break;
-                case 'inventory':
-                    container.innerHTML = renderInventoryTab(project);
-                    setupInventoryHandlers(project);
-                    break;
-                case 'photos':
-                    container.innerHTML = renderPhotosTab(project);
-                    setupPhotosHandlers(project);
-                    break;
-            }
-        }
-
-        function renderInfoTab(project) {
-            return `
-                <div class="tab-content active">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-                        <h3>Informasi Project</h3>
-                        <button class="btn btn-secondary btn-sm" onclick="editBasicInfo('${project.id}')">
-                            <i class="fas fa-edit"></i> Edit Info
-                        </button>
-                    </div>
-                    
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
-                        <div>
-                            <h4 style="color: var(--gray); font-size: 0.85rem; margin-bottom: 0.5rem;">NAMA PROJECT</h4>
-                            <p style="font-weight: 600;">${project.projectName}</p>
-                        </div>
-                        <div>
-                            <h4 style="color: var(--gray); font-size: 0.85rem; margin-bottom: 0.5rem;">CLIENT</h4>
-                            <p style="font-weight: 600;">${project.clientName}</p>
-                            ${project.clientContact ? `<p style="font-size: 0.9rem; color: var(--gray);">${project.clientContact}</p>` : ''}
-                        </div>
-                        <div>
-                            <h4 style="color: var(--gray); font-size: 0.85rem; margin-bottom: 0.5rem;">STATUS PROJECT</h4>
-                            <div style="display: flex; align-items: center; gap: 0.5rem;">
-                                <span class="status-badge status-${project.status}">${getStatusLabel(project.status)}</span>
-                                <button class="btn btn-sm btn-secondary" onclick="changeStatus('${project.id}', '${project.status}')" title="Ubah Status">
-                                    <i class="fas fa-exchange-alt"></i>
-                                </button>
-                            </div>
-                        </div>
-                        <div>
-                            <h4 style="color: var(--gray); font-size: 0.85rem; margin-bottom: 0.5rem;">NILAI KONTRAK</h4>
-                            <p style="font-weight: 600; color: var(--secondary-color);">${formatCurrency(project.contractValue)}</p>
-                        </div>
-                        <div>
-                            <h4 style="color: var(--gray); font-size: 0.85rem; margin-bottom: 0.5rem;">TIPE PROJECT</h4>
-                            <p>${project.projectType || '-'}</p>
-                        </div>
-                        <div>
-                            <h4 style="color: var(--gray); font-size: 0.85rem; margin-bottom: 0.5rem;">PIC</h4>
-                            <p>${project.picName || '-'}</p>
-                        </div>
-                        <div style="grid-column: 1 / -1;">
-                            <h4 style="color: var(--gray); font-size: 0.85rem; margin-bottom: 0.5rem;">LOKASI</h4>
-                            <p>${project.projectAddress}, ${project.projectCity}</p>
-                        </div>
-                        ${project.projectDescription ? `
-                        <div style="grid-column: 1 / -1;">
-                            <h4 style="color: var(--gray); font-size: 0.85rem; margin-bottom: 0.5rem;">DESKRIPSI</h4>
-                            <p style="line-height: 1.6;">${project.projectDescription}</p>
-                        </div>
-                        ` : ''}
-                    </div>
-                </div>
-            `;
-        }
-
-        // Change Status Function
-        window.changeStatus = async function(projectId, currentStatus) {
-            const statuses = {
-                'potential': 'Potential',
-                'negosiasi': 'Negosiasi',
-                'kontrak': 'Kontrak Signed',
-                'eksekusi': 'Eksekusi',
-                'selesai': 'Selesai',
-                'hold': 'Hold'
-            };
-            
-            let html = '<div style="padding: 1.5rem; min-width: 300px;"><h3 style="margin-bottom: 1rem;">Pilih Status Baru:</h3>';
-            html += '<div style="display: grid; gap: 0.5rem;">';
-            
-            for (const [key, label] of Object.entries(statuses)) {
-                const isActive = key === currentStatus ? 'border: 2px solid var(--primary-color); background: #eff6ff;' : '';
-                html += `
-                    <button class="status-change-btn" style="${isActive}" onclick="window.updateProjectStatus('${projectId}', '${key}')">
-                        <span class="status-badge status-${key}">${label}</span>
-                        ${key === currentStatus ? '<i class="fas fa-check" style="color: var(--primary-color);"></i>' : ''}
-                    </button>
-                `;
-            }
-            
-            html += '</div>';
-            html += '<button onclick="window.closeStatusModal()" class="btn btn-secondary" style="width: 100%; margin-top: 1rem;">Batal</button>';
-            html += '</div>';
-            
-            // Create backdrop
-            const backdrop = document.createElement('div');
-            backdrop.id = 'statusChangeBackdrop';
-            backdrop.style.position = 'fixed';
-            backdrop.style.top = '0';
-            backdrop.style.left = '0';
-            backdrop.style.width = '100%';
-            backdrop.style.height = '100%';
-            backdrop.style.background = 'rgba(0,0,0,0.5)';
-            backdrop.style.zIndex = '2999';
-            backdrop.onclick = window.closeStatusModal;
-            document.body.appendChild(backdrop);
-            
-            // Create modal
-            const tempDiv = document.createElement('div');
-            tempDiv.innerHTML = html;
-            tempDiv.style.position = 'fixed';
-            tempDiv.style.top = '50%';
-            tempDiv.style.left = '50%';
-            tempDiv.style.transform = 'translate(-50%, -50%)';
-            tempDiv.style.background = 'white';
-            tempDiv.style.borderRadius = '0.75rem';
-            tempDiv.style.boxShadow = '0 10px 40px rgba(0,0,0,0.3)';
-            tempDiv.style.zIndex = '3000';
-            tempDiv.id = 'statusChangeModal';
-            
-            document.body.appendChild(tempDiv);
-        };
-
-        window.closeStatusModal = function() {
-            document.getElementById('statusChangeModal')?.remove();
-            document.getElementById('statusChangeBackdrop')?.remove();
-        };
-
-        window.updateProjectStatus = async function(projectId, newStatus) {
-            try {
-                await updateDoc(doc(db, PROJECTS_COLLECTION, projectId), {
-                    status: newStatus,
-                    updatedAt: serverTimestamp()
-                });
-                
-                window.closeStatusModal();
-                alert('✅ Status berhasil diupdate!');
-                
-                // Reload project detail
-                const project = allProjects.find(p => p.id === projectId);
-                if (project) {
-                    project.status = newStatus;
-                    viewProject(projectId);
-                }
-            } catch (error) {
-                console.error('Error updating status:', error);
-                alert('❌ Error: ' + error.message);
-            }
-        };
-
-        // Edit Basic Info Function
-        window.editBasicInfo = function(projectId) {
-            const project = allProjects.find(p => p.id === projectId);
-            if (!project) return;
-            
-            const html = `
-                <div style="padding: 1.5rem; max-width: 600px;">
-                    <h3 style="margin-bottom: 1rem;">Edit Informasi Project</h3>
-                    
-                    <div style="display: grid; gap: 1rem;">
-                        <div class="form-group">
-                            <label>Nama Project</label>
-                            <input type="text" id="editProjectName" value="${project.projectName || ''}" style="width: 100%;">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label>Client</label>
-                            <input type="text" id="editClientName" value="${project.clientName || ''}" style="width: 100%;">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label>Kontak Client</label>
-                            <input type="text" id="editClientContact" value="${project.clientContact || ''}" style="width: 100%;">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label>Email Client</label>
-                            <input type="email" id="editClientEmail" value="${project.clientEmail || ''}" style="width: 100%;">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label>Nilai Kontrak (Rp)</label>
-                            <input type="number" id="editContractValue" value="${project.contractValue || 0}" style="width: 100%;">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label>Tipe Project</label>
-                            <select id="editProjectType" style="width: 100%;">
-                                <option value="instalasi" ${project.projectType === 'instalasi' ? 'selected' : ''}>Instalasi Baru</option>
-                                <option value="maintenance" ${project.projectType === 'maintenance' ? 'selected' : ''}>Maintenance</option>
-                                <option value="perbaikan" ${project.projectType === 'perbaikan' ? 'selected' : ''}>Perbaikan</option>
-                                <option value="upgrade" ${project.projectType === 'upgrade' ? 'selected' : ''}>Upgrade System</option>
-                            </select>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label>PIC</label>
-                            <input type="text" id="editPicName" value="${project.picName || ''}" style="width: 100%;">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label>Alamat</label>
-                            <input type="text" id="editProjectAddress" value="${project.projectAddress || ''}" style="width: 100%;">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label>Kota</label>
-                            <input type="text" id="editProjectCity" value="${project.projectCity || ''}" style="width: 100%;">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label>Deskripsi</label>
-                            <textarea id="editProjectDescription" rows="3" style="width: 100%;">${project.projectDescription || ''}</textarea>
-                        </div>
-                    </div>
-                    
-                    <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
-                        <button onclick="window.saveBasicInfo('${projectId}')" class="btn btn-primary" style="flex: 1;">
-                            <i class="fas fa-save"></i> Simpan
-                        </button>
-                        <button onclick="window.closeEditModal()" class="btn btn-secondary" style="flex: 1;">
-                            <i class="fas fa-times"></i> Batal
-                        </button>
-                    </div>
-                </div>
-            `;
-            
-            // Create backdrop
-            const backdrop = document.createElement('div');
-            backdrop.id = 'editBackdrop';
-            backdrop.style.position = 'fixed';
-            backdrop.style.top = '0';
-            backdrop.style.left = '0';
-            backdrop.style.width = '100%';
-            backdrop.style.height = '100%';
-            backdrop.style.background = 'rgba(0,0,0,0.5)';
-            backdrop.style.zIndex = '2999';
-            backdrop.onclick = window.closeEditModal;
-            document.body.appendChild(backdrop);
-            
-            // Create modal
-            const modal = document.createElement('div');
-            modal.innerHTML = html;
-            modal.style.position = 'fixed';
-            modal.style.top = '50%';
-            modal.style.left = '50%';
-            modal.style.transform = 'translate(-50%, -50%)';
-            modal.style.background = 'white';
-            modal.style.borderRadius = '0.75rem';
-            modal.style.boxShadow = '0 10px 40px rgba(0,0,0,0.3)';
-            modal.style.zIndex = '3000';
-            modal.style.maxHeight = '90vh';
-            modal.style.overflowY = 'auto';
-            modal.id = 'editInfoModal';
-            
-            document.body.appendChild(modal);
-        };
-
-        window.closeEditModal = function() {
-            document.getElementById('editInfoModal')?.remove();
-            document.getElementById('editBackdrop')?.remove();
-        };
-
-        window.saveBasicInfo = async function(projectId) {
-            try {
-                const updatedData = {
-                    projectName: document.getElementById('editProjectName').value,
-                    clientName: document.getElementById('editClientName').value,
-                    clientContact: document.getElementById('editClientContact').value,
-                    clientEmail: document.getElementById('editClientEmail').value,
-                    contractValue: parseInt(document.getElementById('editContractValue').value) || 0,
-                    projectType: document.getElementById('editProjectType').value,
-                    picName: document.getElementById('editPicName').value,
-                    projectAddress: document.getElementById('editProjectAddress').value,
-                    projectCity: document.getElementById('editProjectCity').value,
-                    projectDescription: document.getElementById('editProjectDescription').value,
-                    updatedAt: serverTimestamp()
-                };
-                
-                await updateDoc(doc(db, PROJECTS_COLLECTION, projectId), updatedData);
-                
-                window.closeEditModal();
-                alert('✅ Informasi berhasil diupdate!');
-                
-                // Reload project detail
-                const project = allProjects.find(p => p.id === projectId);
-                if (project) {
-                    Object.assign(project, updatedData);
-                    viewProject(projectId);
-                }
-            } catch (error) {
-                console.error('Error updating info:', error);
-                alert('❌ Error: ' + error.message);
-            }
-        };
-
-        function renderTimelineTab(project) {
-            const milestones = project.milestones || {};
-            const progress = project.progress || 0;
-            
-            return `
-                <div class="tab-content active">
-                    <div style="margin-bottom: 2rem;">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
-                            <h3>Progress Project</h3>
-                            <span style="font-size: 1.5rem; font-weight: 700; color: var(--primary-color);">${progress}%</span>
-                        </div>
-                        <div class="progress-container" style="height: 12px;">
-                            <div class="progress-bar" style="width: ${progress}%"></div>
-                        </div>
-                    </div>
-                    
-                    <div class="timeline">
-                        ${renderMilestone('Survey', milestones.survey)}
-                        ${renderMilestone('Quotation', milestones.quotation)}
-                        ${renderMilestone('Negotiation', milestones.negotiation)}
-                        ${renderMilestone('Deal', milestones.deal)}
-                        ${renderMilestone('Execution', milestones.execution)}
-                        ${renderMilestone('Testing', milestones.testing)}
-                        ${renderMilestone('Completed', milestones.completed)}
-                    </div>
-                    
-                    <div style="margin-top: 2rem;">
-                        <h3 style="margin-bottom: 1rem;">Update Progress</h3>
-                        <div style="display: flex; gap: 1rem; align-items: end;">
-                            <div class="form-group" style="flex: 1;">
-                                <label>Progress (%)</label>
-                                <input type="number" id="updateProgress" min="0" max="100" value="${progress}">
-                            </div>
-                            <button class="btn btn-primary" onclick="saveProgress()">
-                                <i class="fas fa-save"></i> Update
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            `;
-        }
-
-        function renderMilestone(title, milestone) {
-            const isDone = milestone?.done || false;
-            const date = milestone?.date || '';
-            const className = isDone ? 'completed' : '';
-            
-            return `
-                <div class="timeline-item ${className}">
-                    <div class="timeline-dot"></div>
-                    <div class="timeline-content">
-                        <div class="timeline-title">${title}</div>
-                        <div class="timeline-date">${date ? formatDate(date) : 'Pending'}</div>
-                    </div>
-                </div>
-            `;
-        }
-
-        function setupTimelineHandlers(project) {
-            window.saveProgress = async function() {
-                const progress = parseInt(document.getElementById('updateProgress').value);
-                
-                try {
-                    await updateDoc(doc(db, PROJECTS_COLLECTION, project.id), {
-                        progress: progress,
-                        updatedAt: serverTimestamp()
-                    });
-                    alert('Progress berhasil diupdate!');
-                    closeProjectModal();
-                } catch (error) {
-                    alert('Error: ' + error.message);
-                }
-            };
-        }
-
-        function renderFinancialTab(project) {
-            const financial = project.financial || {
-                payments: []
-            };
-            
-            const totalPaid = financial.payments?.reduce((sum, p) => sum + (p.amount || 0), 0) || 0;
-            const outstanding = (project.contractValue || 0) - totalPaid;
-            
-            return `
-                <div class="tab-content active">
-                    <div class="summary-box" style="margin-bottom: 2rem;">
-                        <div class="summary-row">
-                            <span>Total Kontrak</span>
-                            <strong>${formatCurrency(project.contractValue)}</strong>
-                        </div>
-                        <div class="summary-row">
-                            <span>Total Terbayar</span>
-                            <strong style="color: var(--secondary-color);">${formatCurrency(totalPaid)}</strong>
-                        </div>
-                        <div class="summary-row">
-                            <span>Outstanding</span>
-                            <strong style="color: var(--danger-color);">${formatCurrency(outstanding)}</strong>
-                        </div>
-                    </div>
-                    
-                    <h3 style="margin-bottom: 1rem;">Payment History</h3>
-                    <div id="paymentsList">
-                        ${renderPaymentsList(financial.payments || [])}
-                    </div>
-                    
-                    <div style="margin-top: 2rem;">
-                        <h3 style="margin-bottom: 1rem;">Tambah Payment</h3>
-                        <div class="form-grid">
-                            <div class="form-group">
-                                <label>Nama Payment</label>
-                                <input type="text" id="paymentName" placeholder="DP / Termin 1">
-                            </div>
-                            <div class="form-group">
-                                <label>Jumlah (Rp)</label>
-                                <input type="number" id="paymentAmount">
-                            </div>
-                            <div class="form-group">
-                                <label>Tanggal</label>
-                                <input type="date" id="paymentDate">
-                            </div>
-                            <div class="form-group">
-                                <label>Status</label>
-                                <select id="paymentStatus">
-                                    <option value="paid">Sudah Dibayar</option>
-                                    <option value="pending">Belum Dibayar</option>
-                                </select>
-                            </div>
-                        </div>
-                        <button class="btn btn-primary" onclick="addPayment()" style="margin-top: 1rem;">
-                            <i class="fas fa-plus"></i> Tambah Payment
-                        </button>
-                    </div>
-                </div>
-            `;
-        }
-
-        function renderPaymentsList(payments) {
-            if (!payments || payments.length === 0) {
-                return '<p style="text-align: center; color: var(--gray); padding: 2rem;">Belum ada payment</p>';
-            }
-            
-            return `
-                <table style="width: 100%;">
-                    <thead>
-                        <tr>
-                            <th>Nama</th>
-                            <th>Jumlah</th>
-                            <th>Tanggal</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        ${payments.map(p => `
-                            <tr>
-                                <td>${p.name}</td>
-                                <td><strong>${formatCurrency(p.amount)}</strong></td>
-                                <td>${formatDate(p.date)}</td>
-                                <td><span class="status-badge payment-${p.status}">${p.status === 'paid' ? 'Lunas' : 'Pending'}</span></td>
-                            </tr>
-                        `).join('')}
-                    </tbody>
-                </table>
-            `;
-        }
-
-        function setupFinancialHandlers(project) {
-            window.addPayment = async function() {
-                const name = document.getElementById('paymentName').value;
-                const amount = parseInt(document.getElementById('paymentAmount').value);
-                const date = document.getElementById('paymentDate').value;
-                const status = document.getElementById('paymentStatus').value;
-                
-                if (!name || !amount || !date) {
-                    alert('Mohon lengkapi semua field');
-                    return;
-                }
-                
-                const financial = project.financial || { payments: [] };
-                financial.payments = financial.payments || [];
-                financial.payments.push({ name, amount, date, status });
-                
-                const totalPaid = financial.payments.reduce((sum, p) => sum + (p.status === 'paid' ? p.amount : 0), 0);
-                const outstanding = (project.contractValue || 0) - totalPaid;
-                
-                financial.outstanding = outstanding;
-                financial.paymentStatus = outstanding === 0 ? 'paid' : (totalPaid > 0 ? 'partial' : 'pending');
-                
-                try {
-                    await updateDoc(doc(db, PROJECTS_COLLECTION, project.id), {
-                        financial: financial,
-                        updatedAt: serverTimestamp()
-                    });
-                    
-                    alert('Payment berhasil ditambahkan!');
-                    viewProject(project.id);
-                    
-                    // Switch to financial tab
-                    document.querySelector('[data-modal-tab="financial"]').click();
-                } catch (error) {
-                    alert('Error: ' + error.message);
-                }
-            };
-        }
-
-        function renderQuotationTab(project) {
-            const quotation = project.quotation || {
-                acUnits: [],
-                materials: []
-            };
-            
-            const acTotal = quotation.acUnits?.reduce((sum, item) => sum + (item.subtotal || 0), 0) || 0;
-            const matTotal = quotation.materials?.reduce((sum, item) => sum + (item.subtotal || 0), 0) || 0;
-            const grandTotal = acTotal + matTotal;
-            
-            return `
-                <div class="tab-content active">
-                    <h3 style="margin-bottom: 1rem;">Unit AC</h3>
-                    <table class="items-table">
-                        <thead>
-                            <tr>
-                                <th>Brand</th>
-                                <th>Type</th>
-                                <th>Capacity</th>
-                                <th>Qty</th>
-                                <th>Harga</th>
-                                <th>Subtotal</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody id="acUnitsTable">
-                            ${renderACUnits(quotation.acUnits || [])}
-                        </tbody>
-                    </table>
-                    <button class="btn btn-secondary btn-sm" onclick="addACUnit()" style="margin-top: 0.5rem;">
-                        <i class="fas fa-plus"></i> Tambah Unit
-                    </button>
-                    
-                    <h3 style="margin-top: 2rem; margin-bottom: 1rem;">Material</h3>
-                    <table class="items-table">
-                        <thead>
-                            <tr>
-                                <th>Nama Material</th>
-                                <th>Qty</th>
-                                <th>Unit</th>
-                                <th>Harga</th>
-                                <th>Subtotal</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody id="materialsTable">
-                            ${renderMaterials(quotation.materials || [])}
-                        </tbody>
-                    </table>
-                    <button class="btn btn-secondary btn-sm" onclick="addMaterial()" style="margin-top: 0.5rem;">
-                        <i class="fas fa-plus"></i> Tambah Material
-                    </button>
-                    
-                    <div class="summary-box" style="margin-top: 2rem;">
-                        <div class="summary-row">
-                            <span>Total Unit AC</span>
-                            <strong>${formatCurrency(acTotal)}</strong>
-                        </div>
-                        <div class="summary-row">
-                            <span>Total Material</span>
-                            <strong>${formatCurrency(matTotal)}</strong>
-                        </div>
-                        <div class="summary-row">
-                            <span>GRAND TOTAL</span>
-                            <strong style="color: var(--primary-color);">${formatCurrency(grandTotal)}</strong>
-                        </div>
-                    </div>
-                    
-                    <button class="btn btn-primary" onclick="saveQuotation()" style="margin-top: 1rem;">
-                        <i class="fas fa-save"></i> Simpan Quotation
-                    </button>
-                </div>
-            `;
-        }
-
-        function renderACUnits(units) {
-            if (!units || units.length === 0) {
-                return '<tr><td colspan="7" style="text-align: center; padding: 1rem;">Belum ada unit AC</td></tr>';
-            }
-            
-            return units.map((unit, index) => `
+            tbody.innerHTML = filteredProjects.map(project => `
                 <tr>
-                    <td><input type="text" value="${unit.brand}" data-ac-index="${index}" data-ac-field="brand"></td>
-                    <td><input type="text" value="${unit.type}" data-ac-index="${index}" data-ac-field="type"></td>
-                    <td><input type="text" value="${unit.capacity}" data-ac-index="${index}" data-ac-field="capacity"></td>
-                    <td><input type="number" value="${unit.qty}" data-ac-index="${index}" data-ac-field="qty" onchange="calculateACSubtotal(${index})"></td>
-                    <td><input type="number" value="${unit.price}" data-ac-index="${index}" data-ac-field="price" onchange="calculateACSubtotal(${index})"></td>
-                    <td><strong>${formatCurrency(unit.subtotal || 0)}</strong></td>
-                    <td><button class="btn btn-sm btn-danger" onclick="removeACUnit(${index})"><i class="fas fa-trash"></i></button></td>
-                </tr>
-            `).join('');
-        }
-
-        function renderMaterials(materials) {
-            if (!materials || materials.length === 0) {
-                return '<tr><td colspan="6" style="text-align: center; padding: 1rem;">Belum ada material</td></tr>';
-            }
-            
-            return materials.map((mat, index) => `
-                <tr>
-                    <td><input type="text" value="${mat.name}" data-mat-index="${index}" data-mat-field="name"></td>
-                    <td><input type="number" value="${mat.qty}" data-mat-index="${index}" data-mat-field="qty" onchange="calculateMatSubtotal(${index})"></td>
-                    <td><input type="text" value="${mat.unit}" data-mat-index="${index}" data-mat-field="unit"></td>
-                    <td><input type="number" value="${mat.price}" data-mat-index="${index}" data-mat-field="price" onchange="calculateMatSubtotal(${index})"></td>
-                    <td><strong>${formatCurrency(mat.subtotal || 0)}</strong></td>
-                    <td><button class="btn btn-sm btn-danger" onclick="removeMaterial(${index})"><i class="fas fa-trash"></i></button></td>
-                </tr>
-            `).join('');
-        }
-
-        function setupQuotationHandlers(project) {
-            let quotation = project.quotation || {
-                acUnits: [],
-                materials: []
-            };
-            
-            window.addACUnit = function() {
-                quotation.acUnits.push({
-                    brand: '',
-                    type: '',
-                    capacity: '',
-                    qty: 1,
-                    price: 0,
-                    subtotal: 0
-                });
-                document.getElementById('acUnitsTable').innerHTML = renderACUnits(quotation.acUnits);
-            };
-            
-            window.removeACUnit = function(index) {
-                quotation.acUnits.splice(index, 1);
-                document.getElementById('acUnitsTable').innerHTML = renderACUnits(quotation.acUnits);
-            };
-            
-            window.calculateACSubtotal = function(index) {
-                const qty = parseFloat(document.querySelector(`[data-ac-index="${index}"][data-ac-field="qty"]`).value) || 0;
-                const price = parseFloat(document.querySelector(`[data-ac-index="${index}"][data-ac-field="price"]`).value) || 0;
-                quotation.acUnits[index].subtotal = qty * price;
-                document.getElementById('acUnitsTable').innerHTML = renderACUnits(quotation.acUnits);
-            };
-            
-            window.addMaterial = function() {
-                quotation.materials.push({
-                    name: '',
-                    qty: 1,
-                    unit: '',
-                    price: 0,
-                    subtotal: 0
-                });
-                document.getElementById('materialsTable').innerHTML = renderMaterials(quotation.materials);
-            };
-            
-            window.removeMaterial = function(index) {
-                quotation.materials.splice(index, 1);
-                document.getElementById('materialsTable').innerHTML = renderMaterials(quotation.materials);
-            };
-            
-            window.calculateMatSubtotal = function(index) {
-                const qty = parseFloat(document.querySelector(`[data-mat-index="${index}"][data-mat-field="qty"]`).value) || 0;
-                const price = parseFloat(document.querySelector(`[data-mat-index="${index}"][data-mat-field="price"]`).value) || 0;
-                quotation.materials[index].subtotal = qty * price;
-                document.getElementById('materialsTable').innerHTML = renderMaterials(quotation.materials);
-            };
-            
-            window.saveQuotation = async function() {
-                // Collect all data from inputs
-                document.querySelectorAll('[data-ac-index]').forEach(input => {
-                    const index = parseInt(input.dataset.acIndex);
-                    const field = input.dataset.acField;
-                    quotation.acUnits[index][field] = input.value;
-                });
-                
-                document.querySelectorAll('[data-mat-index]').forEach(input => {
-                    const index = parseInt(input.dataset.matIndex);
-                    const field = input.dataset.matField;
-                    quotation.materials[index][field] = input.value;
-                });
-                
-                try {
-                    await updateDoc(doc(db, PROJECTS_COLLECTION, project.id), {
-                        quotation: quotation,
-                        updatedAt: serverTimestamp()
-                    });
-                    
-                    alert('Quotation berhasil disimpan!');
-                } catch (error) {
-                    alert('Error: ' + error.message);
-                }
-            };
-        }
-
-        function renderDocumentsTab(project) {
-            const documents = project.documents || [];
-            
-            return `
-                <div class="tab-content active">
-                    <div class="doc-upload-area" onclick="document.getElementById('docUploadInput').click()">
-                        <i class="fas fa-cloud-upload-alt" style="font-size: 3rem; color: var(--primary-color); margin-bottom: 1rem;"></i>
-                        <p style="font-weight: 600;">Klik untuk upload dokumen</p>
-                        <p style="font-size: 0.85rem; color: var(--gray);">PDF, Word, Excel (Max 10MB)</p>
-                        <input type="file" id="docUploadInput" style="display: none;" accept=".pdf,.doc,.docx,.xls,.xlsx">
-                    </div>
-                    
-                    <div style="margin-top: 1rem;">
-                        <label>Tipe Dokumen</label>
-                        <select id="docType">
-                            <option value="kontrak">Kontrak</option>
-                            <option value="bast">BAST</option>
-                            <option value="invoice">Invoice</option>
-                            <option value="penawaran">Surat Penawaran</option>
-                            <option value="other">Lainnya</option>
-                        </select>
-                    </div>
-                    
-                    <div class="doc-list">
-                        ${renderDocumentsList(documents)}
-                    </div>
-                </div>
-            `;
-        }
-
-        function renderDocumentsList(documents) {
-            if (!documents || documents.length === 0) {
-                return '<p style="text-align: center; color: var(--gray); padding: 2rem;">Belum ada dokumen</p>';
-            }
-            
-            return documents.map((doc, index) => `
-                <div class="doc-item">
-                    <div class="doc-info">
-                        <div class="doc-icon">
-                            <i class="fas ${getDocIcon(doc.name)}"></i>
-                        </div>
-                        <div>
-                            <strong>${doc.name}</strong>
-                            <p style="font-size: 0.85rem; color: var(--gray);">${doc.type} • ${formatDate(doc.uploadDate)}</p>
-                        </div>
-                    </div>
-                    <div style="display: flex; gap: 0.5rem;">
-                        ${doc.name.toLowerCase().endsWith('.pdf') ? `
-                            <button class="btn btn-sm btn-primary" onclick="viewPDF('${doc.url}', '${doc.name}')">
-                                <i class="fas fa-eye"></i> View
-                            </button>
-                        ` : ''}
-                        <a href="${doc.url}" target="_blank" class="btn btn-sm btn-secondary">
-                            <i class="fas fa-download"></i> Download
-                        </a>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function getDocIcon(filename) {
-            const ext = filename.split('.').pop().toLowerCase();
-            const icons = {
-                'pdf': 'fa-file-pdf',
-                'doc': 'fa-file-word',
-                'docx': 'fa-file-word',
-                'xls': 'fa-file-excel',
-                'xlsx': 'fa-file-excel',
-                'jpg': 'fa-file-image',
-                'jpeg': 'fa-file-image',
-                'png': 'fa-file-image'
-            };
-            return icons[ext] || 'fa-file';
-        }
-
-        // PDF Viewer Function
-        window.viewPDF = function(url, filename) {
-            const modal = document.createElement('div');
-            modal.className = 'modal active';
-            modal.id = 'pdfViewerModal';
-            modal.innerHTML = `
-                <div class="modal-content" style="max-width: 90%; width: 1200px;">
-                    <div class="modal-header">
-                        <h2 class="modal-title">${filename}</h2>
-                        <button class="close-modal" onclick="closePDFViewer()">
-                            <i class="fas fa-times"></i>
-                        </button>
-                    </div>
-                    <div class="pdf-viewer-container">
-                        <iframe src="${url}" type="application/pdf"></iframe>
-                    </div>
-                    <div style="margin-top: 1rem; display: flex; gap: 1rem;">
-                        <a href="${url}" target="_blank" class="btn btn-primary">
-                            <i class="fas fa-external-link-alt"></i> Buka di Tab Baru
-                        </a>
-                        <a href="${url}" download="${filename}" class="btn btn-secondary">
-                            <i class="fas fa-download"></i> Download
-                        </a>
-                        <button class="btn btn-secondary" onclick="closePDFViewer()">
-                            <i class="fas fa-times"></i> Tutup
-                        </button>
-                    </div>
-                </div>
-            `;
-            document.body.appendChild(modal);
-            
-            // Close on outside click
-            modal.addEventListener('click', (e) => {
-                if (e.target.id === 'pdfViewerModal') {
-                    closePDFViewer();
-                }
-            });
-        };
-
-        window.closePDFViewer = function() {
-            document.getElementById('pdfViewerModal')?.remove();
-        };
-
-        function setupDocumentsHandlers(project) {
-            document.getElementById('docUploadInput').addEventListener('change', async (e) => {
-                const file = e.target.files[0];
-                if (!file) return;
-                
-                const docType = document.getElementById('docType').value;
-                
-                try {
-                    const storageRef = ref(storage, `nala_projects/${project.id}/documents/${Date.now()}_${file.name}`);
-                    const uploadTask = uploadBytesResumable(storageRef, file);
-                    
-                    uploadTask.on('state_changed',
-                        (snapshot) => {
-                            // Progress
-                        },
-                        (error) => {
-                            alert('Upload gagal: ' + error.message);
-                        },
-                        async () => {
-                            const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-                            
-                            const documents = project.documents || [];
-                            documents.push({
-                                name: file.name,
-                                type: docType,
-                                url: downloadURL,
-                                uploadDate: new Date().toISOString()
-                            });
-                            
-                            await updateDoc(doc(db, PROJECTS_COLLECTION, project.id), {
-                                documents: documents,
-                                updatedAt: serverTimestamp()
-                            });
-                            
-                            alert('Dokumen berhasil diupload!');
-                            viewProject(project.id);
-                            document.querySelector('[data-modal-tab="documents"]').click();
-                        }
-                    );
-                } catch (error) {
-                    alert('Error: ' + error.message);
-                }
-            });
-        }
-
-        function renderInventoryTab(project) {
-            const inventory = project.inventory || [];
-            
-            return `
-                <div class="tab-content active">
-                    <h3 style="margin-bottom: 1rem;">Inventory Project</h3>
-                    
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Item</th>
-                                <th>Qty</th>
-                                <th>Used</th>
-                                <th>Remaining</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody id="inventoryTable">
-                            ${renderInventoryList(inventory)}
-                        </tbody>
-                    </table>
-                    
-                    <div style="margin-top: 2rem;">
-                        <h3 style="margin-bottom: 1rem;">Tambah Item</h3>
-                        <div class="form-grid">
-                            <div class="form-group">
-                                <label>Nama Item</label>
-                                <input type="text" id="invItem">
-                            </div>
-                            <div class="form-group">
-                                <label>Quantity</label>
-                                <input type="number" id="invQty">
-                            </div>
-                            <div class="form-group">
-                                <label>Used</label>
-                                <input type="number" id="invUsed">
-                            </div>
-                        </div>
-                        <button class="btn btn-primary" onclick="addInventoryItem()" style="margin-top: 1rem;">
-                            <i class="fas fa-plus"></i> Tambah Item
-                        </button>
-                    </div>
-                </div>
-            `;
-        }
-
-        function renderInventoryList(inventory) {
-            if (!inventory || inventory.length === 0) {
-                return '<tr><td colspan="5" style="text-align: center; padding: 2rem;">Belum ada inventory</td></tr>';
-            }
-            
-            return inventory.map((item, index) => `
-                <tr>
-                    <td><strong>${item.item}</strong></td>
-                    <td>${item.qty}</td>
-                    <td>${item.used || 0}</td>
-                    <td>${(item.qty - (item.used || 0))}</td>
+                    <td><strong>${project.projectName}</strong></td>
+                    <td>${project.clientName}</td>
+                    <td>${project.projectAddress}, ${project.projectCity}</td>
+                    <td><span class="status-badge status-${project.status}">${getStatusLabel(project.status)}</span></td>
+                    <td><strong>${formatCurrency(project.contractValue)}</strong></td>
+                    <td>${project.picName || '-'}</td>
+                    <td>${project.startDate ? formatDate(project.startDate) : '-'}</td>
                     <td>
-                        <button class="btn btn-sm btn-danger" onclick="removeInventoryItem(${index})">
-                            <i class="fas fa-trash"></i>
-                        </button>
+                        <div class="action-buttons">
+                            <button class="btn btn-sm btn-view" onclick="viewProject('${project.id}')">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button class="btn btn-sm btn-edit" onclick="editProject('${project.id}')">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-sm btn-delete" onclick="deleteProject('${project.id}')">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
                     </td>
                 </tr>
             `).join('');
         }
 
-        function setupInventoryHandlers(project) {
-            window.addInventoryItem = async function() {
-                const item = document.getElementById('invItem').value;
-                const qty = parseInt(document.getElementById('invQty').value);
-                const used = parseInt(document.getElementById('invUsed').value) || 0;
-                
-                if (!item || !qty) {
-                    alert('Mohon lengkapi semua field');
-                    return;
-                }
-                
-                const inventory = project.inventory || [];
-                inventory.push({ item, qty, used, remaining: qty - used });
-                
-                try {
-                    await updateDoc(doc(db, PROJECTS_COLLECTION, project.id), {
-                        inventory: inventory,
-                        updatedAt: serverTimestamp()
-                    });
-                    
-                    alert('Item berhasil ditambahkan!');
-                    viewProject(project.id);
-                    document.querySelector('[data-modal-tab="inventory"]').click();
-                } catch (error) {
-                    alert('Error: ' + error.message);
-                }
-            };
-            
-            window.removeInventoryItem = async function(index) {
-                if (!confirm('Hapus item ini?')) return;
-                
-                const inventory = project.inventory || [];
-                inventory.splice(index, 1);
-                
-                try {
-                    await updateDoc(doc(db, PROJECTS_COLLECTION, project.id), {
-                        inventory: inventory,
-                        updatedAt: serverTimestamp()
-                    });
-                    
-                    alert('Item berhasil dihapus!');
-                    viewProject(project.id);
-                    document.querySelector('[data-modal-tab="inventory"]').click();
-                } catch (error) {
-                    alert('Error: ' + error.message);
-                }
-            };
-        }
+        // Filter listeners
+        document.getElementById('filterStatus').addEventListener('change', displayAllProjects);
+        document.getElementById('filterSearch').addEventListener('input', displayAllProjects);
+        document.getElementById('resetFilter').addEventListener('click', () => {
+            document.getElementById('filterStatus').value = '';
+            document.getElementById('filterSearch').value = '';
+            displayAllProjects();
+        });
 
-        function renderPhotosTab(project) {
-            const photos = project.photos || [];
-            
-            return `
-                <div class="tab-content active">
-                    <div class="photo-upload-container" onclick="document.getElementById('photoUploadInput').click()">
-                        <i class="fas fa-cloud-upload-alt" style="font-size: 3rem; color: var(--primary-color); margin-bottom: 1rem;"></i>
-                        <p style="font-weight: 600;">Klik untuk upload foto</p>
-                        <p style="font-size: 0.85rem; color: var(--gray);">PNG, JPG (Max 5MB)</p>
-                        <input type="file" id="photoUploadInput" multiple accept="image/*" style="display: none;">
-                    </div>
-                    
-                    <div class="photo-preview-grid" style="margin-top: 2rem;">
-                        ${renderPhotosList(photos)}
-                    </div>
-                </div>
-            `;
-        }
-
-        function renderPhotosList(photos) {
-            if (!photos || photos.length === 0) {
-                return '<p style="text-align: center; color: var(--gray); padding: 2rem; grid-column: 1 / -1;">Belum ada foto</p>';
-            }
-            
-            return photos.map(photo => `
-                <div class="photo-preview-item">
-                    <img src="${photo.url}" alt="${photo.name}" onclick="window.open('${photo.url}', '_blank')">
-                </div>
-            `).join('');
-        }
-
-        function setupPhotosHandlers(project) {
-            document.getElementById('photoUploadInput').addEventListener('change', async (e) => {
-                const files = Array.from(e.target.files);
-                if (files.length === 0) return;
-                
-                try {
-                    const photos = project.photos || [];
-                    
-                    for (const file of files) {
-                        const storageRef = ref(storage, `nala_projects/${project.id}/photos/${Date.now()}_${file.name}`);
-                        const uploadTask = uploadBytesResumable(storageRef, file);
-                        
-                        await new Promise((resolve, reject) => {
-                            uploadTask.on('state_changed',
-                                (snapshot) => {
-                                    // Progress
-                                },
-                                (error) => {
-                                    reject(error);
-                                },
-                                async () => {
-                                    const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-                                    photos.push({
-                                        name: file.name,
-                                        url: downloadURL,
-                                        uploadedAt: new Date().toISOString()
-                                    });
-                                    resolve();
-                                }
-                            );
-                        });
-                    }
-                    
-                    await updateDoc(doc(db, PROJECTS_COLLECTION, project.id), {
-                        photos: photos,
-                        updatedAt: serverTimestamp()
-                    });
-                    
-                    alert('Foto berhasil diupload!');
-                    viewProject(project.id);
-                    document.querySelector('[data-modal-tab="photos"]').click();
-                } catch (error) {
-                    alert('Error: ' + error.message);
-                }
-            });
-        }
-
-        window.closeProjectModal = function() {
-            document.getElementById('projectModal').classList.remove('active');
-            currentProjectId = null;
-        };
-
-        // Delete Project
-        window.deleteProject = async function(projectId) {
-            if (!confirm('Apakah Anda yakin ingin menghapus project ini?')) return;
-            
-            try {
-                await deleteDoc(doc(db, PROJECTS_COLLECTION, projectId));
-                alert('Project berhasil dihapus!');
-            } catch (error) {
-                alert('Error: ' + error.message);
-            }
-        };
-
-        // Utility Functions
+        // ============================================================
+        // UTILITY FUNCTIONS
+        // ============================================================
+        
         function formatCurrency(value) {
             if (!value) return 'Rp 0';
             return 'Rp ' + parseInt(value).toLocaleString('id-ID');
@@ -3397,15 +2365,6 @@
             return labels[status] || status;
         }
 
-        function getPaymentLabel(status) {
-            const labels = {
-                'pending': 'Pending',
-                'partial': 'Partial',
-                'paid': 'Lunas'
-            };
-            return labels[status] || status;
-        }
-
         function showAlert(elementId, message, type) {
             const alert = document.getElementById(elementId);
             alert.textContent = message;
@@ -3416,10 +2375,10 @@
             }, 5000);
         }
 
-        // Close modal on outside click
-        document.getElementById('projectModal').addEventListener('click', (e) => {
-            if (e.target.id === 'projectModal') {
-                closeProjectModal();
+        // Close modal when clicking outside
+        document.getElementById('viewModal').addEventListener('click', (e) => {
+            if (e.target.id === 'viewModal') {
+                closeViewModal();
             }
         });
     </script>
