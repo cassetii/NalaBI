@@ -6,6 +6,9 @@
 let currentProject = null;
 let projectId = null;
 let isEditMode = false;
+let editLocationMap = null;
+let editMarker = null;
+let newLocation = null;
 
 // Initialize project detail page
 function initProjectDetail() {
@@ -559,17 +562,104 @@ function toggleEditMode() {
     isEditMode = !isEditMode;
     
     const editBtn = document.getElementById('editBtn');
+    const mapContainer = document.getElementById('editMapContainer');
     
     if (isEditMode) {
         editBtn.innerHTML = '<i class="fas fa-save"></i> Simpan';
         editBtn.onclick = saveProjectChanges;
         editBtn.classList.remove('btn-primary');
         editBtn.classList.add('btn-success');
+        
+        // Show map for location editing
+        mapContainer.classList.add('active');
+        
+        // Initialize edit map
+        setTimeout(() => {
+            if (!editLocationMap) {
+                editLocationMap = new google.maps.Map(document.getElementById('editMap'), {
+                    center: {
+                        lat: currentProject.location.lat,
+                        lng: currentProject.location.lng
+                    },
+                    zoom: 15,
+                    mapTypeControl: true,
+                    streetViewControl: false
+                });
+                
+                // Add current location marker
+                editMarker = new google.maps.Marker({
+                    position: {
+                        lat: currentProject.location.lat,
+                        lng: currentProject.location.lng
+                    },
+                    map: editLocationMap,
+                    draggable: true,
+                    icon: {
+                        path: google.maps.SymbolPath.CIRCLE,
+                        fillColor: '#2196F3',
+                        fillOpacity: 1,
+                        strokeColor: '#ffffff',
+                        strokeWeight: 3,
+                        scale: 12
+                    }
+                });
+                
+                // Handle map click to change location
+                editLocationMap.addListener('click', (event) => {
+                    const lat = event.latLng.lat();
+                    const lng = event.latLng.lng();
+                    
+                    // Update marker position
+                    editMarker.setPosition(event.latLng);
+                    
+                    // Reverse geocode
+                    const geocoder = new google.maps.Geocoder();
+                    geocoder.geocode({ location: event.latLng }, (results, status) => {
+                        if (status === 'OK' && results[0]) {
+                            newLocation = {
+                                lat: lat,
+                                lng: lng,
+                                address: results[0].formatted_address
+                            };
+                            
+                            // Update address field
+                            document.getElementById('editAddress').value = results[0].formatted_address;
+                            utils.showToast('Lokasi baru dipilih! Klik Simpan untuk update.', 'info');
+                        }
+                    });
+                });
+                
+                // Handle marker drag
+                editMarker.addListener('dragend', (event) => {
+                    const lat = event.latLng.lat();
+                    const lng = event.latLng.lng();
+                    
+                    const geocoder = new google.maps.Geocoder();
+                    geocoder.geocode({ location: event.latLng }, (results, status) => {
+                        if (status === 'OK' && results[0]) {
+                            newLocation = {
+                                lat: lat,
+                                lng: lng,
+                                address: results[0].formatted_address
+                            };
+                            
+                            document.getElementById('editAddress').value = results[0].formatted_address;
+                            utils.showToast('Lokasi baru dipilih! Klik Simpan untuk update.', 'info');
+                        }
+                    });
+                });
+            }
+        }, 100);
+        
     } else {
         editBtn.innerHTML = '<i class="fas fa-edit"></i> Edit';
         editBtn.onclick = toggleEditMode;
         editBtn.classList.remove('btn-success');
         editBtn.classList.add('btn-primary');
+        
+        // Hide map
+        mapContainer.classList.remove('active');
+        newLocation = null;
     }
     
     renderProjectInfo();
@@ -584,9 +674,20 @@ async function saveProjectChanges() {
             phone: document.getElementById('editPhone').value.trim(),
             status: document.getElementById('editStatus').value,
             description: document.getElementById('editDescription').value.trim(),
-            'location.address': document.getElementById('editAddress').value.trim(),
             updatedAt: firebase.firestore.FieldValue.serverTimestamp()
         };
+        
+        // If location changed, include new location
+        if (newLocation) {
+            updatedData.location = {
+                lat: newLocation.lat,
+                lng: newLocation.lng,
+                address: newLocation.address
+            };
+        } else {
+            // Just update address if changed (without lat/lng change)
+            updatedData['location.address'] = document.getElementById('editAddress').value.trim();
+        }
         
         // Validate
         if (!updatedData.projectName || !updatedData.client) {
@@ -603,12 +704,22 @@ async function saveProjectChanges() {
         currentProject.phone = updatedData.phone;
         currentProject.status = updatedData.status;
         currentProject.description = updatedData.description;
-        if (currentProject.location) {
+        
+        if (newLocation) {
+            currentProject.location = newLocation;
+            // Update sidebar map marker
+            clearMarkers();
+            addMarker(currentProject);
+        } else if (currentProject.location) {
             currentProject.location.address = updatedData['location.address'];
         }
         
         // Exit edit mode
         isEditMode = false;
+        newLocation = null;
+        
+        // Hide map
+        document.getElementById('editMapContainer').classList.remove('active');
         
         // Update UI
         renderProjectHeader();
