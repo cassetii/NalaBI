@@ -210,6 +210,19 @@
         .tab-content.active {
             display: block;
         }
+        
+        .edit-map-container {
+            height: 300px;
+            width: 100%;
+            border: 2px solid #2196F3;
+            border-radius: 8px;
+            margin: 20px 0;
+            display: none;
+        }
+        
+        .edit-map-container.active {
+            display: block;
+        }
     </style>
 </head>
 <body>
@@ -304,6 +317,11 @@
 
                     <!-- Info Tab -->
                     <div id="tab-info" class="tab-content active">
+                        <!-- Map for Edit Location -->
+                        <div id="editMapContainer" class="edit-map-container">
+                            <div id="editMap" style="width: 100%; height: 100%;"></div>
+                        </div>
+                        
                         <div class="info-grid">
                             <div class="info-item">
                                 <div class="info-label">Nama Project</div>
