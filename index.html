@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nala Project Management - Dashboard</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <i class="fas fa-snowflake"></i>
+                <span>Nala Project Management</span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="index.html" class="active"><i class="fas fa-home"></i> Dashboard</a></li>
+                <li><a href="add-project.html"><i class="fas fa-plus-circle"></i> Tambah Project</a></li>
+                <li><a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+            </ul>
+            <div class="user-info">
+                <i class="fas fa-user-circle"></i>
+                <span id="userEmail">Loading...</span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content login-card">
+            <div class="login-header">
+                <i class="fas fa-snowflake"></i>
+                <h2>Nala Aircon</h2>
+                <p>Project Management System</p>
+            </div>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label><i class="fas fa-envelope"></i> Email</label>
+                    <input type="email" id="loginEmail" value="admin@nalaaircon.com" required>
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-lock"></i> Password</label>
+                    <input type="password" id="loginPassword" value="123456" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">
+                    <i class="fas fa-sign-in-alt"></i> Login
+                </button>
+            </form>
+            <div id="loginError" class="error-message"></div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Map Hero Section -->
+        <section class="map-hero">
+            <div id="map"></div>
+            <div class="map-overlay">
+                <div class="map-controls">
+                    <div class="map-stats">
+                        <div class="stat-item">
+                            <i class="fas fa-project-diagram"></i>
+                            <div>
+                                <h3 id="totalProjects">0</h3>
+                                <p>Total Projects</p>
+                            </div>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-hourglass-half"></i>
+                            <div>
+                                <h3 id="activeProjects">0</h3>
+                                <p>Active</p>
+                            </div>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-check-circle"></i>
+                            <div>
+                                <h3 id="completedProjects">0</h3>
+                                <p>Survey Done</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="map-legend">
+                        <h4><i class="fas fa-info-circle"></i> Status Legend</h4>
+                        <div class="legend-items">
+                            <span class="legend-item"><span class="marker-blue"></span> Prospek</span>
+                            <span class="legend-item"><span class="marker-green"></span> Survey</span>
+                            <span class="legend-item"><span class="marker-purple"></span> Pengerjaan</span>
+                            <span class="legend-item"><span class="marker-red"></span> Ditolak</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Filter Section -->
+        <section class="filter-section">
+            <div class="container">
+                <div class="filter-bar">
+                    <div class="filter-group">
+                        <button class="filter-btn active" data-status="all">
+                            <i class="fas fa-th"></i> Semua Project
+                        </button>
+                        <button class="filter-btn" data-status="prospek">
+                            <i class="fas fa-circle" style="color: #2196F3;"></i> Prospek
+                        </button>
+                        <button class="filter-btn" data-status="survey">
+                            <i class="fas fa-circle" style="color: #4CAF50;"></i> Survey
+                        </button>
+                        <button class="filter-btn" data-status="pengerjaan">
+                            <i class="fas fa-circle" style="color: #9C27B0;"></i> Pengerjaan
+                        </button>
+                        <button class="filter-btn" data-status="ditolak">
+                            <i class="fas fa-circle" style="color: #F44336;"></i> Ditolak
+                        </button>
+                    </div>
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="searchInput" placeholder="Cari project...">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Projects Grid -->
+        <section class="projects-section">
+            <div class="container">
+                <div class="section-header">
+                    <h2><i class="fas fa-folder-open"></i> Daftar Project</h2>
+                    <a href="add-project.html" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Tambah Project Baru
+                    </a>
+                </div>
+                
+                <div id="loadingSpinner" class="loading">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    <p>Memuat data project...</p>
+                </div>
+
+                <div id="projectsGrid" class="projects-grid">
+                    <!-- Project cards will be inserted here dynamically -->
+                </div>
+
+                <div id="emptyState" class="empty-state" style="display: none;">
+                    <i class="fas fa-folder-open"></i>
+                    <h3>Belum Ada Project</h3>
+                    <p>Mulai tambahkan project baru dengan klik tombol di atas</p>
+                    <a href="add-project.html" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Tambah Project
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 Nala Aircon - CV Nala Karya. All rights reserved.</p>
+            <p>Professional AC Installation & Maintenance</p>
+        </div>
+    </footer>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
+    
+    <!-- App Scripts - Load FIRST -->
+    <script src="js/config.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/maps.js"></script>
+    <script src="js/dashboard.js"></script>
+    
+    <!-- Google Maps with Callback - Load LAST -->
+    <script>
+        function initGoogleMaps() {
+            console.log('✅ Google Maps API loaded on dashboard');
+            // Dashboard map will initialize when user logs in via initDashboard()
+        }
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAgJ1XyeNAym-SibOsJG57gE5WXWJgzDA4&libraries=places&callback=initGoogleMaps" async defer></script>
+</body>
+</html>

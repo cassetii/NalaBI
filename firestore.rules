@@ -1,0 +1,89 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // ================================================
+    // HELPER FUNCTIONS
+    // ================================================
+    
+    // Check if user is authenticated
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    // Check if user owns the document
+    function isOwner(userId) {
+      return request.auth.uid == userId;
+    }
+    
+    // Check if user is admin
+    function isAdmin() {
+      return isAuthenticated() && request.auth.token.email == 'admin@nalaaircon.com';
+    }
+    
+    // ================================================
+    // NALA PROJECTS COLLECTION
+    // Main collection for project management
+    // ================================================
+    match /nala_projects/{projectId} {
+      
+      // Allow read for all authenticated users
+      allow read: if isAuthenticated();
+      
+      // Allow create for authenticated users
+      // Ensure createdBy field is set to current user
+      allow create: if isAuthenticated() 
+                    && request.resource.data.createdBy == request.auth.uid
+                    && request.resource.data.createdAt != null;
+      
+      // Allow update if:
+      // - User is authenticated
+      // - User is the creator OR is admin
+      // - createdBy field cannot be changed
+      allow update: if isAuthenticated() 
+                    && (resource.data.createdBy == request.auth.uid || isAdmin())
+                    && request.resource.data.createdBy == resource.data.createdBy;
+      
+      // Allow delete if:
+      // - User is authenticated
+      // - User is the creator OR is admin
+      allow delete: if isAuthenticated() 
+                    && (resource.data.createdBy == request.auth.uid || isAdmin());
+    }
+    
+    // ================================================
+    // CUSTOMERS COLLECTION
+    // For customer data management
+    // ================================================
+    match /customers/{customerId} {
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated();
+    }
+    
+    // ================================================
+    // KPI TEKNISI COLLECTION
+    // For technician performance tracking
+    // ================================================
+    match /kpi_teknisi/{kpiId} {
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated();
+    }
+    
+    // ================================================
+    // DASHBOARD PROJECTS COLLECTION
+    // For dashboard-specific project data
+    // ================================================
+    match /nala_dashboard_projects/{projectId} {
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated();
+    }
+    
+    // ================================================
+    // BLOCK ALL OTHER PATHS
+    // Security: Deny access to any other collections
+    // ================================================
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
