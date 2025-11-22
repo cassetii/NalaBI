@@ -1,6 +1,6 @@
 // ================================================
 // FIREBASE CONFIGURATION
-// Nala Project Management System
+// Nala Project Management System - UPDATED
 // ================================================
 
 // Firebase Configuration
@@ -53,10 +53,18 @@ const PROJECT_STATUS = {
     DITOLAK: 'ditolak'
 };
 
-// Default Materials
+// Default Materials - UPDATED WITH BREAKDOWN
 const DEFAULT_MATERIALS = [
-    { name: 'Pipa', unit: 'm', quotationPrice: 0, quotationQty: 0, realPrice: 0, realQty: 0 },
-    { name: 'Kabel', unit: 'm', quotationPrice: 0, quotationQty: 0, realPrice: 0, realQty: 0 },
+    // Pipa - 3 Types
+    { name: 'Pipa 1/4" - 3/8"', unit: 'm', quotationPrice: 0, quotationQty: 0, realPrice: 0, realQty: 0 },
+    { name: 'Pipa 1/4" - 1/2"', unit: 'm', quotationPrice: 0, quotationQty: 0, realPrice: 0, realQty: 0 },
+    { name: 'Pipa 3/8" - 5/8"', unit: 'm', quotationPrice: 0, quotationQty: 0, realPrice: 0, realQty: 0 },
+    // Kabel - 4 Types
+    { name: 'Kabel 2x1.5', unit: 'm', quotationPrice: 0, quotationQty: 0, realPrice: 0, realQty: 0 },
+    { name: 'Kabel 2x2.5', unit: 'm', quotationPrice: 0, quotationQty: 0, realPrice: 0, realQty: 0 },
+    { name: 'Kabel 3x2.5', unit: 'm', quotationPrice: 0, quotationQty: 0, realPrice: 0, realQty: 0 },
+    { name: 'Kabel 4x2.5', unit: 'm', quotationPrice: 0, quotationQty: 0, realPrice: 0, realQty: 0 },
+    // Other Materials
     { name: 'Bracket', unit: 'pcs', quotationPrice: 0, quotationQty: 0, realPrice: 0, realQty: 0 },
     { name: 'Ducktip', unit: 'pcs', quotationPrice: 0, quotationQty: 0, realPrice: 0, realQty: 0 },
     { name: 'Isolasi Listrik', unit: 'roll', quotationPrice: 0, quotationQty: 0, realPrice: 0, realQty: 0 },
@@ -120,7 +128,6 @@ const utils = {
 
     // Show toast notification
     showToast: (message, type = 'info') => {
-        // Simple toast implementation
         const toast = document.createElement('div');
         toast.className = `toast toast-${type}`;
         toast.textContent = message;
