@@ -18,7 +18,74 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        /* Dashboard Stats Cards */
+        /* Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f6fa;
+            color: #2c3e50;
+        }
+        
+        /* Layout dengan Sidebar Map */
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+            flex-direction: column;
+        }
+        
+        .app-body {
+            display: flex;
+            flex: 1;
+        }
+        
+        .main-wrapper {
+            flex: 1;
+            overflow-y: auto;
+        }
+        
+        .sidebar-map {
+            width: 400px;
+            background: white;
+            box-shadow: -2px 0 10px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            height: 100vh;
+        }
+        
+        /* Header */
+        .header {
+            background: white;
+            padding: 20px 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .header-left h1 {
+            font-size: 24px;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+        
+        .header-left p {
+            font-size: 14px;
+            color: #7f8c8d;
+        }
+        
+        /* Main Content */
+        .main-content {
+            padding: 30px;
+        }
+        
+        /* Stats Cards */
         .stats-container {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -34,18 +101,23 @@
             padding: 25px;
             border-radius: 12px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            transition: transform 0.3s ease;
         }
         
         .stat-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
         }
         
         .stat-card-icon {
             font-size: 36px;
             margin-bottom: 15px;
         }
+        
+        .stat-card.total .stat-card-icon { color: #3498db; }
+        .stat-card.active .stat-card-icon { color: #f39c12; }
+        .stat-card.revenue .stat-card-icon { color: #9b59b6; }
+        .stat-card.profit .stat-card-icon { color: #2ecc71; }
+        .stat-card.loss .stat-card-icon { color: #e74c3c; }
         
         .stat-card-value {
             font-size: 32px;
@@ -61,22 +133,7 @@
             letter-spacing: 1px;
         }
         
-        .stat-card.total { }
-        .stat-card.total .stat-card-icon { color: #3498db; }
-        
-        .stat-card.active { }
-        .stat-card.active .stat-card-icon { color: #f39c12; }
-        
-        .stat-card.revenue { }
-        .stat-card.revenue .stat-card-icon { color: #9b59b6; }
-        
-        .stat-card.profit { }
-        .stat-card.profit .stat-card-icon { color: #2ecc71; }
-        
-        .stat-card.loss { }
-        .stat-card.loss .stat-card-icon { color: #e74c3c; }
-        
-        /* Search & Filter Bar */
+        /* Controls Bar */
         .controls-bar {
             background: white;
             padding: 20px;
@@ -97,11 +154,10 @@
         
         .search-box input {
             width: 100%;
-            padding: 12px 45px 12px 45px;
+            padding: 12px 45px;
             border: 2px solid #e0e0e0;
             border-radius: 8px;
             font-size: 15px;
-            transition: border-color 0.3s;
         }
         
         .search-box input:focus {
@@ -145,10 +201,10 @@
             border-color: #3498db;
         }
         
-        /* Project Cards Grid */
+        /* Project Cards */
         .projects-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
             gap: 25px;
             margin-bottom: 30px;
         }
@@ -159,7 +215,6 @@
             overflow: hidden;
             box-shadow: 0 4px 15px rgba(0,0,0,0.08);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
-            cursor: pointer;
         }
         
         .project-card:hover {
@@ -199,25 +254,13 @@
             font-size: 12px;
             font-weight: 600;
             text-transform: uppercase;
-            backdrop-filter: blur(10px);
             color: white;
         }
         
-        .project-card-status.prospek {
-            background: rgba(52, 152, 219, 0.9);
-        }
-        
-        .project-card-status.survey {
-            background: rgba(243, 156, 18, 0.9);
-        }
-        
-        .project-card-status.pengerjaan {
-            background: rgba(46, 204, 113, 0.9);
-        }
-        
-        .project-card-status.ditolak {
-            background: rgba(231, 76, 60, 0.9);
-        }
+        .project-card-status.prospek { background: rgba(52, 152, 219, 0.9); }
+        .project-card-status.survey { background: rgba(243, 156, 18, 0.9); }
+        .project-card-status.pengerjaan { background: rgba(46, 204, 113, 0.9); }
+        .project-card-status.ditolak { background: rgba(231, 76, 60, 0.9); }
         
         .project-card-body {
             padding: 20px;
@@ -253,11 +296,6 @@
             border-radius: 10px;
         }
         
-        .project-card-stat {
-            display: flex;
-            flex-direction: column;
-        }
-        
         .project-card-stat-label {
             font-size: 11px;
             color: #95a5a6;
@@ -289,15 +327,9 @@
             color: #c0392b;
         }
         
-        .project-card-profit.neutral {
-            background: rgba(149, 165, 166, 0.1);
-            color: #7f8c8d;
-        }
-        
         .project-card-meta {
             display: flex;
             justify-content: space-between;
-            align-items: center;
             font-size: 13px;
             color: #95a5a6;
             margin-bottom: 15px;
@@ -315,26 +347,31 @@
             font-size: 14px;
         }
         
-        /* Empty State */
-        .empty-state {
-            text-align: center;
-            padding: 80px 20px;
-            color: #95a5a6;
+        /* Buttons */
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
         
-        .empty-state i {
-            font-size: 80px;
-            margin-bottom: 20px;
-            opacity: 0.3;
+        .btn-primary {
+            background: #3498db;
+            color: white;
         }
         
-        .empty-state h3 {
-            font-size: 24px;
-            margin-bottom: 10px;
+        .btn-primary:hover {
+            background: #2980b9;
         }
         
-        /* Loading State */
-        .loading-state {
+        /* Empty/Loading States */
+        .loading-state, .empty-state {
             text-align: center;
             padding: 60px 20px;
             color: #95a5a6;
@@ -355,29 +392,41 @@
             100% { transform: rotate(360deg); }
         }
         
+        .empty-state i {
+            font-size: 80px;
+            margin-bottom: 20px;
+            opacity: 0.3;
+        }
+        
         /* Responsive */
+        @media (max-width: 1200px) {
+            .sidebar-map {
+                display: none;
+            }
+        }
+        
         @media (max-width: 768px) {
-            .stats-container {
-                grid-template-columns: repeat(2, 1fr);
+            .header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .main-content {
+                padding: 15px;
             }
             
             .projects-grid {
                 grid-template-columns: 1fr;
             }
             
-            .controls-bar {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            
-            .search-box {
-                width: 100%;
+            .stats-container {
+                grid-template-columns: repeat(2, 1fr);
             }
         }
     </style>
 </head>
 <body>
-    <div class="container">
+    <div class="app-container">
         <!-- Header -->
         <header class="header">
             <div class="header-left">
@@ -391,84 +440,76 @@
             </div>
         </header>
 
-        <!-- Dashboard Stats -->
-        <div class="stats-container">
-            <div class="stat-card total">
-                <div class="stat-card-icon"><i class="fas fa-folder-open"></i></div>
-                <div class="stat-card-value" id="statTotal">0</div>
-                <div class="stat-card-label">Total Projects</div>
-            </div>
-            
-            <div class="stat-card active">
-                <div class="stat-card-icon"><i class="fas fa-tools"></i></div>
-                <div class="stat-card-value" id="statActive">0</div>
-                <div class="stat-card-label">Pengerjaan</div>
-            </div>
-            
-            <div class="stat-card revenue">
-                <div class="stat-card-icon"><i class="fas fa-hand-holding-usd"></i></div>
-                <div class="stat-card-value" id="statRevenue">Rp 0</div>
-                <div class="stat-card-label">Total Penawaran</div>
-            </div>
-            
-            <div class="stat-card profit" id="statProfitCard">
-                <div class="stat-card-icon"><i class="fas fa-chart-line"></i></div>
-                <div class="stat-card-value" id="statProfit">Rp 0</div>
-                <div class="stat-card-label">Profit/Loss</div>
-            </div>
-        </div>
+        <div class="app-body">
+            <!-- Main Content -->
+            <div class="main-wrapper">
+                <div class="main-content">
+                    <!-- Dashboard Stats -->
+                    <div class="stats-container">
+                        <div class="stat-card total">
+                            <div class="stat-card-icon"><i class="fas fa-folder-open"></i></div>
+                            <div class="stat-card-value" id="statTotal">0</div>
+                            <div class="stat-card-label">Total Projects</div>
+                        </div>
+                        
+                        <div class="stat-card active">
+                            <div class="stat-card-icon"><i class="fas fa-tools"></i></div>
+                            <div class="stat-card-value" id="statActive">0</div>
+                            <div class="stat-card-label">Pengerjaan</div>
+                        </div>
+                        
+                        <div class="stat-card revenue">
+                            <div class="stat-card-icon"><i class="fas fa-hand-holding-usd"></i></div>
+                            <div class="stat-card-value" id="statRevenue">Rp 0</div>
+                            <div class="stat-card-label">Total Penawaran</div>
+                        </div>
+                        
+                        <div class="stat-card profit" id="statProfitCard">
+                            <div class="stat-card-icon"><i class="fas fa-chart-line"></i></div>
+                            <div class="stat-card-value" id="statProfit">Rp 0</div>
+                            <div class="stat-card-label">Profit/Loss</div>
+                        </div>
+                    </div>
 
-        <!-- Search & Filter Bar -->
-        <div class="controls-bar">
-            <div class="search-box">
-                <i class="fas fa-search"></i>
-                <input type="text" id="searchInput" placeholder="Cari project atau client...">
-            </div>
-            
-            <div class="filter-group">
-                <button class="filter-btn active" data-status="all" onclick="filterByStatus('all')">
-                    Semua
-                </button>
-                <button class="filter-btn" data-status="prospek" onclick="filterByStatus('prospek')">
-                    Prospek
-                </button>
-                <button class="filter-btn" data-status="survey" onclick="filterByStatus('survey')">
-                    Survey
-                </button>
-                <button class="filter-btn" data-status="pengerjaan" onclick="filterByStatus('pengerjaan')">
-                    Pengerjaan
-                </button>
-                <button class="filter-btn" data-status="ditolak" onclick="filterByStatus('ditolak')">
-                    Ditolak
-                </button>
-            </div>
-        </div>
+                    <!-- Search & Filter -->
+                    <div class="controls-bar">
+                        <div class="search-box">
+                            <i class="fas fa-search"></i>
+                            <input type="text" id="searchInput" placeholder="Cari project atau client...">
+                        </div>
+                        
+                        <div class="filter-group">
+                            <button class="filter-btn active" onclick="filterByStatus('all')">Semua</button>
+                            <button class="filter-btn" onclick="filterByStatus('prospek')">Prospek</button>
+                            <button class="filter-btn" onclick="filterByStatus('survey')">Survey</button>
+                            <button class="filter-btn" onclick="filterByStatus('pengerjaan')">Pengerjaan</button>
+                            <button class="filter-btn" onclick="filterByStatus('ditolak')">Ditolak</button>
+                        </div>
+                    </div>
 
-        <!-- Main Content -->
-        <main class="main-content">
-            <!-- Loading State -->
-            <div id="loadingState" class="loading-state">
-                <div class="loading-spinner"></div>
-                <h3>Memuat data...</h3>
+                    <!-- Loading -->
+                    <div id="loadingState" class="loading-state">
+                        <div class="loading-spinner"></div>
+                        <h3>Memuat data...</h3>
+                    </div>
+
+                    <!-- Projects Grid -->
+                    <div id="projectsGrid" class="projects-grid" style="display: none;"></div>
+
+                    <!-- Empty State -->
+                    <div id="emptyState" class="empty-state" style="display: none;">
+                        <i class="fas fa-folder-open"></i>
+                        <h3>Belum Ada Project</h3>
+                        <p>Klik tombol "Tambah Project" untuk membuat project baru</p>
+                    </div>
+                </div>
             </div>
 
-            <!-- Projects Grid -->
-            <div id="projectsGrid" class="projects-grid" style="display: none;"></div>
-
-            <!-- Empty State -->
-            <div id="emptyState" class="empty-state" style="display: none;">
-                <i class="fas fa-folder-open"></i>
-                <h3>Belum Ada Project</h3>
-                <p>Klik tombol "Tambah Project" untuk membuat project baru</p>
-            </div>
-        </main>
-
-        <!-- Sidebar Map -->
-        <aside class="sidebar">
-            <div class="map-container">
+            <!-- Sidebar Map -->
+            <aside class="sidebar-map">
                 <div id="map" style="width: 100%; height: 100%;"></div>
-            </div>
-        </aside>
+            </aside>
+        </div>
     </div>
 
     <!-- Scripts -->
