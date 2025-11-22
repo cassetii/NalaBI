@@ -404,17 +404,46 @@ function renderDocumentList(containerId, documents) {
                     </div>
                 </div>
             </div>
-            <div>
-                <button class="btn btn-primary" style="padding: 8px 15px; margin-right: 5px;" onclick="window.open('${doc.url}', '_blank')">
+            <div style="display: flex; gap: 5px;">
+                <button class="btn btn-success" style="padding: 8px 15px;" onclick="viewDocument('${doc.url}', '${doc.filename}')" title="Lihat Dokumen">
+                    <i class="fas fa-eye"></i> View
+                </button>
+                <button class="btn btn-primary" style="padding: 8px 15px;" onclick="downloadDocument('${doc.url}', '${doc.filename}')" title="Download Dokumen">
                     <i class="fas fa-download"></i>
                 </button>
-                <button class="btn btn-danger" style="padding: 8px 15px;" onclick="deleteDocument('${containerId}', ${index})">
+                <button class="btn btn-danger" style="padding: 8px 15px;" onclick="deleteDocument('${containerId}', ${index})" title="Hapus Dokumen">
                     <i class="fas fa-trash"></i>
                 </button>
             </div>
         `;
         container.appendChild(docItem);
     });
+}
+
+// View document in modal
+function viewDocument(url, filename) {
+    document.getElementById('documentViewerModal').style.display = 'block';
+    document.getElementById('documentViewerTitle').innerHTML = `<i class="fas fa-file"></i> ${filename}`;
+    
+    const iframe = document.getElementById('documentViewerFrame');
+    iframe.src = url;
+}
+
+// Close document viewer
+function closeDocumentViewer() {
+    document.getElementById('documentViewerModal').style.display = 'none';
+    document.getElementById('documentViewerFrame').src = '';
+}
+
+// Download document
+function downloadDocument(url, filename) {
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = filename;
+    link.target = '_blank';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
 }
 
 // Upload document
@@ -1007,3 +1036,6 @@ window.editAcUnit = editAcUnit;
 window.deleteAcUnit = deleteAcUnit;
 window.renderAcUnits = renderAcUnits;
 window.updateProjectSummary = updateProjectSummary;
+window.viewDocument = viewDocument;
+window.closeDocumentViewer = closeDocumentViewer;
+window.downloadDocument = downloadDocument;
