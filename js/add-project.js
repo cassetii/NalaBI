@@ -1,15 +1,13 @@
 // ================================================
 // ADD PROJECT FUNCTIONALITY - FIXED VERSION
-// Nala Project Management System
 // ================================================
 
 let selectedLocation = null;
 
-// Initialize add project page - ONLY called when Maps is ready
+// Initialize add project page
 function initAddProject() {
     console.log('🚀 initAddProject() CALLED');
     
-    // Double check Google Maps is available
     if (typeof google === 'undefined' || !google.maps) {
         console.error('❌ Google Maps STILL not available!');
         alert('ERROR: Google Maps tidak load. Silakan refresh halaman.');
@@ -19,7 +17,6 @@ function initAddProject() {
     console.log('✅ Google Maps confirmed available');
     
     try {
-        // Initialize map
         console.log('📍 Creating map...');
         const mapEl = document.getElementById('map');
         
@@ -28,11 +25,8 @@ function initAddProject() {
             return;
         }
         
-        console.log('✅ Map element found, initializing...');
-        
-        // Create the map
         const map = new google.maps.Map(mapEl, {
-            center: { lat: -5.1477, lng: 119.4327 }, // Makassar
+            center: { lat: -5.1477, lng: 119.4327 },
             zoom: 12,
             mapTypeControl: true,
             streetViewControl: false,
@@ -41,22 +35,16 @@ function initAddProject() {
         });
         
         console.log('✅ MAP CREATED SUCCESSFULLY!');
-        
-        // Store map globally so other functions can access it
         window.projectMap = map;
         
-        // Setup map click handler
         map.addListener('click', (event) => {
-            console.log('📍 Map clicked!');
             const lat = event.latLng.lat();
             const lng = event.latLng.lng();
             
-            // Clear previous markers
             if (window.projectMarker) {
                 window.projectMarker.setMap(null);
             }
             
-            // Add new marker
             window.projectMarker = new google.maps.Marker({
                 position: event.latLng,
                 map: map,
@@ -71,7 +59,6 @@ function initAddProject() {
                 }
             });
             
-            // Reverse geocode to get address
             const geocoder = new google.maps.Geocoder();
             geocoder.geocode({ location: event.latLng }, (results, status) => {
                 let address = 'Alamat tidak ditemukan';
@@ -80,7 +67,6 @@ function initAddProject() {
                     address = results[0].formatted_address;
                 }
                 
-                // Update form fields
                 selectedLocation = { lat, lng, address };
                 document.getElementById('latitude').value = lat.toFixed(6);
                 document.getElementById('longitude').value = lng.toFixed(6);
@@ -92,10 +78,7 @@ function initAddProject() {
             });
         });
         
-        // Setup form submission
         setupFormSubmission();
-        
-        console.log('✅ All initialization complete!');
         
     } catch (error) {
         console.error('❌ Error in initAddProject:', error);
@@ -126,12 +109,10 @@ function searchLocationHandler() {
             window.projectMap.setCenter(location);
             window.projectMap.setZoom(15);
             
-            // Clear old marker
             if (window.projectMarker) {
                 window.projectMarker.setMap(null);
             }
             
-            // Add new marker
             window.projectMarker = new google.maps.Marker({
                 position: location,
                 map: window.projectMap,
@@ -181,12 +162,10 @@ function getCurrentLocationHandler() {
                 window.projectMap.setCenter({ lat, lng });
                 window.projectMap.setZoom(15);
                 
-                // Clear old marker
                 if (window.projectMarker) {
                     window.projectMarker.setMap(null);
                 }
                 
-                // Add marker
                 window.projectMarker = new google.maps.Marker({
                     position: { lat, lng },
                     map: window.projectMap,
@@ -201,7 +180,6 @@ function getCurrentLocationHandler() {
                     }
                 });
                 
-                // Get address
                 const geocoder = new google.maps.Geocoder();
                 geocoder.geocode({ location: { lat, lng } }, (results, status) => {
                     let address = 'Alamat tidak ditemukan';
@@ -222,7 +200,7 @@ function getCurrentLocationHandler() {
             },
             (error) => {
                 console.error('Geolocation error:', error);
-                alert('Gagal mendapatkan lokasi Anda. Pastikan GPS aktif.');
+                alert('Gagal mendapatkan lokasi Anda.');
             }
         );
     } else {
@@ -237,13 +215,11 @@ function setupFormSubmission() {
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
         
-        // Validate location selected
         if (!selectedLocation) {
             alert('Silakan pilih lokasi di map terlebih dahulu!');
             return;
         }
         
-        // Get form data
         const formData = {
             projectName: document.getElementById('projectName').value.trim(),
             client: document.getElementById('client').value.trim(),
@@ -257,6 +233,7 @@ function setupFormSubmission() {
             },
             materials: window.DEFAULT_MATERIALS ? DEFAULT_MATERIALS.map(m => ({ ...m })) : [],
             services: window.DEFAULT_SERVICES ? DEFAULT_SERVICES.map(s => ({ ...s })) : [],
+            acUnits: [], // NEW: AC Units
             photos: [],
             documents: {
                 penawaran: [],
@@ -266,22 +243,19 @@ function setupFormSubmission() {
             },
             createdAt: firebase.firestore.FieldValue.serverTimestamp(),
             updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
-            createdBy: firebase.auth().currentUser.uid  
+            createdBy: firebase.auth().currentUser ? firebase.auth().currentUser.uid : 'system'
         };
         
-        // Validate required fields
         if (!formData.projectName || !formData.client) {
             alert('Nama project dan client harus diisi!');
             return;
         }
         
-        // Disable submit button
         const submitBtn = form.querySelector('button[type="submit"]');
         submitBtn.disabled = true;
         submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Menyimpan...';
         
         try {
-            // Save to Firestore
             const docRef = await window.db.collection('nala_projects').add(formData);
             
             console.log('✅ Project created:', docRef.id);
@@ -292,7 +266,6 @@ function setupFormSubmission() {
                 alert('Project berhasil disimpan!');
             }
             
-            // Redirect to dashboard after 1 second
             setTimeout(() => {
                 window.location.href = 'index.html';
             }, 1000);
@@ -301,14 +274,12 @@ function setupFormSubmission() {
             console.error('Error saving project:', error);
             alert('Gagal menyimpan project: ' + error.message);
             
-            // Re-enable submit button
             submitBtn.disabled = false;
             submitBtn.innerHTML = '<i class="fas fa-save"></i> Simpan Project';
         }
     });
 }
 
-// Export functions to window
 window.initAddProject = initAddProject;
 window.searchLocationHandler = searchLocationHandler;
 window.getCurrentLocationHandler = getCurrentLocationHandler;
