@@ -1,6 +1,6 @@
 // ================================================
 // PROJECT DETAIL PAGE
-// Nala Project Management System
+// Nala Project Management System - COMPLETE
 // ================================================
 
 let currentProject = null;
@@ -52,6 +52,10 @@ async function loadProjectDetail() {
         renderMaterials();
         renderPhotos();
         renderDocuments();
+        
+        // RENDER AC UNITS & SUMMARY (CRITICAL!)
+        renderAcUnits();
+        updateProjectSummary();
         
         console.log('✅ Project loaded:', currentProject);
         
@@ -153,13 +157,14 @@ function renderProjectLocation() {
 function renderMaterials() {
     const materials = currentProject.materials || DEFAULT_MATERIALS;
     const services = currentProject.services || DEFAULT_SERVICES;
+    const acUnits = currentProject.acUnits || [];
     
     // Render tables
     renderMaterialTable(materials, 'materialsTableBody');
     renderMaterialTable(services, 'servicesTableBody');
     
-    // Initialize chart
-    initMaterialChart(materials, services);
+    // Initialize chart WITH AC UNITS
+    initMaterialChart(materials, services, acUnits);
 }
 
 // Save materials and services
@@ -213,8 +218,12 @@ async function saveMaterials() {
             input.style.borderColor = '#ddd';
         });
         
-        // Update chart
-        initMaterialChart(materials, services);
+        // Update chart WITH AC UNITS
+        const acUnits = currentProject.acUnits || [];
+        initMaterialChart(materials, services, acUnits);
+        
+        // Update summary
+        updateProjectSummary();
         
         utils.showToast('Material & Jasa berhasil disimpan!', 'success');
         
@@ -473,9 +482,6 @@ async function deleteDocument(containerId, index) {
         const categoryDocs = documents[category] || [];
         const doc = categoryDocs[index];
         
-        // Delete from storage (if needed)
-        // Note: Storage deletion might fail if path structure is different
-        
         // Remove from array
         categoryDocs.splice(index, 1);
         documents[category] = categoryDocs;
@@ -522,9 +528,6 @@ async function deleteProject() {
             }
         }
         
-        // Delete documents from storage (simplified)
-        // In production, you'd want to recursively delete all files
-        
         // Delete Firestore document
         await db.collection(COLLECTIONS.PROJECTS).doc(projectId).delete();
         
@@ -555,6 +558,17 @@ function switchTab(tabName) {
     });
     
     document.getElementById(`tab-${tabName}`).classList.add('active');
+    
+    // Re-render AC Units when switching to acunits tab
+    if (tabName === 'acunits') {
+        renderAcUnits();
+        updateProjectSummary();
+    }
+    
+    // Re-render materials chart when switching to materials tab
+    if (tabName === 'materials') {
+        renderMaterials();
+    }
 }
 
 // Toggle edit mode
@@ -741,17 +755,6 @@ async function saveProjectChanges() {
     }
 }
 
-// Export functions
-window.initProjectDetail = initProjectDetail;
-window.saveMaterials = saveMaterials;
-window.uploadPhotos = uploadPhotos;
-window.deletePhoto = deletePhoto;
-window.uploadDocument = uploadDocument;
-window.deleteDocument = deleteDocument;
-window.deleteProject = deleteProject;
-window.switchTab = switchTab;
-window.toggleEditMode = toggleEditMode;
-window.saveProjectChanges = saveProjectChanges;
 // ================================================
 // AC UNITS MANAGEMENT FUNCTIONS
 // ================================================
@@ -864,22 +867,26 @@ function renderAcUnits() {
     const emptyState = document.getElementById('emptyAcUnits');
     const tabButton = document.querySelector('button[onclick="switchTab(\'acunits\')"]');
     
+    // Update tab counter
     if (tabButton) {
         tabButton.innerHTML = `<i class="fas fa-snowflake"></i> Unit AC (${acUnits.length})`;
     }
     
-    if (!tbody) return;
+    if (!tbody) {
+        console.warn('AC Units table body not found');
+        return;
+    }
     
     tbody.innerHTML = '';
     
     if (acUnits.length === 0) {
-        table.style.display = 'none';
-        emptyState.style.display = 'block';
+        if (table) table.style.display = 'none';
+        if (emptyState) emptyState.style.display = 'block';
         return;
     }
     
-    table.style.display = 'table';
-    emptyState.style.display = 'none';
+    if (table) table.style.display = 'table';
+    if (emptyState) emptyState.style.display = 'none';
     
     acUnits.forEach((ac, index) => {
         const quotationTotal = (ac.quotationPrice || 0) * (ac.quotationQty || 0);
@@ -916,6 +923,8 @@ function renderAcUnits() {
         `;
         tbody.appendChild(row);
     });
+    
+    console.log(`✅ Rendered ${acUnits.length} AC units`);
 }
 
 // Update Project Summary with AC Units
@@ -973,22 +982,25 @@ function updateProjectSummary() {
         `;
     }
     
+    // Update chart with AC Units
     if (typeof initMaterialChart === 'function') {
         initMaterialChart(materials, services, acUnits);
     }
+    
+    console.log('✅ Project summary updated');
 }
 
-// Update initProjectDetail function to call renderAcUnits
-const originalInitProjectDetail = initProjectDetail;
-if (typeof originalInitProjectDetail === 'function') {
-    initProjectDetail = async function() {
-        await originalInitProjectDetail();
-        renderAcUnits();
-        updateProjectSummary();
-    };
-}
-
-// Make functions global
+// Export functions
+window.initProjectDetail = initProjectDetail;
+window.saveMaterials = saveMaterials;
+window.uploadPhotos = uploadPhotos;
+window.deletePhoto = deletePhoto;
+window.uploadDocument = uploadDocument;
+window.deleteDocument = deleteDocument;
+window.deleteProject = deleteProject;
+window.switchTab = switchTab;
+window.toggleEditMode = toggleEditMode;
+window.saveProjectChanges = saveProjectChanges;
 window.showAddAcUnitModal = showAddAcUnitModal;
 window.closeAcUnitModal = closeAcUnitModal;
 window.editAcUnit = editAcUnit;
