@@ -1,6 +1,7 @@
 // ================================================
 // MATERIAL TRACKER WITH CHART.JS - UPDATED
 // Formula: PROFIT/LOSS = PENAWARAN - REAL
+// Nala Project Management System
 // ================================================
 
 let deviationChart = null;
@@ -35,7 +36,7 @@ function initMaterialChart(materials, services, acUnits = []) {
     const profitLossData = allItems.map((item, index) => {
         const quotation = quotationData[index];
         const real = realData[index];
-        return quotation - real;
+        return quotation - real; // PROFIT jika positif, LOSS jika negatif
     });
     
     // Chart configuration
@@ -64,8 +65,14 @@ function initMaterialChart(materials, services, acUnits = []) {
                     label: 'Profit/Loss (IDR)',
                     data: profitLossData,
                     type: 'line',
-                    borderColor: 'rgba(244, 67, 54, 1)',
-                    backgroundColor: 'rgba(244, 67, 54, 0.1)',
+                    borderColor: function(context) {
+                        const value = context.parsed.y;
+                        return value >= 0 ? 'rgba(76, 175, 80, 1)' : 'rgba(244, 67, 54, 1)';
+                    },
+                    backgroundColor: function(context) {
+                        const value = context.parsed.y;
+                        return value >= 0 ? 'rgba(76, 175, 80, 0.1)' : 'rgba(244, 67, 54, 0.1)';
+                    },
                     borderWidth: 3,
                     pointRadius: 6,
                     pointBackgroundColor: function(context) {
@@ -73,7 +80,13 @@ function initMaterialChart(materials, services, acUnits = []) {
                         return value >= 0 ? 'rgba(76, 175, 80, 1)' : 'rgba(244, 67, 54, 1)';
                     },
                     yAxisID: 'y',
-                    tension: 0.4
+                    tension: 0.4,
+                    segment: {
+                        borderColor: function(context) {
+                            const value = context.p1.parsed.y;
+                            return value >= 0 ? 'rgba(76, 175, 80, 1)' : 'rgba(244, 67, 54, 1)';
+                        }
+                    }
                 }
             ]
         },
@@ -149,7 +162,7 @@ function initMaterialChart(materials, services, acUnits = []) {
         }
     });
     
-    console.log('📊 Material chart initialized with profit/loss');
+    console.log('📊 Material deviation chart initialized with profit/loss calculation');
 }
 
 // Render material table rows
@@ -169,19 +182,19 @@ function renderMaterialTable(materials, tableBodyId) {
         // Calculate totals
         const quotationTotal = (item.quotationPrice || 0) * (item.quotationQty || 0);
         const realTotal = (item.realPrice || 0) * (item.realQty || 0);
-        const profitLoss = quotationTotal - realTotal;
+        const profitLoss = quotationTotal - realTotal; // PENAWARAN - REAL
         
         // Color based on profit/loss
-        let profitLossColor = '#4CAF50';
+        let profitLossColor = '#4CAF50'; // green (profit)
         let profitLossText = 'PROFIT';
         let profitLossIcon = '↑';
         
         if (profitLoss < 0) {
-            profitLossColor = '#F44336';
+            profitLossColor = '#F44336'; // red (loss)
             profitLossText = 'LOSS';
             profitLossIcon = '↓';
         } else if (profitLoss === 0) {
-            profitLossColor = '#757575';
+            profitLossColor = '#757575'; // grey (break even)
             profitLossText = 'BREAK EVEN';
             profitLossIcon = '=';
         }
@@ -250,7 +263,8 @@ function renderMaterialTable(materials, tableBodyId) {
 
 // Update material data on input change
 function updateMaterialData(input) {
-    input.style.borderColor = '#FF9800';
+    // Mark as dirty (unsaved changes)
+    input.style.borderColor = '#FF9800'; // Orange to indicate unsaved changes
 }
 
 // Calculate material summary
