@@ -304,6 +304,9 @@
                         <button class="tab active" onclick="switchTab('info')">
                             <i class="fas fa-info-circle"></i> Info Project
                         </button>
+                        <button class="tab" onclick="switchTab('acunits')">
+                             <i class="fas fa-snowflake"></i> Unit AC (0)
+                        </button>
                         <button class="tab" onclick="switchTab('materials')">
                             <i class="fas fa-boxes"></i> Material & Jasa
                         </button>
@@ -349,7 +352,37 @@
                             </div>
                         </div>
                     </div>
+<!-- AC Units Tab -->
+<div id="tab-acunits" class="tab-content">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <h3><i class="fas fa-snowflake"></i> Unit AC Terpasang</h3>
+        <button class="btn btn-primary" onclick="showAddAcUnitModal()">
+            <i class="fas fa-plus"></i> Tambah Unit AC
+        </button>
+    </div>
 
+    <table class="material-table" id="acUnitsTable" style="display: none;">
+        <thead>
+            <tr>
+                <th>Type/Nama AC</th>
+                <th>Qty Penawaran</th>
+                <th>Harga Penawaran</th>
+                <th>Qty Real</th>
+                <th>Harga Real</th>
+                <th>Profit/Loss</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody id="acUnitsTableBody">
+        </tbody>
+    </table>
+
+    <div id="emptyAcUnits" style="text-align: center; padding: 60px 20px; color: #7f8c8d;">
+        <i class="fas fa-snowflake" style="font-size: 64px; opacity: 0.3; margin-bottom: 20px;"></i>
+        <h3>Belum Ada Unit AC</h3>
+        <p>Klik tombol "Tambah Unit AC" untuk menambahkan data unit AC</p>
+    </div>
+</div>
                     <!-- Materials Tab -->
                     <div id="tab-materials" class="tab-content">
                         <h3 style="margin-bottom: 15px;"><i class="fas fa-tools"></i> Material</h3>
@@ -491,5 +524,55 @@
     <script src="js/maps.js"></script>
     <script src="js/material-tracker.js"></script>
     <script src="js/project-detail.js"></script>
+    <!-- Add/Edit AC Unit Modal -->
+<div id="acUnitModal" class="modal" style="display: none;">
+    <div class="modal-content" style="max-width: 600px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h2><i class="fas fa-snowflake"></i> <span id="acModalTitle">Tambah Unit AC</span></h2>
+            <button onclick="closeAcUnitModal()" style="background: none; border: none; font-size: 24px; cursor: pointer; color: #999;">&times;</button>
+        </div>
+        
+        <form id="acUnitForm">
+            <input type="hidden" id="acUnitIndex" value="-1">
+            
+            <div class="form-group">
+                <label><i class="fas fa-tag"></i> Type/Nama Unit AC *</label>
+                <input type="text" id="acType" placeholder="Contoh: Daikin 1PK Inverter" required>
+                <small style="color: #999;">Isikan brand dan tipe AC</small>
+            </div>
+
+            <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                <div class="form-group">
+                    <label>Qty Penawaran</label>
+                    <input type="number" id="acQuotationQty" min="0" step="1" value="0">
+                </div>
+                <div class="form-group">
+                    <label>Harga Penawaran (per unit)</label>
+                    <input type="number" id="acQuotationPrice" min="0" step="1000" value="0">
+                </div>
+            </div>
+
+            <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                <div class="form-group">
+                    <label>Qty Real</label>
+                    <input type="number" id="acRealQty" min="0" step="1" value="0">
+                </div>
+                <div class="form-group">
+                    <label>Harga Real (per unit)</label>
+                    <input type="number" id="acRealPrice" min="0" step="1000" value="0">
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 30px;">
+                <button type="button" class="btn" onclick="closeAcUnitModal()" style="background: #95a5a6; color: white;">
+                    <i class="fas fa-times"></i> Batal
+                </button>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save"></i> Simpan
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
 </body>
 </html>
