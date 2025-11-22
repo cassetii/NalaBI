@@ -752,3 +752,246 @@ window.deleteProject = deleteProject;
 window.switchTab = switchTab;
 window.toggleEditMode = toggleEditMode;
 window.saveProjectChanges = saveProjectChanges;
+// ================================================
+// AC UNITS MANAGEMENT FUNCTIONS
+// ================================================
+
+// Show Add AC Unit Modal
+function showAddAcUnitModal() {
+    document.getElementById('acUnitModal').style.display = 'block';
+    document.getElementById('acModalTitle').textContent = 'Tambah Unit AC';
+    document.getElementById('acUnitIndex').value = '-1';
+    document.getElementById('acUnitForm').reset();
+}
+
+// Close AC Unit Modal
+function closeAcUnitModal() {
+    document.getElementById('acUnitModal').style.display = 'none';
+    document.getElementById('acUnitForm').reset();
+}
+
+// Show Edit AC Unit Modal
+function editAcUnit(index) {
+    const acUnit = currentProject.acUnits[index];
+    
+    document.getElementById('acUnitModal').style.display = 'block';
+    document.getElementById('acModalTitle').textContent = 'Edit Unit AC';
+    document.getElementById('acUnitIndex').value = index;
+    document.getElementById('acType').value = acUnit.acType || '';
+    document.getElementById('acQuotationQty').value = acUnit.quotationQty || 0;
+    document.getElementById('acQuotationPrice').value = acUnit.quotationPrice || 0;
+    document.getElementById('acRealQty').value = acUnit.realQty || 0;
+    document.getElementById('acRealPrice').value = acUnit.realPrice || 0;
+}
+
+// Handle AC Unit Form Submit
+document.addEventListener('DOMContentLoaded', () => {
+    const acUnitForm = document.getElementById('acUnitForm');
+    if (acUnitForm) {
+        acUnitForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const index = parseInt(document.getElementById('acUnitIndex').value);
+            const acUnitData = {
+                acType: document.getElementById('acType').value.trim(),
+                quotationQty: parseFloat(document.getElementById('acQuotationQty').value) || 0,
+                quotationPrice: parseFloat(document.getElementById('acQuotationPrice').value) || 0,
+                realQty: parseFloat(document.getElementById('acRealQty').value) || 0,
+                realPrice: parseFloat(document.getElementById('acRealPrice').value) || 0
+            };
+            
+            if (!acUnitData.acType) {
+                utils.showToast('Type/Nama AC harus diisi', 'error');
+                return;
+            }
+            
+            try {
+                if (!currentProject.acUnits) {
+                    currentProject.acUnits = [];
+                }
+                
+                if (index === -1) {
+                    currentProject.acUnits.push(acUnitData);
+                } else {
+                    currentProject.acUnits[index] = acUnitData;
+                }
+                
+                await db.collection(COLLECTIONS.PROJECTS).doc(projectId).update({
+                    acUnits: currentProject.acUnits
+                });
+                
+                closeAcUnitModal();
+                renderAcUnits();
+                updateProjectSummary();
+                
+                utils.showToast(index === -1 ? 'Unit AC berhasil ditambahkan!' : 'Unit AC berhasil diupdate!', 'success');
+                
+            } catch (error) {
+                console.error('Error saving AC unit:', error);
+                utils.showToast('Gagal menyimpan data AC unit', 'error');
+            }
+        });
+    }
+});
+
+// Delete AC Unit
+async function deleteAcUnit(index) {
+    if (!confirm('Yakin ingin menghapus unit AC ini?')) return;
+    
+    try {
+        currentProject.acUnits.splice(index, 1);
+        
+        await db.collection(COLLECTIONS.PROJECTS).doc(projectId).update({
+            acUnits: currentProject.acUnits
+        });
+        
+        renderAcUnits();
+        updateProjectSummary();
+        
+        utils.showToast('Unit AC berhasil dihapus', 'success');
+        
+    } catch (error) {
+        console.error('Error deleting AC unit:', error);
+        utils.showToast('Gagal menghapus unit AC', 'error');
+    }
+}
+
+// Render AC Units Table
+function renderAcUnits() {
+    const acUnits = currentProject.acUnits || [];
+    const tbody = document.getElementById('acUnitsTableBody');
+    const table = document.getElementById('acUnitsTable');
+    const emptyState = document.getElementById('emptyAcUnits');
+    const tabButton = document.querySelector('button[onclick="switchTab(\'acunits\')"]');
+    
+    if (tabButton) {
+        tabButton.innerHTML = `<i class="fas fa-snowflake"></i> Unit AC (${acUnits.length})`;
+    }
+    
+    if (!tbody) return;
+    
+    tbody.innerHTML = '';
+    
+    if (acUnits.length === 0) {
+        table.style.display = 'none';
+        emptyState.style.display = 'block';
+        return;
+    }
+    
+    table.style.display = 'table';
+    emptyState.style.display = 'none';
+    
+    acUnits.forEach((ac, index) => {
+        const quotationTotal = (ac.quotationPrice || 0) * (ac.quotationQty || 0);
+        const realTotal = (ac.realPrice || 0) * (ac.realQty || 0);
+        const profitLoss = quotationTotal - realTotal;
+        
+        const profitLossColor = profitLoss >= 0 ? '#4CAF50' : '#F44336';
+        const profitLossText = profitLoss >= 0 ? 'PROFIT' : 'LOSS';
+        const profitLossIcon = profitLoss >= 0 ? '↑' : '↓';
+        
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td><strong>${ac.acType}</strong></td>
+            <td>${ac.quotationQty || 0}</td>
+            <td>${utils.formatCurrency(ac.quotationPrice || 0)}</td>
+            <td>${ac.realQty || 0}</td>
+            <td>${utils.formatCurrency(ac.realPrice || 0)}</td>
+            <td>
+                <strong style="color: ${profitLossColor}">
+                    ${profitLossText} ${profitLossIcon}
+                </strong>
+                <div style="font-size: 13px; font-weight: 600; color: ${profitLossColor};">
+                    ${utils.formatCurrency(Math.abs(profitLoss))}
+                </div>
+            </td>
+            <td>
+                <button class="btn" onclick="editAcUnit(${index})" style="padding: 5px 10px; margin-right: 5px; background: #2196F3; color: white;">
+                    <i class="fas fa-edit"></i>
+                </button>
+                <button class="btn" onclick="deleteAcUnit(${index})" style="padding: 5px 10px; background: #F44336; color: white;">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </td>
+        `;
+        tbody.appendChild(row);
+    });
+}
+
+// Update Project Summary with AC Units
+function updateProjectSummary() {
+    const materials = currentProject.materials || [];
+    const services = currentProject.services || [];
+    const acUnits = currentProject.acUnits || [];
+    
+    const summary = calculateProjectSummary(materials, services, acUnits);
+    
+    const summaryElement = document.getElementById('projectSummary');
+    if (summaryElement) {
+        const profitLossColor = summary.isProfitable ? '#4CAF50' : '#F44336';
+        const profitLossText = summary.isProfitable ? 'PROFIT' : 'LOSS';
+        
+        summaryElement.innerHTML = `
+            <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+                <h4 style="margin-bottom: 15px; color: #2c3e50;">📊 Ringkasan Project</h4>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+                    <div>
+                        <div style="font-size: 12px; color: #7f8c8d;">Total Penawaran</div>
+                        <div style="font-size: 20px; font-weight: 700; color: #2196F3;">
+                            ${utils.formatCurrency(summary.totalQuotation)}
+                        </div>
+                    </div>
+                    <div>
+                        <div style="font-size: 12px; color: #7f8c8d;">Total Real</div>
+                        <div style="font-size: 20px; font-weight: 700; color: #4CAF50;">
+                            ${utils.formatCurrency(summary.totalReal)}
+                        </div>
+                    </div>
+                </div>
+                <div style="border-top: 2px solid #ddd; padding-top: 15px;">
+                    <div style="font-size: 14px; font-weight: 600; color: ${profitLossColor};">
+                        ${profitLossText}
+                    </div>
+                    <div style="font-size: 24px; font-weight: 700; color: ${profitLossColor};">
+                        ${utils.formatCurrency(Math.abs(summary.profitLoss))}
+                    </div>
+                </div>
+            </div>
+            
+            ${acUnits.length > 0 ? `
+            <div style="background: #E3F2FD; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                <div style="font-size: 14px; font-weight: 600; color: #2196F3; margin-bottom: 10px;">
+                    ❄️ Unit AC Terpasang: ${acUnits.reduce((sum, ac) => sum + (ac.quotationQty || 0), 0)} Unit
+                </div>
+                ${acUnits.map(ac => `
+                    <div style="font-size: 13px; color: #555; margin-left: 15px;">
+                        • ${ac.quotationQty || 0}x ${ac.acType}
+                    </div>
+                `).join('')}
+            </div>
+            ` : ''}
+        `;
+    }
+    
+    if (typeof initMaterialChart === 'function') {
+        initMaterialChart(materials, services, acUnits);
+    }
+}
+
+// Update initProjectDetail function to call renderAcUnits
+const originalInitProjectDetail = initProjectDetail;
+if (typeof originalInitProjectDetail === 'function') {
+    initProjectDetail = async function() {
+        await originalInitProjectDetail();
+        renderAcUnits();
+        updateProjectSummary();
+    };
+}
+
+// Make functions global
+window.showAddAcUnitModal = showAddAcUnitModal;
+window.closeAcUnitModal = closeAcUnitModal;
+window.editAcUnit = editAcUnit;
+window.deleteAcUnit = deleteAcUnit;
+window.renderAcUnits = renderAcUnits;
+window.updateProjectSummary = updateProjectSummary;
