@@ -1,5 +1,5 @@
 // ================================================
-// DASHBOARD INDEX - UPGRADED VERSION
+// REDESIGNED DASHBOARD - JAKOB'S LAWS
 // ================================================
 
 let allProjects = [];
@@ -8,18 +8,10 @@ let currentFilter = 'all';
 
 // Initialize dashboard
 function initDashboard() {
-    console.log('🚀 Initializing upgraded dashboard...');
+    console.log('🚀 Initializing redesigned dashboard...');
     
-    // Load projects
     loadProjects();
-    
-    // Setup search
     setupSearch();
-    
-    // Initialize map
-    if (typeof initMap === 'function') {
-        initMap('map', DEFAULT_MAP_CENTER, DEFAULT_MAP_ZOOM);
-    }
 }
 
 // Load all projects
@@ -40,33 +32,21 @@ async function loadProjects() {
         
         console.log(`✅ Loaded ${allProjects.length} projects`);
         
-        // Calculate and render stats
         renderDashboardStats();
-        
-        // Render projects
         filteredProjects = [...allProjects];
         renderProjects();
-        
-        // Add markers to map
-        if (typeof addMarker === 'function') {
-            allProjects.forEach(project => {
-                if (project.location) {
-                    addMarker(project);
-                }
-            });
-        }
         
     } catch (error) {
         console.error('Error loading projects:', error);
         document.getElementById('loadingState').innerHTML = `
-            <i class="fas fa-exclamation-triangle" style="font-size: 48px; color: #e74c3c; margin-bottom: 20px;"></i>
-            <h3 style="color: #e74c3c;">Gagal Memuat Data</h3>
+            <i class="fas fa-exclamation-triangle" style="color: #e74c3c;"></i>
+            <h3>Failed to Load</h3>
             <p>${error.message}</p>
         `;
     }
 }
 
-// Calculate and render dashboard stats
+// Render dashboard stats
 function renderDashboardStats() {
     const total = allProjects.length;
     const active = allProjects.filter(p => p.status === 'pengerjaan').length;
@@ -88,31 +68,23 @@ function renderDashboardStats() {
     const profitLoss = totalRevenue - totalReal;
     const isProfitable = profitLoss >= 0;
     
-    // Update stat cards
     document.getElementById('statTotal').textContent = total;
     document.getElementById('statActive').textContent = active;
     document.getElementById('statRevenue').textContent = utils.formatCurrency(totalRevenue);
     document.getElementById('statProfit').textContent = utils.formatCurrency(Math.abs(profitLoss));
     
-    // Update profit card color
-    const profitCard = document.getElementById('statProfitCard');
-    profitCard.classList.remove('profit', 'loss');
-    profitCard.classList.add(isProfitable ? 'profit' : 'loss');
-    
-    // Update label
-    const profitLabel = profitCard.querySelector('.stat-card-label');
+    const profitLabel = document.getElementById('statProfitLabel');
     profitLabel.textContent = isProfitable ? 'Total Profit' : 'Total Loss';
     
-    console.log(`📊 Stats: ${total} projects, ${active} active, Revenue: ${utils.formatCurrency(totalRevenue)}, Profit: ${utils.formatCurrency(profitLoss)}`);
+    console.log(`📊 Stats updated`);
 }
 
-// Render projects as cards
+// Render projects with new design
 function renderProjects() {
     const grid = document.getElementById('projectsGrid');
     const loadingState = document.getElementById('loadingState');
     const emptyState = document.getElementById('emptyState');
     
-    // Hide loading
     loadingState.style.display = 'none';
     
     if (filteredProjects.length === 0) {
@@ -130,17 +102,16 @@ function renderProjects() {
         grid.appendChild(card);
     });
     
-    console.log(`🎨 Rendered ${filteredProjects.length} project cards`);
+    console.log(`🎨 Rendered ${filteredProjects.length} cards`);
 }
 
-// Create project card element
+// Create project card with new design
 function createProjectCard(project) {
     const materials = project.materials || [];
     const services = project.services || [];
     const acUnits = project.acUnits || [];
     
     const summary = calculateProjectSummary(materials, services, acUnits);
-    
     const profitLoss = summary.profitLoss;
     const isProfitable = profitLoss >= 0;
     
@@ -148,61 +119,62 @@ function createProjectCard(project) {
         ? project.photos[0].url 
         : null;
     
-    const statusText = {
+    const statusMap = {
         'prospek': 'Prospek',
         'survey': 'Survey',
-        'pengerjaan': 'Pengerjaan',
-        'ditolak': 'Ditolak'
-    }[project.status] || project.status;
+        'pengerjaan': 'On Progress',
+        'ditolak': 'Rejected'
+    };
+    
+    const statusText = statusMap[project.status] || project.status;
     
     const timeAgo = project.createdAt 
         ? getTimeAgo(project.createdAt.toDate()) 
         : '-';
     
     const card = document.createElement('div');
-    card.className = 'project-card';
+    card.className = 'project-card-new';
     
     card.innerHTML = `
-        <div class="project-card-image ${thumbnail ? '' : 'no-image'}">
+        <div class="project-card-header ${thumbnail ? '' : 'no-image'}">
             ${thumbnail 
                 ? `<img src="${thumbnail}" alt="${project.projectName}">` 
                 : '<i class="fas fa-snowflake"></i>'}
-            <div class="project-card-status ${project.status}">${statusText}</div>
+            <div class="status-badge ${project.status}">${statusText}</div>
         </div>
         
         <div class="project-card-body">
-            <div class="project-card-title">${project.projectName || 'Untitled'}</div>
-            <div class="project-card-client">
+            <div class="project-title">${project.projectName || 'Untitled'}</div>
+            <div class="project-client">
                 <i class="fas fa-building"></i>
                 ${project.client || '-'}
             </div>
             
-            <div class="project-card-stats">
-                <div class="project-card-stat">
-                    <div class="project-card-stat-label">Penawaran</div>
-                    <div class="project-card-stat-value">${utils.formatCurrency(summary.totalQuotation)}</div>
+            <div class="financial-summary">
+                <div class="financial-row">
+                    <span class="financial-label">Quotation</span>
+                    <span class="financial-value">${utils.formatCurrency(summary.totalQuotation)}</span>
                 </div>
-                <div class="project-card-stat">
-                    <div class="project-card-stat-label">Real</div>
-                    <div class="project-card-stat-value">${utils.formatCurrency(summary.totalReal)}</div>
+                <div class="financial-row">
+                    <span class="financial-label">Actual</span>
+                    <span class="financial-value">${utils.formatCurrency(summary.totalReal)}</span>
                 </div>
             </div>
             
-            <div class="project-card-profit ${isProfitable ? 'positive' : profitLoss === 0 ? 'neutral' : 'negative'}">
-                ${isProfitable ? '✅ PROFIT' : profitLoss === 0 ? '➖ BREAK EVEN' : '⚠️ LOSS'}: 
-                ${utils.formatCurrency(Math.abs(profitLoss))}
+            <div class="profit-indicator ${isProfitable ? 'positive' : 'negative'}">
+                ${isProfitable ? '✓' : '⚠'} ${isProfitable ? 'PROFIT' : 'LOSS'}: ${utils.formatCurrency(Math.abs(profitLoss))}
             </div>
             
-            <div class="project-card-meta">
+            <div class="card-meta">
                 <span><i class="fas fa-calendar"></i> ${timeAgo}</span>
                 <span><i class="fas fa-images"></i> ${project.photos ? project.photos.length : 0}/10</span>
             </div>
             
-            <div class="project-card-actions">
-                <button class="btn btn-primary" onclick="viewProject('${project.id}')">
+            <div class="card-actions">
+                <button class="btn-card btn-card-primary" onclick="viewProject('${project.id}')">
                     <i class="fas fa-eye"></i> View
                 </button>
-                <button class="btn" style="background: #95a5a6; color: white;" onclick="editProject('${project.id}')">
+                <button class="btn-card btn-card-secondary" onclick="editProject('${project.id}')">
                     <i class="fas fa-edit"></i> Edit
                 </button>
             </div>
@@ -218,15 +190,15 @@ function getTimeAgo(date) {
     const diffMs = now - date;
     const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
     
-    if (diffDays === 0) return 'Hari ini';
-    if (diffDays === 1) return 'Kemarin';
-    if (diffDays < 7) return `${diffDays} hari lalu`;
-    if (diffDays < 30) return `${Math.floor(diffDays / 7)} minggu lalu`;
-    if (diffDays < 365) return `${Math.floor(diffDays / 30)} bulan lalu`;
-    return `${Math.floor(diffDays / 365)} tahun lalu`;
+    if (diffDays === 0) return 'Today';
+    if (diffDays === 1) return 'Yesterday';
+    if (diffDays < 7) return `${diffDays} days ago`;
+    if (diffDays < 30) return `${Math.floor(diffDays / 7)} weeks ago`;
+    if (diffDays < 365) return `${Math.floor(diffDays / 30)} months ago`;
+    return `${Math.floor(diffDays / 365)} years ago`;
 }
 
-// Setup search functionality
+// Setup search
 function setupSearch() {
     const searchInput = document.getElementById('searchInput');
     
@@ -234,10 +206,8 @@ function setupSearch() {
         const query = e.target.value.toLowerCase().trim();
         
         if (query === '') {
-            // No search, apply current filter only
             applyFilter();
         } else {
-            // Search with current filter
             filteredProjects = allProjects.filter(project => {
                 const matchesSearch = 
                     (project.projectName && project.projectName.toLowerCase().includes(query)) ||
@@ -257,17 +227,16 @@ function setupSearch() {
 function filterByStatus(status) {
     currentFilter = status;
     
-    // Update active button
-    document.querySelectorAll('.filter-btn').forEach(btn => {
-        btn.classList.remove('active');
+    // Update active chip
+    document.querySelectorAll('.filter-chip').forEach(chip => {
+        chip.classList.remove('active');
     });
     event.target.classList.add('active');
     
-    // Apply filter
     applyFilter();
 }
 
-// Apply current filter
+// Apply filter
 function applyFilter() {
     const searchQuery = document.getElementById('searchInput').value.toLowerCase().trim();
     
@@ -289,7 +258,7 @@ function viewProject(projectId) {
     window.location.href = `project-detail.html?id=${projectId}`;
 }
 
-// Edit project (go to detail page in edit mode)
+// Edit project
 function editProject(projectId) {
     window.location.href = `project-detail.html?id=${projectId}`;
 }
@@ -303,4 +272,4 @@ window.editProject = editProject;
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', initDashboard);
 
-console.log('✅ index.js loaded (upgraded version)');
+console.log('✅ index-redesign.js loaded');
