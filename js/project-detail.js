@@ -133,24 +133,95 @@ function renderProjectInfo() {
 
 // Render project location on map
 function renderProjectLocation() {
-    if (!currentProject.location) return;
+    // Cek apakah ada element map
+    const mapElement = document.getElementById('map');
+    if (!mapElement) {
+        console.warn('Map element not found');
+        return;
+    }
     
-    const location = {
-        lat: currentProject.location.lat,
-        lng: currentProject.location.lng
-    };
+    // Tentukan lokasi untuk map
+    let mapLocation = DEFAULT_MAP_CENTER;  // Default: Makassar
+    let mapZoom = DEFAULT_MAP_ZOOM;        // Default zoom: 12
     
-    // Initialize map
-    initMap('map', location, 15);
+    // Jika project punya location, gunakan itu
+    if (currentProject.location && 
+        currentProject.location.lat && 
+        currentProject.location.lng) {
+        mapLocation = {
+            lat: currentProject.location.lat,
+            lng: currentProject.location.lng
+        };
+        mapZoom = 15;  // Zoom lebih dekat jika ada location
+        
+        console.log('✅ Project has location:', mapLocation);
+    } else {
+        console.warn('⚠️ Project has no location, using default center');
+        
+        // Tampilkan pesan info di map
+        setTimeout(() => {
+            const infoDiv = document.createElement('div');
+            infoDiv.style.cssText = `
+                position: absolute;
+                top: 10px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: #FFF3CD;
+                border: 1px solid #FFC107;
+                color: #856404;
+                padding: 10px 20px;
+                border-radius: 6px;
+                font-size: 14px;
+                font-weight: 500;
+                z-index: 1000;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            `;
+            infoDiv.innerHTML = '<i class="fas fa-info-circle"></i> Project ini belum memiliki lokasi spesifik';
+            mapElement.style.position = 'relative';
+            mapElement.appendChild(infoDiv);
+        }, 500);
+    }
     
-    // Add marker
-    addMarker({
-        id: currentProject.id,
-        projectName: currentProject.projectName,
-        client: currentProject.client,
-        status: currentProject.status,
-        location: currentProject.location
-    });
+    // Initialize map (SELALU DITAMPILKAN)
+    try {
+        initMap('map', mapLocation, mapZoom);
+        
+        // Jika project punya location, tambahkan marker
+        if (currentProject.location && 
+            currentProject.location.lat && 
+            currentProject.location.lng) {
+            addMarker({
+                id: currentProject.id,
+                projectName: currentProject.projectName,
+                client: currentProject.client,
+                status: currentProject.status,
+                location: currentProject.location
+            });
+        }
+        
+        console.log('🗺️ Map rendered successfully');
+    } catch (error) {
+        console.error('Error rendering map:', error);
+        
+        // Tampilkan error message di map container
+        mapElement.innerHTML = `
+            <div style="
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                height: 100%;
+                background: #f5f5f5;
+                border-radius: 10px;
+                padding: 20px;
+                text-align: center;
+            ">
+                <i class="fas fa-map-marked-alt" style="font-size: 48px; color: #999; margin-bottom: 10px;"></i>
+                <p style="color: #666; margin: 0;">Map tidak dapat dimuat</p>
+                <small style="color: #999; margin-top: 5px;">Periksa koneksi internet Anda</small>
+            </div>
+        `;
+    }
 }
 
 // Render materials and services
